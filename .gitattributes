@@ -1,0 +1,22 @@
+# Normalize line endings for cross-platform consistency
+* text=auto eol=lf
+
+# Force LF for all source files
+*.py text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.sql text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+
+# Binary files — do not touch line endings
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary

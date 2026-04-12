@@ -1,0 +1,123 @@
+[
+  {
+    "name": "Diwali",
+    "slug": "diwali",
+    "approximate_month": "October-November",
+    "regions": ["pan_india"],
+    "color_guidance": "Embrace rich jewel tones — deep reds, royal blues, emerald greens, magenta, and gold. These colors mirror the festival of lights and add to the celebratory grandeur. Metallic accents in gold and silver are highly auspicious.",
+    "dress_code": "Traditional Indian ethnic wear — sarees, lehenga cholis, anarkalis, sherwanis, or festive salwar suits. Heavy embellishments like zari, sequins, and mirror work are encouraged.",
+    "occasion_tags": ["festival", "pooja", "family_gathering", "celebrations"],
+    "avoid_colors": ["white", "black"],
+    "description": "Diwali, the Festival of Lights, is the most celebrated Hindu festival across India. It marks Lord Rama's return to Ayodhya and the triumph of light over darkness. Families dress in their finest ethnic wear, exchange gifts, light diyas, and burst firecrackers over five festive days."
+  },
+  {
+    "name": "Navratri",
+    "slug": "navratri",
+    "approximate_month": "September-October",
+    "regions": ["gujarat", "rajasthan", "maharashtra", "pan_india"],
+    "color_guidance": "Each of the 9 nights has a sacred color: Day 1 (Pratipada) = Yellow (Shailaputri), Day 2 (Dwitiya) = Green (Brahmacharini), Day 3 (Tritiya) = Grey (Chandraghanta), Day 4 (Chaturthi) = Orange (Kushmanda), Day 5 (Panchami) = White (Skandamata), Day 6 (Shashthi) = Red (Katyayani), Day 7 (Saptami) = Royal Blue (Kalaratri), Day 8 (Ashtami) = Pink (Mahagauri), Day 9 (Navami) = Purple (Siddhidatri).",
+    "navratri_colors": [
+      { "day": 1, "color_name": "Yellow", "color_hex": "#FFD700", "goddess": "Shailaputri" },
+      { "day": 2, "color_name": "Green", "color_hex": "#228B22", "goddess": "Brahmacharini" },
+      { "day": 3, "color_name": "Grey", "color_hex": "#808080", "goddess": "Chandraghanta" },
+      { "day": 4, "color_name": "Orange", "color_hex": "#FF8C00", "goddess": "Kushmanda" },
+      { "day": 5, "color_name": "White", "color_hex": "#FFFFFF", "goddess": "Skandamata" },
+      { "day": 6, "color_name": "Red", "color_hex": "#DC143C", "goddess": "Katyayani" },
+      { "day": 7, "color_name": "Royal Blue", "color_hex": "#4169E1", "goddess": "Kalaratri" },
+      { "day": 8, "color_name": "Pink", "color_hex": "#FF69B4", "goddess": "Mahagauri" },
+      { "day": 9, "color_name": "Purple", "color_hex": "#800080", "goddess": "Siddhidatri" }
+    ],
+    "dress_code": "Traditional Gujarati chaniya choli (lehenga) for women, and kediyu-dhoti for men. During Garba and Dandiya nights, choose comfortable yet festive attire in the day's color.",
+    "occasion_tags": ["festival", "garba", "dandiya", "pooja", "dance"],
+    "avoid_colors": [],
+    "description": "Navratri, meaning 'nine nights', is dedicated to the worship of Goddess Durga in her nine forms. It is most vibrantly celebrated in Gujarat with Garba and Dandiya Raas dances. Each day is associated with a specific color worn by devotees as a spiritual offering."
+  },
+  {
+    "name": "Holi",
+    "slug": "holi",
+    "approximate_month": "March",
+    "regions": ["pan_india", "uttar_pradesh", "rajasthan", "delhi"],
+    "color_guidance": "White is the traditional base color as it best shows the colorful gulal. However, old, comfortable clothing is strongly recommended as it will be permanently stained. Avoid expensive or delicate fabrics.",
+    "dress_code": "Simple, comfortable, and old white or light-colored clothing that you don't mind staining. Kurta-pajama or simple salwar suit. Protect your expensive wardrobe — this is not the occasion for it.",
+    "occasion_tags": ["festival", "outdoor", "celebration", "casual"],
+    "avoid_colors": ["dark_colors_if_showing_off_holi"],
+    "description": "Holi, the Festival of Colors, heralds the arrival of spring and the victory of good over evil (Holika Dahan). It is celebrated with boisterous color-throwing (gulal), water guns, festive bhang-thandai, and traditional folk music. The day after Holika Dahan is Rangwali Holi."
+  },
+  {
+    "name": "Eid ul-Fitr",
+    "slug": "eid-ul-fitr",
+    "approximate_month": "April (varies by lunar calendar)",
+    "regions": ["pan_india", "hyderabad", "lucknow", "kashmir", "kerala"],
+    "color_guidance": "Pastel shades, white, ivory, and soft greens are most traditional and auspicious. Silver and gold embellishments are highly favored. Avoid dark, somber colors as Eid is a joyous occasion.",
+    "dress_code": "Men traditionally wear white kurta-pajama or sherwani with a taqiyah. Women wear sharara, gharara, anarkali, or heavily embroidered salwar suits and sarees. Chikankari work from Lucknow is especially prized.",
+    "occasion_tags": ["festival", "namaz", "family_gathering", "formal", "celebration"],
+    "avoid_colors": ["black", "dark_grey"],
+    "description": "Eid ul-Fitr marks the end of Ramadan, the Islamic holy month of fasting. It is a time of charity (Zakat al-Fitr), communal prayer, feasting on sheer khurma and biryani, and wearing new clothes. The greeting 'Eid Mubarak' is exchanged with family, friends, and neighbors."
+  },
+  {
+    "name": "Ganesh Chaturthi",
+    "slug": "ganesh-chaturthi",
+    "approximate_month": "August-September",
+    "regions": ["maharashtra", "goa", "andhra_pradesh", "karnataka", "tamil_nadu"],
+    "color_guidance": "Yellow and red are auspicious for Ganesh Chaturthi. Green (representing new beginnings) is also favored. Orange, the color of Ganesha's modak, is a popular choice.",
+    "dress_code": "Traditional Maharashtrian attire — nauvari saree (nine-yard saree) for women, and dhoti-kurta or pajama-kurta for men. Silk is preferred for the main puja day.",
+    "occasion_tags": ["festival", "pooja", "procession", "celebration"],
+    "avoid_colors": ["black", "white"],
+    "description": "Ganesh Chaturthi celebrates the birth of Lord Ganesha, the elephant-headed deity of wisdom and new beginnings. Maharashtra's ten-day celebration culminates in the grand Ganpati Visarjan procession where idols are immersed in water bodies. Modak (sweet dumplings) are Ganesha's favorite offering."
+  },
+  {
+    "name": "Dussehra",
+    "slug": "dussehra",
+    "approximate_month": "October",
+    "regions": ["pan_india", "mysore", "delhi", "rajasthan"],
+    "color_guidance": "Red, saffron, and traditional ethnic colors are preferred. Orange tones are symbolic of victory. Mysore's Dussehra particularly favors traditional Karnataka silk sarees in rich jewel tones.",
+    "dress_code": "Traditional ethnic wear. The Mysore Dasara is famous for its royal procession where silk sarees and traditional jewelry are a must. Rajasthan's Dussehra features vibrant Rajasthani attire.",
+    "occasion_tags": ["festival", "celebration", "procession", "outdoor"],
+    "avoid_colors": ["black"],
+    "description": "Dussehra (Vijayadashami) commemorates Lord Rama's victory over Ravana and Goddess Durga's triumph over Mahishasura. It marks the end of Navratri. Effigy burning of Ravana is the highlight in North India, while Mysore hosts the grandest Dasara procession in India with its illuminated royal elephant parade."
+  },
+  {
+    "name": "Durga Puja",
+    "slug": "durga-puja",
+    "approximate_month": "October",
+    "regions": ["west_bengal", "assam", "odisha", "tripura"],
+    "color_guidance": "Red and white are the colors of Goddess Durga and are most auspicious. Red-bordered white sarees (especially Bengali tant cotton) are iconic. Each day of the five-day celebration also has traditional color associations.",
+    "dress_code": "Bengali women traditionally wear red-bordered white sarees (lal paar shada saree) on Saptami and Ashtami. Silk sarees in red, gold, and deep hues are worn throughout. Men wear dhoti-kurta in white or off-white.",
+    "occasion_tags": ["festival", "pandal_hopping", "pooja", "cultural"],
+    "avoid_colors": [],
+    "description": "Durga Puja is West Bengal's grandest festival celebrating Goddess Durga's victory over the demon Mahishasura. For five days (Panchami to Navami), elaborate pandals (temporary structures) showcase artistic grandeur. Cultural performances, dhunuchi dance, and sindoor khela (vermillion play) mark the celebration."
+  },
+  {
+    "name": "Onam",
+    "slug": "onam",
+    "approximate_month": "August-September",
+    "regions": ["kerala"],
+    "color_guidance": "White (kasavu) is the quintessential Onam color. The traditional Kerala white saree with golden border (Kasavu saree/mundum neriyathum) is the iconic look. Women also wear fresh flower (pookalam) jewelry.",
+    "dress_code": "Women wear the traditional mundum neriyathum (two-piece white and gold saree) or kasavu saree. Men wear the white dhoti (mundu) with golden border and a white shirt. Simplicity and elegance define Onam attire.",
+    "occasion_tags": ["festival", "harvest", "cultural", "feast"],
+    "avoid_colors": ["black"],
+    "description": "Onam is Kerala's harvest festival celebrating the homecoming of the legendary King Mahabali. The ten-day festival (Thiruvonam being the main day) features the famous Onam Sadya (feast on banana leaf), snake boat races (Vallam Kali), floral carpet (pookalam) arrangements, and traditional Thiruvathira dance."
+  },
+  {
+    "name": "Pongal",
+    "slug": "pongal",
+    "approximate_month": "January",
+    "regions": ["tamil_nadu", "andhra_pradesh", "telangana", "karnataka"],
+    "color_guidance": "Traditional Kanjivaram silk sarees in bright, auspicious colors — red, green, yellow, and gold. The four days of Pongal each carry significance. Bright, harvest-inspired colors like turmeric yellow, sugarcane green, and sun orange are celebratory.",
+    "dress_code": "Tamil women wear the traditional Kanjivaram or Coimbatore cotton sarees with floral patterns. Men wear dhoti and angavastram. Fresh jasmine flowers in hair are an essential accessory for women.",
+    "occasion_tags": ["festival", "harvest", "thanksgiving", "traditional"],
+    "avoid_colors": [],
+    "description": "Pongal is the Tamil harvest festival of thanksgiving to the Sun God, rain, and cattle. The iconic ritual of cooking sweet pongal (rice and jaggery) in a new clay pot and letting it 'overflow' (symbolizing abundance) gives the festival its name. The four days — Thai Pongal, Mattu Pongal, and Kaanum Pongal — each hold distinct rituals."
+  },
+  {
+    "name": "Christmas",
+    "slug": "christmas",
+    "approximate_month": "December",
+    "regions": ["goa", "kerala", "meghalaya", "tamil_nadu", "pan_india"],
+    "color_guidance": "Red, green, gold, and white are the classic Christmas palette. In Goa, bright colors reflecting Portuguese heritage are popular. Midnight Mass attire tends toward elegant and formal with these color accents.",
+    "dress_code": "Western formal or semi-formal wear (for midnight mass and parties) or traditional Indian ethnic wear in Christmas colors. Goa's Christmas features bright, festive indo-portuguese inspired outfits.",
+    "occasion_tags": ["festival", "church", "celebration", "formal", "family_gathering"],
+    "avoid_colors": [],
+    "description": "Christmas in India is celebrated by Christians and increasingly by people across faiths. Goa has the most vibrant celebrations with its Portuguese heritage — churches lit up magnificently, carol singing, and Christmas markets. Kerala's churches hold grand midnight masses. The festival brings together Indian and Western festive traditions uniquely."
+  }
+]

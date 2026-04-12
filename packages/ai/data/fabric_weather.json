@@ -1,0 +1,86 @@
+{
+  "cotton": {
+    "summer": "excellent",
+    "monsoon": "good",
+    "winter": "avoid",
+    "notes": "Best for heat and humidity. Breathable natural fiber that absorbs sweat efficiently. A wardrobe staple for Indian summers from March to June. Avoid layering cotton in winter as it retains cold."
+  },
+  "linen": {
+    "summer": "excellent",
+    "monsoon": "good",
+    "winter": "avoid",
+    "notes": "Even more breathable than cotton. Ideal for humid coastal cities like Mumbai, Chennai, and Kochi. Gets softer with each wash. Wrinkles easily — embrace the relaxed look or steam lightly."
+  },
+  "georgette": {
+    "summer": "good",
+    "monsoon": "caution",
+    "winter": "good",
+    "notes": "Lightweight and flowy — great for formal occasions in moderate weather. Avoid in heavy rain as it takes long to dry. Works well for evening events year-round. Popular for sarees and dupattas."
+  },
+  "chiffon": {
+    "summer": "good",
+    "monsoon": "caution",
+    "winter": "good",
+    "notes": "Very lightweight and sheer. Ideal for summers and mild winters. Not recommended during heavy monsoons. Beautiful drape makes it popular for sarees and dupattas for festive occasions."
+  },
+  "crepe": {
+    "summer": "good",
+    "monsoon": "good",
+    "winter": "good",
+    "notes": "Versatile fabric suitable across seasons. Doesn't wrinkle easily — great for travel and long days. The crinkled texture adds visual interest. Popular for salwar suits and Indo-western wear."
+  },
+  "velvet": {
+    "summer": "avoid",
+    "monsoon": "avoid",
+    "winter": "excellent",
+    "notes": "Reserved strictly for cooler weather. Velvet is heavy and heat-trapping — wearing it in summer is uncomfortable and impractical. Perfect for Diwali and wedding season (October-February). Avoid in monsoon as moisture can damage the pile."
+  },
+  "raw_silk": {
+    "summer": "caution",
+    "monsoon": "avoid",
+    "winter": "excellent",
+    "notes": "Natural silk protein keeps you warm in winter. Avoid in monsoon and heavy humidity as moisture weakens silk fibers and causes spotting. Wear with care in summer — only for air-conditioned venues."
+  },
+  "banarasi": {
+    "summer": "avoid",
+    "monsoon": "avoid",
+    "winter": "excellent",
+    "notes": "Heavy brocade weave with zari work — strictly a winter fabric for grand occasions like weddings and Diwali. The weight and density make it impractical in heat or humidity. Store in muslin cloth to protect the zari."
+  },
+  "kanjeevaram": {
+    "summer": "caution",
+    "monsoon": "avoid",
+    "winter": "good",
+    "notes": "South India's most prized silk. The heavy weave and rich zari border make it ideal for cooler months. In summer, wear only for brief air-conditioned functions. Monsoon humidity can affect the silk sheen."
+  },
+  "khadi": {
+    "summer": "excellent",
+    "monsoon": "good",
+    "winter": "good",
+    "notes": "Gandhi's fabric of independence — hand-spun and versatile. The loose weave is naturally cool in summer and warm in winter (especially thicker khadi). Excellent for everyday wear and casual occasions. Wrinkles are part of its charm."
+  },
+  "net": {
+    "summer": "good",
+    "monsoon": "avoid",
+    "winter": "caution",
+    "notes": "Sheer and decorative fabric — primarily used for dupattas and layered tops. Avoid in monsoon as it can be easily damaged and takes long to dry. In winter, use only as an overlay with proper lining underneath."
+  },
+  "satin": {
+    "summer": "avoid",
+    "monsoon": "avoid",
+    "winter": "good",
+    "notes": "Smooth and lustrous, best suited for winter formal occasions. Gets uncomfortably hot in summer due to low breathability. Monsoon humidity can cause water spots on the satin surface. Use for evening events and indoors celebrations."
+  },
+  "polyester": {
+    "summer": "avoid",
+    "monsoon": "caution",
+    "winter": "good",
+    "notes": "Synthetic fabric — not breathable. Can cause excessive sweating in Indian summer heat. More practical in winter for budget-friendly formal looks. Blended polyester (with cotton or viscose) performs better across seasons."
+  },
+  "rayon": {
+    "summer": "excellent",
+    "monsoon": "good",
+    "winter": "caution",
+    "notes": "A semi-synthetic fabric that mimics the drape and comfort of natural fabrics. Breathable and lightweight — excellent for summer and transitional weather. Affordable alternative to silk for casual and semi-formal occasions. Avoid heavy rain as it loses shape when wet."
+  }
+}

@@ -1,0 +1,92 @@
+[
+  {
+    "slug": "saree",
+    "label": "Saree",
+    "subcategories": ["drape_saree", "pre_stitched_saree", "concept_saree", "dhoti_saree"],
+    "typical_fabrics": ["kanjeevaram", "banarasi", "georgette", "chiffon", "cotton", "raw_silk", "linen", "net"],
+    "occasion_suitability": ["wedding_guest", "festival", "pooja", "formal", "temple"],
+    "regional_associations": ["south_indian", "bengali", "maharashtrian", "rajasthani", "pan_india"],
+    "description": "The timeless garment draped 5.5 to 9 yards around the body. India's most iconic ethnic garment worn by women across all regions and occasions."
+  },
+  {
+    "slug": "salwar_suit",
+    "label": "Salwar Suit",
+    "subcategories": ["straight_cut", "patiala", "anarkali_suit", "palazzo_suit", "sharara_suit"],
+    "typical_fabrics": ["cotton", "georgette", "crepe", "chiffon", "raw_silk", "rayon"],
+    "occasion_suitability": ["casual", "office", "festival", "pooja", "formal", "temple"],
+    "regional_associations": ["punjabi", "north_india", "pan_india"],
+    "description": "Three-piece ensemble comprising kameez (top), salwar (pants), and dupatta (scarf). The most versatile category of Indian women's wear spanning casual to formal."
+  },
+  {
+    "slug": "kurta",
+    "label": "Kurta",
+    "subcategories": ["straight_kurta", "a_line_kurta", "asymmetric_kurta", "high_low_kurta", "kaftan_kurta"],
+    "typical_fabrics": ["cotton", "khadi", "linen", "rayon", "georgette"],
+    "occasion_suitability": ["casual", "office", "campus", "temple", "pooja"],
+    "regional_associations": ["pan_india"],
+    "description": "Collarless top of varying lengths worn over salwar, pants, leggings, or skirts. A staple of everyday Indian women's (and men's) fashion across all regions."
+  },
+  {
+    "slug": "dupatta",
+    "label": "Dupatta",
+    "subcategories": ["printed_dupatta", "embroidered_dupatta", "bandhani_dupatta", "phulkari_dupatta", "net_dupatta"],
+    "typical_fabrics": ["chiffon", "georgette", "net", "cotton", "raw_silk", "banarasi"],
+    "occasion_suitability": ["festival", "pooja", "wedding_guest", "formal", "temple"],
+    "regional_associations": ["punjabi", "rajasthani", "pan_india"],
+    "description": "A long, versatile scarf worn across the chest or draped over the shoulders. Can transform a simple kurta into festival wear. Phulkari dupattas from Punjab and Bandhani from Rajasthan are regional specialties."
+  },
+  {
+    "slug": "lehenga",
+    "label": "Lehenga Choli",
+    "subcategories": ["bridal_lehenga", "chaniya_choli", "a_line_lehenga", "flared_lehenga", "mermaid_lehenga"],
+    "typical_fabrics": ["velvet", "banarasi", "raw_silk", "georgette", "net", "kanjeevaram"],
+    "occasion_suitability": ["wedding_guest", "festival", "formal", "night_out"],
+    "regional_associations": ["rajasthani", "gujarati", "punjabi"],
+    "description": "A three-piece ensemble of flared skirt (lehenga), fitted blouse (choli), and dupatta. The most elaborate Indian occasion wear, especially for weddings. The chaniya choli version is quintessential Navratri Garba wear."
+  },
+  {
+    "slug": "palazzo",
+    "label": "Palazzo Pants",
+    "subcategories": ["printed_palazzo", "solid_palazzo", "ethnic_palazzo", "fusion_palazzo"],
+    "typical_fabrics": ["cotton", "rayon", "georgette", "chiffon", "crepe"],
+    "occasion_suitability": ["casual", "office", "campus", "festival"],
+    "regional_associations": ["mumbai_minimal", "pan_india"],
+    "description": "Wide-leg, flowy pants that pair with kurtis, crop tops, and ethnic blouses. A modern Indian fashion staple that bridges ethnic and contemporary styles. Very comfortable for the Indian climate."
+  },
+  {
+    "slug": "anarkali",
+    "label": "Anarkali",
+    "subcategories": ["floor_length_anarkali", "mid_length_anarkali", "layered_anarkali", "embroidered_anarkali"],
+    "typical_fabrics": ["georgette", "raw_silk", "chiffon", "net", "crepe"],
+    "occasion_suitability": ["wedding_guest", "festival", "formal", "night_out", "pooja"],
+    "regional_associations": ["mughal_inspired", "north_india", "pan_india"],
+    "description": "A long, flowy frock-style kurta inspired by Mughal court fashion, named after the legendary dancer Anarkali. The floor-length version creates a regal silhouette. Popular for weddings, festivals, and formal evening events."
+  },
+  {
+    "slug": "kurti",
+    "label": "Kurti",
+    "subcategories": ["casual_kurti", "printed_kurti", "embroidered_kurti", "long_kurti", "crop_kurti"],
+    "typical_fabrics": ["cotton", "rayon", "khadi", "linen", "georgette"],
+    "occasion_suitability": ["casual", "office", "campus", "temple"],
+    "regional_associations": ["pan_india"],
+    "description": "A shorter version of the kurta (typically above the knee), usually worn with jeans, leggings, or tights. India's most popular everyday garment for urban women — bridges ethnic and casual wear effortlessly."
+  },
+  {
+    "slug": "indo_western",
+    "label": "Indo-Western",
+    "subcategories": ["dhoti_pants_top", "cape_lehenga", "fusion_saree_gown", "jacket_kurta", "sharara_crop"],
+    "typical_fabrics": ["georgette", "crepe", "raw_silk", "cotton", "net", "satin"],
+    "occasion_suitability": ["formal", "night_out", "wedding_guest", "festival"],
+    "regional_associations": ["mumbai_minimal", "pan_india"],
+    "description": "Contemporary fusion silhouettes blending Indian ethnic elements with Western fashion sensibilities. Popular among the urban professional and millennial demographic. Cape jackets with lehengas, saree gowns, and dhoti-pants with crop tops are key pieces."
+  },
+  {
+    "slug": "churidar",
+    "label": "Churidar",
+    "subcategories": ["plain_churidar", "printed_churidar", "embroidered_churidar"],
+    "typical_fabrics": ["cotton", "crepe", "georgette", "raw_silk"],
+    "occasion_suitability": ["casual", "office", "pooja", "festival", "temple"],
+    "regional_associations": ["south_indian", "kerala", "pan_india"],
+    "description": "Fitted trousers that gather in horizontal folds below the knee, creating a 'bangle' effect at the ankle. More fitted than salwar, usually paired with long kurtas or anarkalis. A staple in South Indian fashion and popular across India."
+  }
+]
