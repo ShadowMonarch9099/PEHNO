@@ -46,7 +46,7 @@ class Settings(BaseSettings):
     GARMENT_IMAGES_BUCKET: str = "garment-images"
     SIGNED_URL_EXPIRY_SECONDS: int = 3600
 
-    model_config = {"env_file": ".env", "case_sensitive": True, "populate_by_name": True}
+    model_config = {"env_file": ".env", "case_sensitive": True, "populate_by_name": True, "extra": "ignore"}
 
 
 settings = Settings()

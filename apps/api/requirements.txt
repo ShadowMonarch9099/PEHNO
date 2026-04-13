@@ -13,14 +13,13 @@ aiofiles==23.2.1
 celery==5.3.6
 redis==5.0.1
 flower==2.0.1
-supabase==2.3.4
+supabase==2.4.0
 Pillow==10.2.0
 numpy==1.26.3
-httpx==0.26.0
+httpx>=0.24,<0.26
 python-dotenv==1.0.0
 transformers==4.37.2
 torch==2.2.0
 firebase-admin==6.4.0
 pytest==7.4.4
 pytest-asyncio==0.23.3
-httpx==0.26.0
