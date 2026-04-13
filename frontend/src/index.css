@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Noto Serif", serif;
+
+  --color-primary: #964900;
+  --color-primary-container: #fd8621;
+  --color-secondary: #426087;
+  --color-background: #fff8f1;
+  --color-surface: #fff8f1;
+  --color-on-surface: #1e1b15;
+  --color-on-surface-variant: #554334;
+  --color-outline-variant: #dbc2ae;
+  --color-surface-container-low: #faf3e8;
+  --color-surface-container: #f5ede2;
+  --color-surface-container-high: #efe7dc;
+  --color-surface-container-highest: #e9e1d7;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-on-surface font-sans;
+  }
+}
+
+.heritage-border {
+  @apply relative;
+}
+
+.heritage-border::after {
+  content: '';
+  @apply absolute bottom-0 left-0 right-0 h-[1px] opacity-50;
+  background: linear-gradient(90deg, transparent 0%, #dbc2ae 50%, transparent 100%);
+}
+
+.buti-pattern {
+  background-image: radial-gradient(#964900 0.5px, transparent 0.5px);
+  background-size: 24px 24px;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
