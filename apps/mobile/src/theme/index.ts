@@ -5,30 +5,39 @@ import { StyleSheet, Platform } from 'react-native';
 
 // ── Color Palette ──────────────────────────────────────────────────────────────
 export const colors = {
-  primary: '#8B4513',       // Saddle Brown
-  primaryLight: '#A0522D',  // Lighter brown
-  primaryDark: '#6B3410',   // Darker brown
+  // Frontend Mapped Colors
+  primary: '#964900',       // primary
+  primaryContainer: '#fd8621',
+  secondary: '#426087',
+  
+  background: '#fff8f1',
+  surface: '#fff8f1',
+  surfaceElevated: '#faf3e8', // using surface-container-low
 
-  accent: '#D4A017',        // Golden
-  accentLight: '#E8C547',
-  accentDark: '#B8860B',
+  onSurface: '#1e1b15',
+  onSurfaceVariant: '#554334',
+  outlineVariant: '#dbc2ae',
 
-  background: '#FDF8F0',    // Warm Cream
-  surface: '#FFFFFF',
-  surfaceElevated: '#FFF5E8',
+  // Existing theme keys updated to map frontend colors
+  primaryLight: '#fd8621',
+  primaryDark: '#554334',
 
-  textPrimary: '#2C1810',   // Dark Brown
-  textSecondary: '#8B7355', // Muted Brown
-  textMuted: '#B8A08A',
-  textInverse: '#FDF8F0',
+  accent: '#426087',
+  accentLight: '#6181ac',
+  accentDark: '#29405d',
+
+  textPrimary: '#1e1b15',
+  textSecondary: '#554334',
+  textMuted: '#8f7a69',
+  textInverse: '#fff8f1',
 
   success: '#2D7A4F',
   warning: '#D4A017',
   error: '#C0392B',
   info: '#2980B9',
 
-  border: '#E8DDD0',
-  borderLight: '#F0E8DC',
+  border: '#dbc2ae',
+  borderLight: '#efe7dc', // surface-container-high
 
   white: '#FFFFFF',
   black: '#000000',
@@ -50,8 +59,8 @@ export const colors = {
   fabricKanjeevaram: '#880E4F',
 
   // Overlay
-  overlay: 'rgba(44, 24, 16, 0.5)',
-  overlayLight: 'rgba(44, 24, 16, 0.2)',
+  overlay: 'rgba(30, 27, 21, 0.5)',     // Based on onSurface (#1e1b15)
+  overlayLight: 'rgba(30, 27, 21, 0.2)',
 } as const;
 
 // ── Typography ─────────────────────────────────────────────────────────────────

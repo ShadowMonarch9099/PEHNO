@@ -11,7 +11,6 @@ import {
   Modal,
   ViewStyle,
   TextStyle,
-  Animated,
 } from 'react-native';
 import { colors, spacing, borderRadius, typography, shadows } from '../../theme';
 
@@ -182,8 +181,8 @@ export const OutfitRating: React.FC<OutfitRatingProps> = ({
           disabled={readonly}
           hitSlop={{ top: 8, bottom: 8, left: 4, right: 4 }}
         >
-          <Text style={[styles.star, rating && star <= rating && styles.starFilled]}>
-            {rating && star <= rating ? '★' : '☆'}
+          <Text style={[styles.star, (rating !== undefined && star <= rating) && styles.starFilled]}>
+            {rating !== undefined && star <= rating ? '★' : '☆'}
           </Text>
         </TouchableOpacity>
       ))}
@@ -227,35 +226,39 @@ const styles = StyleSheet.create({
   // Buttons
   primaryButton: {
     backgroundColor: colors.primary,
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.lg,
-    borderRadius: borderRadius.md,
+    paddingVertical: 12,
+    paddingHorizontal: spacing.xl,
+    borderRadius: borderRadius.pill,
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: 52,
-    ...shadows.sm,
+    minHeight: 48,
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
   },
   primaryButtonText: {
     color: colors.background,
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '600',
     letterSpacing: 0.3,
   },
   secondaryButton: {
-    backgroundColor: 'transparent',
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.lg,
-    borderRadius: borderRadius.md,
-    borderWidth: 1.5,
-    borderColor: colors.primary,
+    backgroundColor: colors.surfaceElevated,
+    paddingVertical: 12,
+    paddingHorizontal: spacing.xl,
+    borderRadius: borderRadius.pill,
+    borderWidth: 1,
+    borderColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: 52,
+    minHeight: 48,
   },
   secondaryButtonText: {
-    color: colors.primary,
-    fontSize: 16,
-    fontWeight: '600',
+    color: colors.textSecondary,
+    fontSize: 14,
+    fontWeight: '500',
   },
   buttonDisabled: { opacity: 0.6 },
   fullWidth: { width: '100%' },
