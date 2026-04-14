@@ -2,11 +2,12 @@
  * PEHNO App Navigation — Complete navigation structure
  */
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, LinkingOptions } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Text, View, StyleSheet } from 'react-native';
 import * as Linking from 'expo-linking';
+import { Feather } from '@expo/vector-icons';
 
 import { colors, typography } from '../theme';
 
@@ -48,7 +49,7 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 // ── Deep Linking Config ────────────────────────────────────────────────────────
-const linking = {
+const linking: LinkingOptions<any> = {
   prefixes: ['pehno://', 'https://app.pehno.in'],
   config: {
     screens: {
@@ -80,9 +81,9 @@ const linking = {
 };
 
 // ── Tab Icon ───────────────────────────────────────────────────────────────────
-const TabIcon = ({ icon, label, focused }: { icon: string; label: string; focused: boolean }) => (
+const TabIcon = ({ icon, label, focused }: { icon: any; label: string; focused: boolean }) => (
   <View style={[tabStyles.tabItem, focused && tabStyles.tabItemActive]}>
-    <Text style={tabStyles.tabIcon}>{icon}</Text>
+    <Feather name={icon} size={22} color={focused ? colors.primary : colors.textMuted} />
     <Text style={[tabStyles.tabLabel, focused && tabStyles.tabLabelActive]}>{label}</Text>
   </View>
 );
@@ -146,7 +147,7 @@ function MainTabs() {
         component={WardrobeStack}
         options={{
           tabBarLabel: () => null,
-          tabBarIcon: ({ focused }) => <TabIcon icon="👗" label="Wardrobe" focused={focused} />,
+          tabBarIcon: ({ focused }) => <TabIcon icon="archive" label="Wardrobe" focused={focused} />,
         }}
       />
       <Tab.Screen
@@ -154,7 +155,7 @@ function MainTabs() {
         component={OutfitStack}
         options={{
           tabBarLabel: () => null,
-          tabBarIcon: ({ focused }) => <TabIcon icon="✨" label="Outfits" focused={focused} />,
+          tabBarIcon: ({ focused }) => <TabIcon icon="star" label="Outfits" focused={focused} />,
         }}
       />
       <Tab.Screen
@@ -162,7 +163,7 @@ function MainTabs() {
         component={FestivalStack}
         options={{
           tabBarLabel: () => null,
-          tabBarIcon: ({ focused }) => <TabIcon icon="🪔" label="Festivals" focused={focused} />,
+          tabBarIcon: ({ focused }) => <TabIcon icon="calendar" label="Festivals" focused={focused} />,
         }}
       />
       <Tab.Screen
@@ -170,7 +171,7 @@ function MainTabs() {
         component={SettingsStack}
         options={{
           tabBarLabel: () => null,
-          tabBarIcon: ({ focused }) => <TabIcon icon="⚙️" label="Settings" focused={focused} />,
+          tabBarIcon: ({ focused }) => <TabIcon icon="settings" label="Settings" focused={focused} />,
         }}
       />
     </Tab.Navigator>
@@ -220,11 +221,16 @@ function OnboardingStack() {
 // ── Tab Styles ─────────────────────────────────────────────────────────────────
 const tabStyles = StyleSheet.create({
   tabBar: {
-    backgroundColor: colors.surface,
-    borderTopColor: colors.borderLight,
+    backgroundColor: 'rgba(255, 248, 241, 0.9)',
+    borderTopColor: colors.outlineVariant + '33',
     borderTopWidth: 1,
     height: 72,
     paddingBottom: 8,
+    shadowColor: '#554334', // Equivalent to rgba(85,67,52,0.08) base
+    shadowOffset: { width: 0, height: -12 },
+    shadowOpacity: 0.08,
+    shadowRadius: 32,
+    elevation: 20,
   },
   tabItem: {
     alignItems: 'center',
@@ -234,7 +240,6 @@ const tabStyles = StyleSheet.create({
     borderRadius: 12,
   },
   tabItemActive: { backgroundColor: colors.primary + '12' },
-  tabIcon: { fontSize: 22 },
   tabLabel: { fontSize: 10, color: colors.textMuted, fontWeight: '500' },
   tabLabelActive: { color: colors.primary, fontWeight: '700' },
 });

@@ -160,4 +160,8 @@ export const commonStyles = StyleSheet.create({
     backgroundColor: colors.borderLight,
     marginVertical: spacing.sm,
   },
+  heritageBorder: {
+    borderBottomWidth: 1,
+    borderBottomColor: colors.outlineVariant + '80',
+  },
 });
