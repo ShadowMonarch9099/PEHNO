@@ -1,0 +1,62 @@
+import { 
+  Shirt, 
+  Sparkles, 
+  CalendarDays, 
+  Store,
+  Menu,
+  X,
+  Camera,
+  Image as ImageIcon,
+  Zap,
+  Lightbulb,
+  ChevronRight,
+  Share2,
+  ShoppingBag,
+  RefreshCw,
+  CheckCircle2,
+  Search,
+  Heart,
+  Plus,
+  Star,
+  ArrowRight,
+  History,
+  WashingMachine,
+  Ruler
+} from 'lucide-react';
+
+export const ICONS = {
+  Wardrobe: Shirt,
+  AIOutfits: Sparkles,
+  Planner: CalendarDays,
+  Market: Store,
+  Menu,
+  Close: X,
+  Camera,
+  Gallery: ImageIcon,
+  Flash: Zap,
+  Tip: Lightbulb,
+  ChevronRight,
+  Share: Share2,
+  Buy: ShoppingBag,
+  Regenerate: RefreshCw,
+  Check: CheckCircle2,
+  Search,
+  Heart,
+  Add: Plus,
+  Star,
+  ArrowRight,
+  History,
+  Laundry: WashingMachine,
+  Alteration: Ruler
+};
+
+export const COLORS = {
+  primary: '#964900',
+  primaryContainer: '#fd8621',
+  secondary: '#426087',
+  background: '#fff8f1',
+  surface: '#fff8f1',
+  onSurface: '#1e1b15',
+  onSurfaceVariant: '#554334',
+  outlineVariant: '#dbc2ae'
+};

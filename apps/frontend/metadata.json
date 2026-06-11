@@ -1,0 +1,6 @@
+{
+  "name": "Pehno",
+  "description": "A digital wardrobe and fashion curation app blending Indian heritage with modern design.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": []
+}

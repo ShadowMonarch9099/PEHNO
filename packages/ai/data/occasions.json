@@ -1,0 +1,65 @@
+[
+  {
+    "slug": "casual",
+    "label": "Casual",
+    "fabric_preference": ["cotton", "khadi", "rayon", "linen"],
+    "avoid_fabrics": ["banarasi", "velvet", "kanjeevaram", "net"],
+    "notes": "Everyday relaxed wear — prioritize comfort and breathability. Kurtis, palazzo pants, casual salwar suits, or printed cotton sarees work perfectly. Keep it light and unfussy."
+  },
+  {
+    "slug": "office",
+    "label": "Office / Workwear",
+    "fabric_preference": ["cotton", "crepe", "georgette", "khadi", "rayon"],
+    "avoid_fabrics": ["velvet", "net", "banarasi", "kanjeevaram"],
+    "notes": "Professional yet comfortable. Formal salwar suits, structured kurta-palazzo sets, cotton or crepe sarees in muted or solid tones. Avoid overly embellished or diaphanous fabrics. Prefer structured silhouettes."
+  },
+  {
+    "slug": "wedding_guest",
+    "label": "Wedding Guest",
+    "fabric_preference": ["raw_silk", "georgette", "banarasi", "kanjeevaram", "chiffon", "satin"],
+    "avoid_fabrics": ["polyester", "cotton"],
+    "notes": "Dress to impress without overshadowing the bride. Rich fabrics in jewel tones — lehenga cholis, anarkalis, silk sarees, or heavily embroidered salwar suits. Embellishment is appropriate. Gold or silver jewelry completes the look."
+  },
+  {
+    "slug": "pooja",
+    "label": "Pooja / Prayer",
+    "fabric_preference": ["cotton", "raw_silk", "khadi", "kanjeevaram"],
+    "avoid_fabrics": ["polyester", "net", "satin"],
+    "notes": "Modest, clean, and traditional. Traditional fabrics like cotton and silk are considered pure and appropriate for puja. Avoid synthetic fabrics. Regional pujas may have specific color requirements (e.g., yellow for Saraswati Puja)."
+  },
+  {
+    "slug": "festival",
+    "label": "Festival",
+    "fabric_preference": ["raw_silk", "banarasi", "kanjeevaram", "georgette", "chiffon", "velvet"],
+    "avoid_fabrics": ["polyester", "rayon"],
+    "notes": "Festival dressing is about celebration. Choose fabrics that photograph beautifully and carry traditional weight. Heavy embellishments, zari work, and mirror embroidery are all welcome. Check festival-specific color codes."
+  },
+  {
+    "slug": "formal",
+    "label": "Formal / Corporate Event",
+    "fabric_preference": ["crepe", "georgette", "raw_silk", "satin", "chiffon"],
+    "avoid_fabrics": ["polyester", "khadi", "cotton"],
+    "notes": "Formal events require polished, structured looks. Silk, crepe, or georgette sarees in neutral or rich tones. Tailored salwar suits or structured anarkalis. Minimal to moderate embellishment."
+  },
+  {
+    "slug": "night_out",
+    "label": "Night Out",
+    "fabric_preference": ["chiffon", "georgette", "satin", "velvet", "net"],
+    "avoid_fabrics": ["cotton", "khadi", "polyester"],
+    "notes": "Evening and party looks call for fabrics with sheen and drape. Deep jewel tones, metallic accents, and dramatic silhouettes are encouraged. Indo-western fusion pieces work beautifully for clubs and urban social events."
+  },
+  {
+    "slug": "campus",
+    "label": "College / Campus",
+    "fabric_preference": ["cotton", "rayon", "khadi", "linen"],
+    "avoid_fabrics": ["velvet", "banarasi", "kanjeevaram", "net"],
+    "notes": "Practical and vibrant — campus wear should be comfortable for all-day activity. Printed kurtis, palazzo combos, jeans with ethnic tops, and casual salwar suits are campus staples. Machine-washable fabrics are a priority."
+  },
+  {
+    "slug": "temple",
+    "label": "Temple / Religious Visit",
+    "fabric_preference": ["cotton", "raw_silk", "khadi", "kanjeevaram"],
+    "avoid_fabrics": ["velvet", "polyester", "net", "satin"],
+    "notes": "Temple visits require modest, respectful attire. Natural fabrics like cotton and silk are traditionally considered auspicious. Conservative silhouettes — full-coverage salwar suits, traditional sarees, or long ethnic dresses. Many temples require a dupatta or head covering."
+  }
+]

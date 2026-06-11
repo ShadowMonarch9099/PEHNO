@@ -1,0 +1,70 @@
+{
+  "expo": {
+    "name": "Pehno",
+    "slug": "pehno",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FDF8F0"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "in.pehno.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Pehno needs camera access to photograph your garments for wardrobe management.",
+        "NSPhotoLibraryUsageDescription": "Pehno needs photo library access to upload garment photos to your wardrobe."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FDF8F0"
+      },
+      "package": "in.pehno.app",
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "RECEIVE_BOOT_COMPLETED",
+        "VIBRATE"
+      ],
+      "googleServicesFile": "./google-services.json"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "scheme": "pehno",
+    "plugins": [
+      "expo-secure-store",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#8B4513"
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Pehno needs camera access to photograph your garments."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Pehno needs photo library access to upload garment photos."
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "your-eas-project-id"
+      }
+    }
+  }
+}
