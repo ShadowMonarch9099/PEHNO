@@ -17,7 +17,7 @@ export default function BottomNav() {
           key={item.to}
           to={item.to}
           className={({ isActive }) => `
-            flex flex-col items-center justify-center transition-all active:scale-90 duration-200
+            relative flex flex-col items-center justify-center transition-all active:scale-90 duration-200 cursor-pointer
             ${isActive ? 'text-primary' : 'text-on-surface-variant/50 hover:text-primary'}
           `}
         >
