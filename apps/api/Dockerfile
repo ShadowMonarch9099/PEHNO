@@ -1,26 +1,14 @@
 FROM python:3.11-slim
 
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 WORKDIR /app
 
-# System dependencies for Pillow and ML libraries
-RUN apt-get update && apt-get install -y \
-    libpq-dev \
-    gcc \
-    g++ \
-    libjpeg-dev \
-    zlib1g-dev \
-    libwebp-dev \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends libpq5 && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
 COPY . .
 
-# Set Python path to include packages
-ENV PYTHONPATH="/app:/packages"
-
 EXPOSE 8000
+CMD ["sh", "-c", "alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8000"]

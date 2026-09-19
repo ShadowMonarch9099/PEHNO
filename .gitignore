@@ -99,3 +99,9 @@ uploads/
 
 # TypeScript
 *.tsbuildinfo
+
+# Local databases & media
+*.db
+*.sqlite*
+apps/api/media/
+apps/api/.test-media/

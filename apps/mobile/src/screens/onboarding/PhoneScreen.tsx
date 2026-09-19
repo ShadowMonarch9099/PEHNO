@@ -1,155 +1,117 @@
 /**
- * PhoneScreen — Phone number input with +91 prefix
+ * PhoneScreen — enter Indian mobile number, request OTP.
  */
 import React, { useState } from 'react';
 import {
-  View, Text, StyleSheet, SafeAreaView, TextInput,
-  TouchableOpacity, KeyboardAvoidingView, Platform,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { colors, spacing, borderRadius, typography, shadows } from '../../theme';
-import { PrimaryButton, LoadingOverlay } from '../../components/ui';
-import { authApi } from '../../services/api';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { PrimaryButton } from '../../components/ui';
+import type { AuthScreenProps } from '../../navigation/types';
+import { ApiError, authApi } from '../../services';
+import { borderRadius, colors, spacing, typography } from '../../theme';
+import { digitsOnly, formatIndianMobile, isValidIndianMobile } from '../../utils/phone';
 
-interface Props {
-  navigation: NativeStackNavigationProp<any>;
-}
-
-export default function PhoneScreen({ navigation }: Props) {
+export default function PhoneScreen({ navigation }: AuthScreenProps<'Phone'>) {
   const [phone, setPhone] = useState('');
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
-  const fullPhone = `+91${phone}`;
-  const isValid = phone.length === 10 && /^[6-9]/.test(phone);
+  const valid = isValidIndianMobile(phone);
 
-  const handleSendOtp = async () => {
-    if (!isValid) {
-      setError('Please enter a valid 10-digit Indian mobile number');
-      return;
-    }
-    setError('');
+  const submit = async () => {
+    if (!valid || loading) return;
+    Keyboard.dismiss();
     setLoading(true);
+    setError(null);
     try {
-      await authApi.sendOtp(fullPhone);
-      navigation.navigate('OTP', { phone: fullPhone });
-    } catch (err: any) {
-      setError(err.response?.data?.detail || 'Failed to send OTP. Please try again.');
+      const res = await authApi.sendOtp(digitsOnly(phone));
+      navigation.navigate('Otp', {
+        phone: res.phone,
+        expiresInSeconds: res.expires_in_seconds,
+        devOtp: res.dev_otp,
+      });
+    } catch (e) {
+      setError(e instanceof ApiError ? (e.errors?.phone ?? e.message) : 'Could not send OTP');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <SafeAreaView style={styles.inner}>
-        <LoadingOverlay visible={loading} message="Sending OTP..." />
-
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Text style={styles.backText}>←</Text>
+    <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+        <TouchableOpacity onPress={navigation.goBack} style={styles.back} hitSlop={12}>
+          <Text style={styles.backText}>← Back</Text>
         </TouchableOpacity>
 
-        <View style={styles.content}>
-          <Text style={styles.stepLabel}>Step 1 of 2</Text>
-          <Text style={styles.title}>What's your{'\n'}phone number?</Text>
-          <Text style={styles.subtitle}>We'll send you a 6-digit OTP to verify</Text>
+        <View style={styles.body}>
+          <Text style={typography.h1}>Your mobile number</Text>
+          <Text style={styles.subtitle}>We'll send a 6-digit code to verify it's you.</Text>
 
-          <View style={styles.inputRow}>
-            <View style={styles.prefixBox}>
-              <Text style={styles.flag}>🇮🇳</Text>
-              <Text style={styles.prefix}>+91</Text>
-            </View>
+          <View style={[styles.inputRow, error ? styles.inputError : null]}>
+            <Text style={styles.prefix}>🇮🇳 +91</Text>
             <TextInput
-              style={[styles.input, error ? styles.inputError : null]}
+              style={styles.input}
+              value={formatIndianMobile(phone)}
+              onChangeText={(t) => {
+                setPhone(digitsOnly(t).slice(0, 10));
+                setError(null);
+              }}
+              keyboardType="number-pad"
+              textContentType="telephoneNumber"
+              autoComplete="tel"
               placeholder="98765 43210"
               placeholderTextColor={colors.textMuted}
-              keyboardType="phone-pad"
-              value={phone}
-              onChangeText={(t) => {
-                setPhone(t.replace(/\D/g, '').slice(0, 10));
-                setError('');
-              }}
-              maxLength={10}
+              maxLength={11}
               autoFocus
+              returnKeyType="done"
+              onSubmitEditing={submit}
+              accessibilityLabel="Mobile number"
             />
           </View>
+          {error ? <Text style={styles.error}>{error}</Text> : null}
 
-          {error ? <Text style={styles.errorText}>{error}</Text> : null}
-
-          <Text style={styles.privacyNote}>
-            🔒 Your phone number is only used for login. We never share it.
+          <PrimaryButton title="Send OTP" onPress={submit} disabled={!valid} loading={loading} />
+          <Text style={styles.legal}>
+            By continuing you agree to our Terms and Privacy Policy.
           </Text>
         </View>
-
-        <View style={styles.footer}>
-          <PrimaryButton
-            title="Send OTP →"
-            onPress={handleSendOtp}
-            disabled={!isValid}
-            loading={loading}
-          />
-        </View>
-      </SafeAreaView>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
-  inner: { flex: 1 },
-  backButton: {
-    padding: spacing.md,
-    alignSelf: 'flex-start',
-  },
-  backText: { fontSize: 24, color: colors.textPrimary },
-
-  content: { flex: 1, padding: spacing.xl, gap: spacing.md },
-  stepLabel: { ...typography.caption, color: colors.textMuted, textTransform: 'uppercase', letterSpacing: 1 },
-  title: { ...typography.h1, lineHeight: 36 },
-  subtitle: { ...typography.body2, color: colors.textSecondary },
-
+  flex: { flex: 1 },
+  back: { paddingHorizontal: spacing.md, paddingVertical: spacing.sm, alignSelf: 'flex-start' },
+  backText: { ...typography.label, color: colors.primary },
+  body: { flex: 1, padding: spacing.xl, gap: spacing.md },
+  subtitle: { ...typography.body2, marginBottom: spacing.sm },
   inputRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.sm,
-    marginTop: spacing.sm,
-  },
-  prefixBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.surface,
-    borderRadius: borderRadius.md,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 14,
-    gap: spacing.xs,
     borderWidth: 1.5,
     borderColor: colors.border,
-    ...shadows.sm,
-  },
-  flag: { fontSize: 18 },
-  prefix: { ...typography.body1, fontWeight: '600', color: colors.textPrimary },
-
-  input: {
-    flex: 1,
-    backgroundColor: colors.surface,
-    borderRadius: borderRadius.md,
+    borderRadius: borderRadius.lg,
+    backgroundColor: colors.surfaceElevated,
     paddingHorizontal: spacing.md,
-    paddingVertical: 14,
-    fontSize: 20,
-    fontWeight: '600',
-    color: colors.textPrimary,
-    borderWidth: 1.5,
-    borderColor: colors.border,
-    letterSpacing: 2,
-    ...shadows.sm,
+    height: 56,
   },
   inputError: { borderColor: colors.error },
-
-  errorText: { ...typography.caption, color: colors.error },
-  privacyNote: { ...typography.caption, color: colors.textMuted, lineHeight: 18 },
-
-  footer: { padding: spacing.xl, paddingTop: 0 },
+  prefix: { ...typography.h4, marginRight: spacing.sm },
+  input: { flex: 1, ...typography.h4, letterSpacing: 1, paddingVertical: 0 },
+  error: { ...typography.caption, color: colors.error, marginTop: -spacing.sm },
+  legal: { ...typography.caption, textAlign: 'center' },
 });

@@ -1,82 +1,55 @@
 /**
- * WelcomeScreen — App intro, "Never wonder what to wear again"
+ * WelcomeScreen — first screen for signed-out users.
  */
 import React from 'react';
-import {
-  View, Text, StyleSheet, SafeAreaView, Dimensions, TouchableOpacity,
-} from 'react-native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { colors, spacing, borderRadius, typography, shadows } from '../../theme';
-import { PrimaryButton, SecondaryButton } from '../../components/ui';
+import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { PrimaryButton } from '../../components/ui';
+import type { AuthScreenProps } from '../../navigation/types';
+import { borderRadius, colors, shadows, spacing, typography } from '../../theme';
 
-const { width, height } = Dimensions.get('window');
+const FEATURES = [
+  { icon: '🤖', text: 'AI classifies your wardrobe automatically' },
+  { icon: '🌤️', text: 'Weather-aware outfit suggestions every morning' },
+  { icon: '🪔', text: 'Festival looks curated from your own clothes' },
+];
 
-interface Props {
-  navigation: NativeStackNavigationProp<any>;
-}
-
-export default function WelcomeScreen({ navigation }: Props) {
+export default function WelcomeScreen({ navigation }: AuthScreenProps<'Welcome'>) {
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Hero Section */}
+    <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.hero}>
-        <View style={styles.logoContainer}>
-          <View style={styles.logoCircle}>
-            <Text style={styles.logoText}>P</Text>
-          </View>
-          <Text style={styles.appName}>PEHNO</Text>
-          <Text style={styles.tagline}>पहनो</Text>
+        <View style={styles.logoCircle}>
+          <Text style={styles.logoText}>P</Text>
         </View>
+        <Text style={styles.appName}>PEHNO</Text>
+        <Text style={styles.tagline}>पहनो</Text>
 
-        {/* Floating garment emojis */}
         <View style={styles.emojiRow}>
           {['👗', '🥻', '👚', '🧣', '👘'].map((emoji, i) => (
-            <View
-              key={i}
-              style={[
-                styles.emojiCard,
-                { transform: [{ rotate: `${(i - 2) * 8}deg` }] },
-              ]}
-            >
+            <View key={emoji} style={[styles.emojiCard, { transform: [{ rotate: `${(i - 2) * 8}deg` }] }]}>
               <Text style={styles.emoji}>{emoji}</Text>
             </View>
           ))}
         </View>
       </View>
 
-      {/* Bottom Sheet Content */}
-      <View style={styles.bottomSheet}>
+      <View style={styles.sheet}>
         <Text style={styles.headline}>Never wonder{'\n'}what to wear again.</Text>
         <Text style={styles.subtitle}>
-          AI-powered wardrobe intelligence built for India. From Navratri to office, from Diwali to casual — your perfect outfit, every day.
+          AI wardrobe intelligence built for India — from Navratri to office, Diwali to casual.
         </Text>
 
         <View style={styles.features}>
-          {[
-            { icon: '🤖', text: 'AI classifies your wardrobe automatically' },
-            { icon: '🌤️', text: 'Weather-based outfit suggestions daily' },
-            { icon: '🪔', text: 'Festival looks curated from your clothes' },
-          ].map((f, i) => (
-            <View key={i} style={styles.featureRow}>
+          {FEATURES.map((f) => (
+            <View key={f.text} style={styles.featureRow}>
               <Text style={styles.featureIcon}>{f.icon}</Text>
               <Text style={styles.featureText}>{f.text}</Text>
             </View>
           ))}
         </View>
 
-        <PrimaryButton
-          title="Get Started →"
-          onPress={() => navigation.navigate('Phone')}
-        />
-        <Text style={styles.loginLink}>
-          Already have an account?{' '}
-          <Text
-            style={styles.loginLinkBold}
-            onPress={() => navigation.navigate('Phone')}
-          >
-            Sign in
-          </Text>
-        </Text>
+        <PrimaryButton title="Get started" onPress={() => navigation.navigate('Phone')} />
+        <Text style={styles.footnote}>Sign in with your mobile number. No passwords.</Text>
       </View>
     </SafeAreaView>
   );
@@ -84,19 +57,12 @@ export default function WelcomeScreen({ navigation }: Props) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.primary },
-
-  hero: {
-    flex: 0.45,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: spacing.xl,
-  },
-  logoContainer: { alignItems: 'center', marginBottom: spacing.xl },
+  hero: { flex: 0.45, alignItems: 'center', justifyContent: 'center', paddingTop: spacing.lg },
   logoCircle: {
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: colors.accent,
+    backgroundColor: colors.background,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: spacing.sm,
@@ -104,13 +70,8 @@ const styles = StyleSheet.create({
   },
   logoText: { fontSize: 40, fontWeight: '800', color: colors.primary },
   appName: { fontSize: 32, fontWeight: '800', color: colors.background, letterSpacing: 4 },
-  tagline: { fontSize: 14, color: colors.accent, letterSpacing: 2, marginTop: 2 },
-
-  emojiRow: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-    paddingHorizontal: spacing.lg,
-  },
+  tagline: { fontSize: 14, color: colors.primaryContainer, letterSpacing: 2, marginTop: 2, marginBottom: spacing.xl },
+  emojiRow: { flexDirection: 'row', gap: spacing.sm, paddingHorizontal: spacing.lg },
   emojiCard: {
     width: 56,
     height: 72,
@@ -122,8 +83,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255,255,255,0.25)',
   },
   emoji: { fontSize: 32 },
-
-  bottomSheet: {
+  sheet: {
     flex: 0.55,
     backgroundColor: colors.background,
     borderTopLeftRadius: 32,
@@ -132,27 +92,11 @@ const styles = StyleSheet.create({
     paddingTop: spacing.xxl,
     gap: spacing.md,
   },
-  headline: {
-    ...typography.h1,
-    color: colors.textPrimary,
-    lineHeight: 36,
-  },
-  subtitle: {
-    ...typography.body2,
-    color: colors.textSecondary,
-    lineHeight: 22,
-  },
-
+  headline: { ...typography.h1, lineHeight: 36 },
+  subtitle: { ...typography.body2, lineHeight: 22 },
   features: { gap: spacing.sm, marginBottom: spacing.sm },
   featureRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   featureIcon: { fontSize: 18, width: 28 },
   featureText: { ...typography.body2, color: colors.textPrimary, flex: 1 },
-
-  loginLink: {
-    ...typography.body2,
-    textAlign: 'center',
-    color: colors.textSecondary,
-    marginTop: spacing.xs,
-  },
-  loginLinkBold: { color: colors.primary, fontWeight: '700' },
+  footnote: { ...typography.caption, textAlign: 'center' },
 });

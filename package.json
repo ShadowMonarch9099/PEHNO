@@ -2,19 +2,18 @@
   "name": "pehno",
   "version": "1.0.0",
   "private": true,
-  "description": "PEHNO — AI Wardrobe Intelligence Platform for India",
+  "description": "PEHNO \u00e2\u20ac\u201d AI Wardrobe Intelligence Platform for India",
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
   "scripts": {
-    "mobile": "yarn workspace @pehno/mobile start",
+    "mobile": "npm --workspace @pehno/mobile run start",
     "api": "cd apps/api && uvicorn main:app --reload --port 8000",
-    "docker:up": "docker-compose -f infra/docker-compose.yml up -d",
-    "docker:down": "docker-compose -f infra/docker-compose.yml down",
-    "typecheck": "yarn workspaces run typecheck",
-    "lint": "yarn workspaces run lint",
-    "test": "yarn workspaces run test"
+    "docker:up": "docker compose -f infra/docker-compose.yml up -d",
+    "docker:down": "docker compose -f infra/docker-compose.yml down",
+    "typecheck": "tsc --noEmit -p apps/mobile",
+    "test:api": "cd apps/api && pytest -q"
   },
   "devDependencies": {
     "@pehno/config": "*",

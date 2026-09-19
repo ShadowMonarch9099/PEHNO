@@ -1,0 +1,25 @@
+name: Deploy API
+
+# Deploys apps/api to Railway on every push to main once RAILWAY_TOKEN exists in
+# repo secrets. Until then every step is skipped (secrets can't gate a job directly).
+on:
+  push:
+    branches: [main]
+    paths: ["apps/api/**", ".github/workflows/deploy.yml"]
+
+jobs:
+  railway:
+    runs-on: ubuntu-latest
+    env:
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+    steps:
+      - if: env.RAILWAY_TOKEN != ''
+        uses: actions/checkout@v4
+      - if: env.RAILWAY_TOKEN != ''
+        uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - if: env.RAILWAY_TOKEN != ''
+        run: npm i -g @railway/cli
+      - if: env.RAILWAY_TOKEN != ''
+        run: railway up --service pehno-api --detach
+        working-directory: apps/api

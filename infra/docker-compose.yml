@@ -1,0 +1,41 @@
+# Local full-stack: API + Postgres + Redis (+ Celery worker/beat from week 5 onward).
+# Usage: docker compose -f infra/docker-compose.yml up
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: pehno
+      POSTGRES_PASSWORD: pehno
+      POSTGRES_DB: pehno
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pehno"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+    volumes: [redisdata:/data]
+
+  api:
+    build:
+      context: ../apps/api
+      dockerfile: Dockerfile
+    env_file: ../apps/api/.env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://pehno:pehno@db:5432/pehno
+      REDIS_URL: redis://redis:6379/0
+      LOCAL_MEDIA_DIR: /data/media
+    ports: ["8000:8000"]
+    volumes: [media:/data/media]
+    depends_on:
+      db: { condition: service_healthy }
+      redis: { condition: service_started }
+
+volumes:
+  pgdata:
+  redisdata:
+  media:

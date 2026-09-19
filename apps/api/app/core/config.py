@@ -1,52 +1,74 @@
 """
-PEHNO Application Settings (Pydantic v2)
+Application settings.
+
+Every value has a working local default so the API boots with no external
+services. Production overrides come from environment variables / .env.
 """
-from pydantic_settings import BaseSettings
-from pydantic import Field
-from typing import List
-import os
+from functools import lru_cache
+from typing import Literal
+
+from pydantic import Field, field_validator
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    # ── App ──────────────────────────────────────────────────
+    model_config = SettingsConfigDict(env_file=".env", case_sensitive=True, extra="ignore")
+
+    # ── App ──────────────────────────────────────────────────────────────────
     APP_NAME: str = "PEHNO"
-    DEBUG: bool = Field(default=False, alias="DEBUG")
-    ALLOWED_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:8081"]
+    APP_VERSION: str = "0.1.0"
+    APP_ENV: Literal["development", "test", "production"] = "development"
+    DEBUG: bool = True
+    ALLOWED_ORIGINS: list[str] = ["http://localhost:3000", "http://localhost:8081"]
 
-    # ── Database (Supabase / PostgreSQL) ──────────────────────
-    SUPABASE_URL: str = Field(..., alias="SUPABASE_URL")
-    SUPABASE_ANON_KEY: str = Field(..., alias="SUPABASE_ANON_KEY")
-    SUPABASE_SERVICE_KEY: str = Field(..., alias="SUPABASE_SERVICE_KEY")
-    DATABASE_URL: str = Field(..., alias="DATABASE_URL")
+    # ── Database ─────────────────────────────────────────────────────────────
+    DATABASE_URL: str = "sqlite+aiosqlite:///./pehno.db"
 
-    # ── Auth (JWT) ─────────────────────────────────────────────
-    JWT_SECRET: str = Field(..., alias="JWT_SECRET")
+    # ── Auth ─────────────────────────────────────────────────────────────────
+    JWT_SECRET: str = Field(default="insecure-local-dev-secret", min_length=16)
     JWT_ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24  # 24 hours
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
     REFRESH_TOKEN_EXPIRE_DAYS: int = 30
 
-    # ── Redis / Celery ─────────────────────────────────────────
-    REDIS_URL: str = Field(default="redis://localhost:6379", alias="REDIS_URL")
+    # ── OTP ──────────────────────────────────────────────────────────────────
+    OTP_PROVIDER: Literal["console", "msg91"] = "console"
+    OTP_EXPIRE_MINUTES: int = 10
+    OTP_MAX_ATTEMPTS: int = 5
+    OTP_SEND_LIMIT_PER_HOUR: int = 5
+    MSG91_AUTH_KEY: str = ""
+    MSG91_TEMPLATE_ID: str = ""
 
-    # ── OpenWeatherMap ─────────────────────────────────────────
-    OPENWEATHER_API_KEY: str = Field(..., alias="OPENWEATHER_API_KEY")
-    OPENWEATHER_BASE_URL: str = "https://api.openweathermap.org/data/2.5"
-
-    # ── Firebase (FCM) ─────────────────────────────────────────
-    FIREBASE_SERVICE_ACCOUNT_JSON: str = Field(default="", alias="FIREBASE_SERVICE_ACCOUNT_JSON")
-
-    # ── HuggingFace ────────────────────────────────────────────
-    HF_MODEL_NAME: str = "google/vit-base-patch16-224"
-    HF_API_TOKEN: str = Field(default="", alias="HF_API_TOKEN")
-
-    # ── Admin ──────────────────────────────────────────────────
-    ADMIN_EMAIL_DOMAIN: str = Field(default="pehno.in", alias="ADMIN_EMAIL_DOMAIN")
-
-    # ── Storage ────────────────────────────────────────────────
+    # ── Storage ──────────────────────────────────────────────────────────────
+    STORAGE_BACKEND: Literal["local", "supabase"] = "local"
+    LOCAL_MEDIA_DIR: str = "./media"
+    PUBLIC_BASE_URL: str = "http://localhost:8000"
+    SUPABASE_URL: str = ""
+    SUPABASE_SERVICE_KEY: str = ""
     GARMENT_IMAGES_BUCKET: str = "garment-images"
     SIGNED_URL_EXPIRY_SECONDS: int = 3600
 
-    model_config = {"env_file": ".env", "case_sensitive": True, "populate_by_name": True, "extra": "ignore"}
+    # ── Observability ────────────────────────────────────────────────────────
+    SENTRY_DSN: str = ""
+
+    @field_validator("JWT_SECRET")
+    @classmethod
+    def _reject_default_secret_in_prod(cls, v: str, info) -> str:
+        if info.data.get("APP_ENV") == "production" and v == "insecure-local-dev-secret":
+            raise ValueError("JWT_SECRET must be set in production")
+        return v
+
+    @property
+    def is_sqlite(self) -> bool:
+        return self.DATABASE_URL.startswith("sqlite")
+
+    @property
+    def is_production(self) -> bool:
+        return self.APP_ENV == "production"
 
 
-settings = Settings()
+@lru_cache
+def get_settings() -> Settings:
+    return Settings()
+
+
+settings = get_settings()

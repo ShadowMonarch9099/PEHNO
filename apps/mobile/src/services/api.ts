@@ -1,101 +1,84 @@
 /**
- * PEHNO API Client — Axios instance with auth interceptors
+ * Axios client with bearer auth, single-flight refresh, and typed errors.
  */
-import axios, { AxiosInstance, AxiosError } from 'axios';
-import * as SecureStore from 'expo-secure-store';
+import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
+import { tokenStorage } from './tokens';
+import type { ApiErrorBody, TokenResponse } from './types';
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8000';
+export const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:8000';
 
-const apiClient: AxiosInstance = axios.create({
+export class ApiError extends Error {
+  status: number;
+  errors?: Record<string, string>;
+  constructor(status: number, detail: string, errors?: Record<string, string>) {
+    super(detail);
+    this.status = status;
+    this.errors = errors;
+  }
+}
+
+export const api: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 15000,
+  timeout: 15_000,
   headers: { 'Content-Type': 'application/json' },
 });
 
-// ── Request Interceptor — attach JWT ───────────────────────────────────────────
-apiClient.interceptors.request.use(
-  async (config) => {
-    const token = await SecureStore.getItemAsync('access_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error),
-);
+// Called when a refresh fails — the app-level auth store subscribes to this.
+let onSessionExpired: (() => void) | null = null;
+export const setSessionExpiredHandler = (fn: () => void) => {
+  onSessionExpired = fn;
+};
 
-// ── Response Interceptor — handle 401 with token refresh ──────────────────────
-apiClient.interceptors.response.use(
-  (response) => response,
-  async (error: AxiosError) => {
-    const originalRequest = error.config as any;
+api.interceptors.request.use(async (config) => {
+  const tokens = await tokenStorage.get();
+  if (tokens) config.headers.Authorization = `Bearer ${tokens.accessToken}`;
+  return config;
+});
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      try {
-        const refreshToken = await SecureStore.getItemAsync('refresh_token');
-        if (!refreshToken) throw new Error('No refresh token');
+// Coalesce concurrent 401s into one refresh call.
+let refreshInFlight: Promise<string | null> | null = null;
 
-        const { data } = await axios.post(`${API_BASE_URL}/auth/refresh`, {
-          refresh_token: refreshToken,
-        });
+async function refreshAccessToken(): Promise<string | null> {
+  const tokens = await tokenStorage.get();
+  if (!tokens) return null;
+  try {
+    const { data } = await axios.post<TokenResponse>(`${API_BASE_URL}/auth/refresh`, {
+      refresh_token: tokens.refreshToken,
+    });
+    await tokenStorage.set({ accessToken: data.access_token, refreshToken: data.refresh_token });
+    return data.access_token;
+  } catch {
+    await tokenStorage.clear();
+    onSessionExpired?.();
+    return null;
+  }
+}
 
-        await SecureStore.setItemAsync('access_token', data.access_token);
-        await SecureStore.setItemAsync('refresh_token', data.refresh_token);
+type RetriableConfig = InternalAxiosRequestConfig & { _retried?: boolean };
 
-        originalRequest.headers.Authorization = `Bearer ${data.access_token}`;
-        return apiClient(originalRequest);
-      } catch {
-        await SecureStore.deleteItemAsync('access_token');
-        await SecureStore.deleteItemAsync('refresh_token');
-        // Trigger logout — handled by store
+api.interceptors.response.use(
+  (res) => res,
+  async (error: AxiosError<ApiErrorBody>) => {
+    const original = error.config as RetriableConfig | undefined;
+    const isAuthRoute = original?.url?.startsWith('/auth/');
+
+    if (error.response?.status === 401 && original && !original._retried && !isAuthRoute) {
+      original._retried = true;
+      refreshInFlight ??= refreshAccessToken().finally(() => {
+        refreshInFlight = null;
+      });
+      const newToken = await refreshInFlight;
+      if (newToken) {
+        original.headers.Authorization = `Bearer ${newToken}`;
+        return api(original);
       }
     }
-    return Promise.reject(error);
+
+    const status = error.response?.status ?? 0;
+    const body = error.response?.data;
+    const detail =
+      body?.detail ??
+      (status === 0 ? 'Cannot reach the server. Check your connection.' : 'Something went wrong');
+    throw new ApiError(status, detail, body?.errors);
   },
 );
-
-export default apiClient;
-
-// ── API Functions ──────────────────────────────────────────────────────────────
-
-export const authApi = {
-  sendOtp: (phone: string) => apiClient.post('/auth/send-otp', { phone }),
-  verifyOtp: (phone: string, otp: string) => apiClient.post('/auth/verify-otp', { phone, otp }),
-  refresh: (refresh_token: string) => apiClient.post('/auth/refresh', { refresh_token }),
-  logout: () => apiClient.post('/auth/logout'),
-};
-
-export const userApi = {
-  getMe: () => apiClient.get('/users/me'),
-  updateMe: (data: Record<string, unknown>) => apiClient.put('/users/me', data),
-  getStats: () => apiClient.get('/users/me/stats'),
-};
-
-export const wardrobeApi = {
-  upload: (formData: FormData) =>
-    apiClient.post('/wardrobe/upload', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    }),
-  list: (params?: Record<string, string>) => apiClient.get('/wardrobe', { params }),
-  getOne: (id: string) => apiClient.get(`/wardrobe/${id}`),
-  update: (id: string, data: Record<string, unknown>) => apiClient.put(`/wardrobe/${id}`, data),
-  delete: (id: string) => apiClient.delete(`/wardrobe/${id}`),
-  logWear: (id: string) => apiClient.post(`/wardrobe/${id}/wear`),
-};
-
-export const outfitApi = {
-  getDaily: () => apiClient.get('/outfits/daily'),
-  generate: (data: { occasion: string; festival?: string }) =>
-    apiClient.post('/outfits/generate', data),
-  getHistory: (page = 1) => apiClient.get('/outfits/history', { params: { page } }),
-  rate: (id: string, rating: number) => apiClient.post(`/outfits/${id}/rate`, { rating }),
-  save: (id: string) => apiClient.post(`/outfits/${id}/save`),
-  getSaved: () => apiClient.get('/outfits/saved'),
-};
-
-export const festivalApi = {
-  getUpcoming: () => apiClient.get('/festivals/upcoming'),
-  getDetail: (slug: string) => apiClient.get(`/festivals/${slug}`),
-  getNavratriToday: () => apiClient.get('/festivals/navratri/today'),
-};
