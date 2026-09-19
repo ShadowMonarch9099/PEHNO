@@ -338,7 +338,7 @@
       "kerala"
     ],
     "color_guidance": "White (kasavu) is the quintessential Onam color. The traditional Kerala white saree with golden border (Kasavu saree/mundum neriyathum) is the iconic look. Women also wear fresh flower (pookalam) jewelry.",
-    "dress_code": "Women wear the traditional mundum neriyathum (two-piece white and gold saree) or kasavu saree. Men wear the white dhoti (mundu) with golden border and a white shirt. Simplicity and elegance define Onam attire.",
+    "dress_code": "Kasavu saree (off-white with a gold border) or set-mundu; jasmine in the hair. Men: off-white mundu with gold kara. Keep colour minimal — the gold border is the statement.",
     "occasion_tags": [
       "festival",
       "harvest",
@@ -374,7 +374,7 @@
       "karnataka"
     ],
     "color_guidance": "Traditional Kanjivaram silk sarees in bright, auspicious colors — red, green, yellow, and gold. The four days of Pongal each carry significance. Bright, harvest-inspired colors like turmeric yellow, sugarcane green, and sun orange are celebratory.",
-    "dress_code": "Tamil women wear the traditional Kanjivaram or Coimbatore cotton sarees with floral patterns. Men wear dhoti and angavastram. Fresh jasmine flowers in hair are an essential accessory for women.",
+    "dress_code": "Traditional Tamil attire: turmeric-yellow or sun-coloured pattu (silk) saree or pavadai-dhavani; men in veshti and shirt. Yellow and green for the harvest.",
     "occasion_tags": [
       "festival",
       "harvest",
@@ -436,5 +436,515 @@
     },
     "duration_days": 1,
     "lunar_calendar": false
+  },
+  {
+    "name": "Eid ul-Adha",
+    "slug": "eid-ul-adha",
+    "approximate_month": "May-June",
+    "regions": [
+      "pan_india",
+      "hyderabad",
+      "lucknow",
+      "kashmir",
+      "kerala"
+    ],
+    "color_guidance": "White, Cream, Green, Teal, Golden, Beige.",
+    "dress_code": "Crisp whites and pastels for morning prayers; embroidered kurtas, sharara or anarkali sets and modest silhouettes for family feasts.",
+    "occasion_tags": [
+      "festival",
+      "formal",
+      "pooja"
+    ],
+    "avoid_colors": [
+      "black"
+    ],
+    "description": "Festival of sacrifice marked by prayers and shared meals; dressing leans elegant and modest.",
+    "colors": [
+      "white",
+      "cream",
+      "green",
+      "teal",
+      "golden",
+      "beige"
+    ],
+    "navratri_colors": null,
+    "dates": {
+      "2025": "2025-06-07",
+      "2026": "2026-05-27",
+      "2027": "2027-05-17"
+    },
+    "duration_days": 1,
+    "lunar_calendar": true
+  },
+  {
+    "name": "Baisakhi",
+    "slug": "baisakhi",
+    "approximate_month": "April",
+    "regions": [
+      "punjab",
+      "chandigarh",
+      "delhi",
+      "north"
+    ],
+    "color_guidance": "Yellow, Orange, Green, Pink, Golden.",
+    "dress_code": "Bright Punjabi suits, Patiala salwars and Phulkari dupattas; yellow and mustard for the harvest.",
+    "occasion_tags": [
+      "festival",
+      "temple",
+      "casual"
+    ],
+    "avoid_colors": [],
+    "description": "Punjabi harvest new year and founding of the Khalsa; bhangra, gurudwara visits and open-air fairs.",
+    "colors": [
+      "yellow",
+      "orange",
+      "green",
+      "pink",
+      "golden"
+    ],
+    "navratri_colors": null,
+    "dates": {
+      "2025": "2025-04-13",
+      "2026": "2026-04-14",
+      "2027": "2027-04-14"
+    },
+    "duration_days": 1,
+    "lunar_calendar": false
+  },
+  {
+    "name": "Janmashtami",
+    "slug": "janmashtami",
+    "approximate_month": "August-September",
+    "regions": [
+      "pan_india",
+      "maharashtra",
+      "uttar_pradesh",
+      "gujarat"
+    ],
+    "color_guidance": "Yellow, Blue, Navy, Green, Pink.",
+    "dress_code": "Peacock blues and yellows in honour of Krishna; comfortable cotton or chanderi suits for midnight aarti and dahi-handi crowds.",
+    "occasion_tags": [
+      "festival",
+      "pooja",
+      "temple"
+    ],
+    "avoid_colors": [],
+    "description": "Krishna's birthday: midnight celebrations, dahi handi in Maharashtra, Raas in Gujarat.",
+    "colors": [
+      "yellow",
+      "blue",
+      "navy",
+      "green",
+      "pink"
+    ],
+    "navratri_colors": null,
+    "dates": {
+      "2025": "2025-08-16",
+      "2026": "2026-09-04",
+      "2027": "2027-08-25"
+    },
+    "duration_days": 1,
+    "lunar_calendar": true
+  },
+  {
+    "name": "Raksha Bandhan",
+    "slug": "raksha-bandhan",
+    "approximate_month": "August",
+    "regions": [
+      "pan_india"
+    ],
+    "color_guidance": "Pink, Red, Golden, Cream, Green, Yellow.",
+    "dress_code": "Festive but easy: printed kurtas, light silk or chanderi suits, a pretty dupatta — you'll be sitting, eating and travelling between homes.",
+    "occasion_tags": [
+      "festival",
+      "pooja"
+    ],
+    "avoid_colors": [],
+    "description": "Sibling bond festival: tying the rakhi, family lunch, gifts.",
+    "colors": [
+      "pink",
+      "red",
+      "golden",
+      "cream",
+      "green",
+      "yellow"
+    ],
+    "navratri_colors": null,
+    "dates": {
+      "2025": "2025-08-09",
+      "2026": "2026-08-28",
+      "2027": "2027-08-17"
+    },
+    "duration_days": 1,
+    "lunar_calendar": true
+  },
+  {
+    "name": "Karva Chauth",
+    "slug": "karva-chauth",
+    "approximate_month": "October",
+    "regions": [
+      "delhi",
+      "punjab",
+      "chandigarh",
+      "rajasthan",
+      "uttar_pradesh",
+      "north"
+    ],
+    "color_guidance": "Red, Maroon, Pink, Golden, Orange.",
+    "dress_code": "Bridal reds and maroons: heavy lehenga or saree with mehendi and bangles for the evening moonrise ritual.",
+    "occasion_tags": [
+      "festival",
+      "pooja",
+      "wedding_guest"
+    ],
+    "avoid_colors": [
+      "white",
+      "black"
+    ],
+    "description": "Married women fast for their husband's wellbeing, breaking the fast at moonrise dressed as brides.",
+    "colors": [
+      "red",
+      "maroon",
+      "pink",
+      "golden",
+      "orange"
+    ],
+    "navratri_colors": null,
+    "dates": {
+      "2025": "2025-10-10",
+      "2026": "2026-10-29",
+      "2027": "2027-10-18"
+    },
+    "duration_days": 1,
+    "lunar_calendar": true
+  },
+  {
+    "name": "Makar Sankranti",
+    "slug": "makar-sankranti",
+    "approximate_month": "January",
+    "regions": [
+      "pan_india",
+      "gujarat",
+      "maharashtra",
+      "karnataka"
+    ],
+    "color_guidance": "Black, Golden, Yellow, Orange, Green.",
+    "dress_code": "Black is traditional in Maharashtra (with halwa jewellery); bright kite-flying cottons in Gujarat; yellow and green in the south.",
+    "occasion_tags": [
+      "festival",
+      "casual",
+      "pooja"
+    ],
+    "avoid_colors": [],
+    "description": "Harvest festival marking the sun's northward journey: kites, til-gul sweets, holy dips.",
+    "colors": [
+      "black",
+      "golden",
+      "yellow",
+      "orange",
+      "green"
+    ],
+    "navratri_colors": null,
+    "dates": {
+      "2025": "2025-01-14",
+      "2026": "2026-01-14",
+      "2027": "2027-01-14"
+    },
+    "duration_days": 1,
+    "lunar_calendar": false
+  },
+  {
+    "name": "Ugadi",
+    "slug": "ugadi",
+    "approximate_month": "March-April",
+    "regions": [
+      "andhra_pradesh",
+      "telangana",
+      "karnataka"
+    ],
+    "color_guidance": "Yellow, Green, White, Golden, Orange.",
+    "dress_code": "New silk saree or pattu langa; men in white dhoti-kurta. Fresh, auspicious colours for the year's first day.",
+    "occasion_tags": [
+      "festival",
+      "pooja",
+      "temple"
+    ],
+    "avoid_colors": [],
+    "description": "Telugu and Kannada new year with pachadi (six tastes), new clothes and temple visits.",
+    "colors": [
+      "yellow",
+      "green",
+      "white",
+      "golden",
+      "orange"
+    ],
+    "navratri_colors": null,
+    "dates": {
+      "2025": "2025-03-30",
+      "2026": "2026-03-19",
+      "2027": "2027-04-07"
+    },
+    "duration_days": 1,
+    "lunar_calendar": true
+  },
+  {
+    "name": "Gudi Padwa",
+    "slug": "gudi-padwa",
+    "approximate_month": "March-April",
+    "regions": [
+      "maharashtra",
+      "goa"
+    ],
+    "color_guidance": "Golden, Yellow, Green, Orange, Maroon.",
+    "dress_code": "Nauvari or Paithani saree with nath and gajra for the shobha yatra; cotton or silk kurta-dhoti for men.",
+    "occasion_tags": [
+      "festival",
+      "pooja",
+      "temple"
+    ],
+    "avoid_colors": [],
+    "description": "Marathi new year: hoisting the gudi, morning processions, shrikhand-puri.",
+    "colors": [
+      "golden",
+      "yellow",
+      "green",
+      "orange",
+      "maroon"
+    ],
+    "navratri_colors": null,
+    "dates": {
+      "2025": "2025-03-30",
+      "2026": "2026-03-19",
+      "2027": "2027-04-07"
+    },
+    "duration_days": 1,
+    "lunar_calendar": true
+  },
+  {
+    "name": "Bihu",
+    "slug": "bihu",
+    "approximate_month": "April",
+    "regions": [
+      "assam"
+    ],
+    "color_guidance": "Red, Golden, Cream, White.",
+    "dress_code": "Muga silk mekhela chador with red gamusa accents; Bihu dance colours are cream, gold and red.",
+    "occasion_tags": [
+      "festival",
+      "casual"
+    ],
+    "avoid_colors": [],
+    "description": "Assamese new year (Bohag/Rongali Bihu): folk dance, feasts, gamusa gifting.",
+    "colors": [
+      "red",
+      "golden",
+      "cream",
+      "white"
+    ],
+    "navratri_colors": null,
+    "dates": {
+      "2025": "2025-04-14",
+      "2026": "2026-04-14",
+      "2027": "2027-04-14"
+    },
+    "duration_days": 7,
+    "lunar_calendar": false
+  },
+  {
+    "name": "Lohri",
+    "slug": "lohri",
+    "approximate_month": "January",
+    "regions": [
+      "punjab",
+      "chandigarh",
+      "delhi",
+      "north"
+    ],
+    "color_guidance": "Red, Orange, Yellow, Maroon, Golden.",
+    "dress_code": "Warm winter festive: Phulkari over a woollen or velvet suit, bright dupatta for the bonfire and gidda.",
+    "occasion_tags": [
+      "festival",
+      "casual"
+    ],
+    "avoid_colors": [],
+    "description": "Punjabi winter harvest bonfire festival: peanuts, rewri, gidda and bhangra.",
+    "colors": [
+      "red",
+      "orange",
+      "yellow",
+      "maroon",
+      "golden"
+    ],
+    "navratri_colors": null,
+    "dates": {
+      "2025": "2025-01-13",
+      "2026": "2026-01-13",
+      "2027": "2027-01-13"
+    },
+    "duration_days": 1,
+    "lunar_calendar": false
+  },
+  {
+    "name": "New Year",
+    "slug": "new-year",
+    "approximate_month": "December-January",
+    "regions": [
+      "pan_india"
+    ],
+    "color_guidance": "Black, Golden, Red, Navy, Purple, White.",
+    "dress_code": "Party wear: indo-western, sequined or satin pieces, metallic accents. Cocktail formal.",
+    "occasion_tags": [
+      "night_out",
+      "formal"
+    ],
+    "avoid_colors": [],
+    "description": "New Year's Eve parties and day-one brunches.",
+    "colors": [
+      "black",
+      "golden",
+      "red",
+      "navy",
+      "purple",
+      "white"
+    ],
+    "navratri_colors": null,
+    "dates": {
+      "2025": "2025-12-31",
+      "2026": "2026-12-31",
+      "2027": "2027-12-31"
+    },
+    "duration_days": 1,
+    "lunar_calendar": false
+  },
+  {
+    "name": "Maha Shivratri",
+    "slug": "maha-shivratri",
+    "approximate_month": "February-March",
+    "regions": [
+      "pan_india"
+    ],
+    "color_guidance": "White, Cream, Green, Yellow, Orange.",
+    "dress_code": "Simple and pure for temple night vigils: white or pastel cotton and khadi, minimal embellishment.",
+    "occasion_tags": [
+      "pooja",
+      "temple"
+    ],
+    "avoid_colors": [
+      "black"
+    ],
+    "description": "Night-long worship of Shiva with fasting and temple visits.",
+    "colors": [
+      "white",
+      "cream",
+      "green",
+      "yellow",
+      "orange"
+    ],
+    "navratri_colors": null,
+    "dates": {
+      "2025": "2025-02-26",
+      "2026": "2026-02-15",
+      "2027": "2027-03-06"
+    },
+    "duration_days": 1,
+    "lunar_calendar": true
+  },
+  {
+    "name": "Ram Navami",
+    "slug": "ram-navami",
+    "approximate_month": "March-April",
+    "regions": [
+      "pan_india",
+      "uttar_pradesh"
+    ],
+    "color_guidance": "Orange, Yellow, Golden, White, Cream.",
+    "dress_code": "Saffron and yellow for processions and temple pooja; cotton or chanderi suits and sarees.",
+    "occasion_tags": [
+      "pooja",
+      "temple",
+      "festival"
+    ],
+    "avoid_colors": [],
+    "description": "Birth of Rama: processions, bhajans, temple visits.",
+    "colors": [
+      "orange",
+      "yellow",
+      "golden",
+      "white",
+      "cream"
+    ],
+    "navratri_colors": null,
+    "dates": {
+      "2025": "2025-04-06",
+      "2026": "2026-03-26",
+      "2027": "2027-04-15"
+    },
+    "duration_days": 1,
+    "lunar_calendar": true
+  },
+  {
+    "name": "Hanuman Jayanti",
+    "slug": "hanuman-jayanti",
+    "approximate_month": "April",
+    "regions": [
+      "pan_india"
+    ],
+    "color_guidance": "Orange, Red, Yellow, Golden.",
+    "dress_code": "Saffron and red for morning temple visits; simple cotton or silk-cotton.",
+    "occasion_tags": [
+      "pooja",
+      "temple"
+    ],
+    "avoid_colors": [],
+    "description": "Birth of Hanuman: early temple visits and sundar kand recitals.",
+    "colors": [
+      "orange",
+      "red",
+      "yellow",
+      "golden"
+    ],
+    "navratri_colors": null,
+    "dates": {
+      "2025": "2025-04-12",
+      "2026": "2026-04-01",
+      "2027": "2027-04-21"
+    },
+    "duration_days": 1,
+    "lunar_calendar": true
+  },
+  {
+    "name": "Guru Nanak Jayanti",
+    "slug": "guru-nanak-jayanti",
+    "approximate_month": "November",
+    "regions": [
+      "punjab",
+      "chandigarh",
+      "delhi",
+      "pan_india"
+    ],
+    "color_guidance": "White, Cream, Yellow, Orange, Golden.",
+    "dress_code": "Modest and covered for the gurudwara: white or pastel suits with a dupatta over the head; Phulkari for the nagar kirtan.",
+    "occasion_tags": [
+      "temple",
+      "festival",
+      "pooja"
+    ],
+    "avoid_colors": [],
+    "description": "Gurpurab: prabhat pheris, nagar kirtan, langar.",
+    "colors": [
+      "white",
+      "cream",
+      "yellow",
+      "orange",
+      "golden"
+    ],
+    "navratri_colors": null,
+    "dates": {
+      "2025": "2025-11-05",
+      "2026": "2026-11-24",
+      "2027": "2027-11-14"
+    },
+    "duration_days": 1,
+    "lunar_calendar": true
   }
 ]

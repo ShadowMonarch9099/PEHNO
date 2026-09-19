@@ -220,3 +220,95 @@ async def test_push_open_is_recorded_once(client, db):
     assert (
         await client.post(f"/notifications/{entry.id}/opened", headers=other)
     ).status_code == 404
+
+
+# ── weeks 25–28: expansion ───────────────────────────────────────────────────
+
+
+def test_calendar_has_25_festivals_with_dates_and_colours():
+    from app import knowledge
+
+    fs_all = knowledge.festivals()
+    assert len(fs_all) == 25
+    for f in fs_all:
+        assert set(f["dates"]) >= {"2025", "2026", "2027"}, f["slug"]
+        assert f["colors"] and f["dress_code"] and f["regions"], f["slug"]
+    slugs = {f["slug"] for f in fs_all}
+    assert {
+        "eid-ul-adha",
+        "baisakhi",
+        "karva-chauth",
+        "ugadi",
+        "bihu",
+        "lohri",
+        "guru-nanak-jayanti",
+    } <= slugs
+
+
+def test_regional_festivals_reach_new_cities():
+    assert fs.is_relevant(fs.by_slug("baisakhi"), "Amritsar")  # Punjab was missing before
+    assert fs.is_relevant(fs.by_slug("bihu"), "Guwahati")
+    assert fs.is_relevant(fs.by_slug("ugadi"), "Visakhapatnam")
+    assert not fs.is_relevant(fs.by_slug("bihu"), "Mumbai")
+    assert "kasavu" in fs.by_slug("onam")["dress_code"].lower()
+
+
+def test_wedding_sub_events_are_occasions_with_palettes():
+    from app import knowledge
+
+    for slug in ("mehendi", "sangeet", "haldi", "baraat", "reception"):
+        o = knowledge.occasion(slug)
+        assert (
+            o and o["parent"] == "wedding_guest" and o["palette"] and o["garment_preference"]
+        ), slug
+    assert knowledge.occasion_parent("mehendi") == "wedding_guest"
+    assert knowledge.occasion_parent("office") is None
+
+
+def test_engine_dresses_for_a_wedding_sub_event():
+    import uuid
+    from datetime import UTC, datetime
+
+    from app.models.garment import ClassificationStatus, Garment
+    from app.services import outfit_engine as engine
+    from app.services.weather.base import Weather
+
+    def g(t, f, c):
+        return Garment(
+            id=uuid.uuid4(),
+            user_id=uuid.uuid4(),
+            image_key="x",
+            garment_type=t,
+            fabric_type=f,
+            color_primary=c,
+            occasion_tags=["wedding_guest"],
+            season_tags=[],
+            classification_status=ClassificationStatus.complete,
+        )
+
+    yellow = g("lehenga", "georgette", "yellow")
+    black = g("lehenga", "georgette", "black")
+    kw = dict(
+        weather=Weather("Delhi", 28, 28, 50, "sunny", "transition", "test"),
+        user=engine.UserContext(),
+        festival=None,
+        history=engine.History(),
+        now=datetime.now(UTC),
+    )
+    y = engine.score_garment(yellow, occasion="mehendi", **kw)
+    b = engine.score_garment(black, occasion="mehendi", **kw)
+    assert y.score > b.score
+    assert any("Mehendi colour" in r for r in y.reasons) and any(
+        "best avoided" in r for r in b.reasons
+    )
+    assert any("Wedding-ready" in r for r in y.reasons)  # parent tag fallback
+
+
+async def test_generate_accepts_sub_event_occasions(client):
+    h = auth_headers(await login(client))
+    await _add(client, h, "lehenga", "georgette", "yellow", ["wedding_guest"])
+    r = await client.post("/outfits/generate", json={"occasion": "mehendi"}, headers=h)
+    assert r.status_code == 201, r.text
+    assert r.json()["options"] and r.json()["options"][0]["occasion"] == "mehendi"
+    opts = (await client.get("/meta/wardrobe-options")).json()
+    assert {"slug": "sangeet", "label": "Sangeet"} in opts["occasions"]

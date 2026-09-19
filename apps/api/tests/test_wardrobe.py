@@ -211,4 +211,4 @@ async def test_meta_options_and_cities(client):
     assert [s["slug"] for s in o["seasons"]] == ["summer", "monsoon", "winter", "all_season"]
     assert len(o["regional_styles"]) == 5
     r = await client.get("/meta/cities")
-    assert r.status_code == 200 and len(r.json()) == 20 and r.json()[0]["name"] == "Mumbai"
+    assert r.status_code == 200 and len(r.json()) >= 30 and r.json()[0]["name"] == "Mumbai"

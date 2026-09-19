@@ -49,9 +49,12 @@ def _taxonomy() -> dict[str, dict]:
 
 
 def suits(g: Garment, occasion: str) -> bool:
-    if occasion in (g.occasion_tags or []):
+    tags = g.occasion_tags or []
+    suitability = _taxonomy().get(g.garment_type, {}).get("occasion_suitability", [])
+    if occasion in tags or occasion in suitability:
         return True
-    return occasion in _taxonomy().get(g.garment_type, {}).get("occasion_suitability", [])
+    parent = knowledge.occasion_parent(occasion)
+    return bool(parent) and (parent in tags or parent in suitability)
 
 
 def _harmonises(a: str, b: str) -> bool:

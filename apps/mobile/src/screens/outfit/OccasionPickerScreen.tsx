@@ -19,7 +19,14 @@ const EMOJI: Record<string, string> = {
   formal: '🥂',
   night_out: '🌙',
   temple: '🛕',
+  mehendi: '🌿',
+  sangeet: '💃',
+  haldi: '🌼',
+  baraat: '🐎',
+  reception: '🥂',
 };
+
+const WEDDING = new Set(['mehendi', 'sangeet', 'haldi', 'baraat', 'reception']);
 
 export default function OccasionPickerScreen({ navigation }: OutfitScreenProps<'OccasionPicker'>) {
   const { options, load } = useMetaStore();
@@ -30,13 +37,29 @@ export default function OccasionPickerScreen({ navigation }: OutfitScreenProps<'
   return (
     <SafeAreaView style={styles.container}>
       <ScreenHeader title="What's the occasion?" subtitle="We'll pick from your wardrobe for today's weather." onBack={navigation.goBack} />
-      <ScrollView contentContainerStyle={styles.grid}>
-        {options.occasions.map((o) => (
-          <TouchableOpacity key={o.slug} style={styles.card} onPress={() => navigation.navigate('OutfitResult', { occasion: o.slug })} accessibilityRole="button">
-            <Text style={styles.emoji}>{EMOJI[o.slug] ?? '👗'}</Text>
-            <Text style={styles.label}>{o.label}</Text>
-          </TouchableOpacity>
-        ))}
+      <ScrollView contentContainerStyle={styles.body}>
+        <View style={styles.grid}>
+          {options.occasions.filter((o) => !WEDDING.has(o.slug)).map((o) => (
+            <TouchableOpacity key={o.slug} style={styles.card} onPress={() => navigation.navigate('OutfitResult', { occasion: o.slug })} accessibilityRole="button">
+              <Text style={styles.emoji}>{EMOJI[o.slug] ?? '👗'}</Text>
+              <Text style={styles.label}>{o.label}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        {options.occasions.some((o) => WEDDING.has(o.slug)) ? (
+          <>
+            <Text style={styles.sectionTitle}>Wedding week</Text>
+            <Text style={styles.sectionSub}>Each function has its own dress code and palette.</Text>
+            <View style={styles.grid}>
+              {options.occasions.filter((o) => WEDDING.has(o.slug)).map((o) => (
+                <TouchableOpacity key={o.slug} style={[styles.card, styles.cardWedding]} onPress={() => navigation.navigate('OutfitResult', { occasion: o.slug })} accessibilityRole="button">
+                  <Text style={styles.emoji}>{EMOJI[o.slug] ?? '💍'}</Text>
+                  <Text style={styles.label}>{o.label}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </>
+        ) : null}
         {!options.occasions.length ? (
           <View style={styles.empty}>
             <Text style={typography.body2}>Connect to the API to load occasions.</Text>
@@ -49,7 +72,11 @@ export default function OccasionPickerScreen({ navigation }: OutfitScreenProps<'
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
-  grid: { padding: spacing.xl, flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md },
+  body: { padding: spacing.xl, gap: spacing.md },
+  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md },
+  sectionTitle: { ...typography.h3, marginTop: spacing.sm },
+  sectionSub: { ...typography.caption, marginTop: -spacing.sm },
+  cardWedding: { backgroundColor: colors.background, borderWidth: 1, borderColor: colors.primaryContainer },
   card: { width: '47%', aspectRatio: 1.1, borderRadius: borderRadius.xl, backgroundColor: colors.surfaceElevated, alignItems: 'center', justifyContent: 'center', gap: spacing.sm, ...shadows.sm },
   emoji: { fontSize: 36 },
   label: { ...typography.h4, textAlign: 'center' },

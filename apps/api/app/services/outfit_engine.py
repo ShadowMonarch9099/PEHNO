@@ -38,6 +38,8 @@ W_COLOR_CLASH = -0.7
 W_SKIN_TONE = 0.25
 W_FESTIVAL_COLOR = 1.0
 W_FESTIVAL_TAG = 0.6
+W_PALETTE_MATCH = 0.8  # occasion palette (wedding sub-events)
+W_PALETTE_AVOID = -1.2
 W_RECENT_WEAR = -1.0
 W_NEVER_WORN = 0.3
 W_VERIFIED = 0.2
@@ -146,15 +148,32 @@ def score_garment(
     elif ratings and season == "transition":
         score += 0.3  # pleasant weather: most fabrics fine
 
-    # 2. Occasion
+    # 2. Occasion (wedding sub-events fall back to their parent's tags)
     occ = _occasion(occasion)
-    if occasion in (g.occasion_tags or []):
+    parent = occ.get("parent")
+    suitability = _taxonomy().get(g.garment_type, {}).get("occasion_suitability", [])
+    tags = g.occasion_tags or []
+    if occasion in tags:
         score += W_OCCASION_TAGGED
         reasons.append(f"Tagged for {occ.get('label', occasion)}")
-    elif occasion in _taxonomy().get(g.garment_type, {}).get("occasion_suitability", []):
+    elif parent and parent in tags:
+        score += W_OCCASION_TAGGED * 0.8
+        reasons.append(f"Wedding-ready piece for the {occ.get('label', occasion).lower()}")
+    elif occasion in suitability or (parent and parent in suitability):
         score += W_OCCASION_TAXONOMY
     else:
         score += W_OCCASION_MISS
+    if g.garment_type in occ.get("garment_preference", []):
+        score += W_OCCASION_TAXONOMY
+    if occ.get("palette"):
+        if g.color_primary in occ["palette"]:
+            score += W_PALETTE_MATCH
+            reasons.append(f"{g.color_primary.title()} is a {occ.get('label', occasion)} colour")
+        elif g.color_primary in occ.get("avoid_colors", []):
+            score += W_PALETTE_AVOID
+            reasons.append(
+                f"{g.color_primary.title()} is best avoided at a {occ.get('label', occasion).lower()}"
+            )
     if fabric in occ.get("fabric_preference", []):
         score += W_FABRIC_PREF
     if fabric in occ.get("avoid_fabrics", []):

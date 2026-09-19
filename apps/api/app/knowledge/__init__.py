@@ -78,5 +78,15 @@ def occasion_slugs() -> set[str]:
     return {o["slug"] for o in occasions()}
 
 
+def occasion(slug: str) -> dict | None:
+    return next((o for o in occasions() if o["slug"] == slug), None)
+
+
+def occasion_parent(slug: str) -> str | None:
+    """Wedding sub-events (mehendi, sangeet, …) inherit tags from `wedding_guest`."""
+    o = occasion(slug)
+    return o.get("parent") if o else None
+
+
 def city_names() -> set[str]:
     return {c["name"] for c in cities()}

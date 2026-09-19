@@ -78,8 +78,15 @@ Status: ✅ done · 🔧 in progress · ⬜ not started · ⚠️ deviates from 
 | Weeks 18–19 — Affiliate commerce | ✅ structure / ⚠️ partners | Myntra/Ajio/Nykaa/Meesho have no public product APIs: cards are curated per-platform *searches* wrapped in a configurable network deep-link template with our click id as `subid`. Real product cards arrive when a partner catalogue is approved (`ProductSource` seam). Admin dashboard app itself is still pending; `/admin/metrics` feeds it. |
 | Weeks 20–21 — Fabric care & ROI | ✅ | Care profiles stay free; wear-threshold *reminders* are Plus. |
 | Weeks 22–24 — Shopping scan mode | ✅ | Barcode scanning (blueprint's 'extended version') not built — no fabric-composition data source exists. |
-| Weeks 25–28 — Festival expansion & cities | ⬜ | |
+| Weeks 25–28 — Festival expansion & cities | ✅ data & engine / ⬜ growth | ⚠️ 15 new lunar dates are hand-entered (2025–2027) — verify yearly. Influencer push in Pune/Hyderabad/Chennai/Kolkata is an ops task. |
 | Admin dashboard (Phase 2 pages) | ⬜ | |
+
+### Weeks 25–28 deliverables
+- [x] `festivals.json` 10 → 25 (Eid ul-Adha, Baisakhi, Janmashtami, Raksha Bandhan, Karva Chauth, Makar Sankranti, Ugadi, Gudi Padwa, Bihu, Lohri, New Year, Maha Shivratri, Ram Navami, Hanuman Jayanti, Guru Nanak Jayanti) with dates, regions, palettes, dress codes; Onam (kasavu) and Pongal (Tamil traditional) dress codes rewritten
+- [x] Wedding sub-events in `occasions.json` (mehendi, sangeet, haldi, baraat, reception) with `parent`, `palette`, `avoid_colors`, `garment_preference`, fabric prefs; engine scores palette matches/avoids and falls back to the parent tag; `suits()` (gap / scan / care) inherits the parent
+- [x] `cities.json` 20 → 30 (Punjab was missing entirely: Amritsar, Ludhiana; plus Visakhapatnam, Mysuru, Madurai, Vadodara, Patna, Ranchi, Bhopal, Dehradun)
+- [x] Mobile: OccasionPicker groups a "Wedding week" section with the five functions
+- [x] 5 new tests (135 total)
 
 ### Weeks 22–24 deliverables
 - [x] `scan_service.py`: image pipeline → the one classifier (rule 5) → hypothetical garment in the combination graph → compatibility 0–100 (share of eligible partners × new looks), `pairs_with`, distinct `new_outfits`, duplicate detection (type+colour = "very similar", +fabric = "near-identical"), fabric-vs-season note for the user's city, buy/maybe/skip verdict with rationale; graceful "unknown" path
