@@ -14,8 +14,8 @@ from app.models.garment import ClassificationStatus, Garment
 from app.models.outfit import Outfit
 from app.models.user import User
 from app.schemas.outfit import OutfitOut, WeatherOut
+from app.services import analytics, wardrobe_service
 from app.services import outfit_engine as engine
-from app.services import wardrobe_service
 from app.services.weather import Weather, get_weather
 
 IST = timezone(timedelta(hours=5, minutes=30))
@@ -52,33 +52,40 @@ def weather_out(w: Weather) -> WeatherOut:
     )
 
 
-async def to_out(db: AsyncSession, outfit: Outfit) -> OutfitOut:
-    ids = [uuid.UUID(g) for g in outfit.garment_ids]
+async def to_out_many(db: AsyncSession, outfits: list[Outfit]) -> list[OutfitOut]:
+    """Serialise a page of outfits with one garment query (no N+1)."""
+    ids = {uuid.UUID(g) for o in outfits for g in o.garment_ids}
     rows = (
         (await db.execute(select(Garment).where(Garment.id.in_(ids)))).scalars().all()
         if ids
         else []
     )
-    by_id = {str(g.id): g for g in rows}
-    garments = [wardrobe_service.to_out(by_id[g]) for g in outfit.garment_ids if g in by_id]
-    return OutfitOut(
-        id=outfit.id,
-        occasion=outfit.occasion,
-        festival=outfit.festival,
-        garments=garments,
-        weather_condition=outfit.weather_condition,
-        temperature_celsius=outfit.temperature_celsius,
-        season=outfit.season,
-        score=outfit.score,
-        rationale=outfit.rationale,
-        feedback=outfit.feedback,
-        is_saved=outfit.is_saved,
-        is_daily=outfit.is_daily,
-        for_date=outfit.for_date,
-        batch_id=outfit.batch_id,
-        worn_at=outfit.worn_at,
-        created_at=outfit.created_at,
-    )
+    by_id = {str(g.id): wardrobe_service.to_out(g) for g in rows}
+    return [
+        OutfitOut(
+            id=o.id,
+            occasion=o.occasion,
+            festival=o.festival,
+            garments=[by_id[g] for g in o.garment_ids if g in by_id],
+            weather_condition=o.weather_condition,
+            temperature_celsius=o.temperature_celsius,
+            season=o.season,
+            score=o.score,
+            rationale=o.rationale,
+            feedback=o.feedback,
+            is_saved=o.is_saved,
+            is_daily=o.is_daily,
+            for_date=o.for_date,
+            batch_id=o.batch_id,
+            worn_at=o.worn_at,
+            created_at=o.created_at,
+        )
+        for o in outfits
+    ]
+
+
+async def to_out(db: AsyncSession, outfit: Outfit) -> OutfitOut:
+    return (await to_out_many(db, [outfit]))[0]
 
 
 # ── inputs for the engine ────────────────────────────────────────────────────
@@ -201,6 +208,16 @@ async def generate(
         for_date=for_date,
     )
     await db.flush()
+    analytics.track(
+        user.id,
+        analytics.OUTFIT_GENERATED,
+        occasion=occasion,
+        festival=festival.slug if festival else None,
+        options=len(rows),
+        wardrobe_size=len(garments),
+        is_daily=is_daily,
+        weather_source=weather.source,
+    )
     return weather, rows, hint
 
 
@@ -247,12 +264,17 @@ async def get_owned(db: AsyncSession, user: User, outfit_id: uuid.UUID) -> Outfi
 async def set_feedback(db: AsyncSession, outfit: Outfit, value: int) -> Outfit:
     outfit.feedback = value
     await db.flush()
+    analytics.track(
+        outfit.user_id, analytics.OUTFIT_FEEDBACK, value=value, occasion=outfit.occasion
+    )
     return outfit
 
 
 async def toggle_saved(db: AsyncSession, outfit: Outfit, saved: bool) -> Outfit:
     outfit.is_saved = saved
     await db.flush()
+    if saved:
+        analytics.track(outfit.user_id, analytics.OUTFIT_SAVED, occasion=outfit.occasion)
     return outfit
 
 
@@ -267,6 +289,9 @@ async def wear(db: AsyncSession, outfit: Outfit) -> Outfit:
     if outfit.feedback is None:
         outfit.feedback = 1  # wearing it is the strongest "like"
     await db.flush()
+    analytics.track(
+        outfit.user_id, analytics.OUTFIT_WORN, occasion=outfit.occasion, is_daily=outfit.is_daily
+    )
     return outfit
 
 

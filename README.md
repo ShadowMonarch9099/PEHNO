@@ -9,7 +9,7 @@
 
 PEHNO digitises an Indian wardrobe (ethnic, fusion, western), classifies every garment with vision AI, and recommends outfits using live weather, Indian occasions, the festival calendar, fabric–weather rules and personal style.
 
-- **Plan:** [docs/build-plan.md](docs/build-plan.md) (52 weeks, 3 phases) · **Status:** [docs/progress.md](docs/progress.md) · **Decisions:** [docs/decisions.md](docs/decisions.md)
+- **Plan:** [docs/build-plan.md](docs/build-plan.md) (52 weeks, 3 phases) · **Status:** [docs/progress.md](docs/progress.md) · **Decisions:** [docs/decisions.md](docs/decisions.md) · **Launch:** [docs/launch-checklist.md](docs/launch-checklist.md)
 
 ## Repository
 
@@ -68,6 +68,7 @@ npx tsc --noEmit -p apps/mobile
 | `OPENWEATHER_API_KEY` | empty (monthly climatology per city) | live weather |
 | `FIREBASE_SERVICE_ACCOUNT` | empty (console notifier) | FCM push |
 | `CELERY_BROKER_URL` | empty (in-process jobs) | Redis; run `celery -A app.tasks worker` and `celery -A app.tasks beat` |
+| `POSTHOG_API_KEY` | empty (events logged) | PostHog analytics |
 | `SENTRY_DSN` | empty (disabled) | your DSN |
 
 Full-stack locally with Docker: `docker compose -f infra/docker-compose.yml up`.
@@ -86,7 +87,8 @@ GET  /outfits/daily        POST /outfits/generate    GET  /outfits/history     G
 POST /outfits/{id}/feedback  POST|DELETE /outfits/{id}/save  POST /outfits/{id}/wear
 GET  /festivals/upcoming   GET  /festivals/{slug}    GET  /festivals/navratri/today
 GET  /meta/wardrobe-options                          GET  /meta/cities
-GET  /media/{key}          (local storage backend only)
+POST /notifications/{id}/opened
+GET  /media/{key}?exp&sig  (local storage backend; signed URLs)
 ```
 
 ## Contributing

@@ -173,3 +173,35 @@ async def test_festival_alert_job_dedupes(client, monkeypatch, caplog):
     assert first["sent"] >= 1 and first["failed"] == 0
     assert second["sent"] == 0 and second["skipped"] == first["sent"]  # log prevents repeats
     assert any("Diwali in 14 days" in m for m in caplog.messages)
+
+
+async def test_push_open_is_recorded_once(client, db):
+    from sqlalchemy import select
+
+    from app.models.notification import NotificationLog
+    from app.tasks.daily_outfit_push import push_daily_outfits
+
+    h = auth_headers(await login(client))
+    await _add(client, h, "kurta", "cotton", "white", ["office", "casual"])
+    await _add(client, h, "palazzo", "cotton", "navy", ["office", "casual"])
+    await client.put(
+        "/users/me", json={"onboarding_complete": True, "fcm_token": "tok-abcdef0123"}, headers=h
+    )
+    assert (await push_daily_outfits())["sent"] == 1
+    assert (await push_daily_outfits())["skipped"] == 1  # one push per day per user
+
+    entry = (await db.execute(select(NotificationLog))).scalar_one()
+    assert entry.kind == "daily_outfit" and entry.opened_at is None
+    r = await client.post(f"/notifications/{entry.id}/opened", headers=h)
+    assert r.status_code == 200
+    await db.refresh(entry)
+    assert entry.opened_at is not None
+    first_open = entry.opened_at
+    await client.post(f"/notifications/{entry.id}/opened", headers=h)  # idempotent
+    await db.refresh(entry)
+    assert entry.opened_at == first_open
+
+    other = auth_headers(await login(client, "9123456789"))
+    assert (
+        await client.post(f"/notifications/{entry.id}/opened", headers=other)
+    ).status_code == 404

@@ -8,11 +8,20 @@ from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from fastapi.staticfiles import StaticFiles
 
 from app.core.config import settings
 from app.core.observability import setup_logging, setup_sentry
-from app.routers import auth, festivals, health, meta, outfits, users, wardrobe
+from app.routers import (
+    auth,
+    festivals,
+    health,
+    media,
+    meta,
+    notifications,
+    outfits,
+    users,
+    wardrobe,
+)
 
 
 @asynccontextmanager
@@ -48,12 +57,11 @@ def create_app() -> FastAPI:
     app.include_router(wardrobe.router)
     app.include_router(outfits.router)
     app.include_router(festivals.router)
+    app.include_router(notifications.router)
     app.include_router(meta.router)
 
     if settings.STORAGE_BACKEND == "local":
-        media_dir = Path(settings.LOCAL_MEDIA_DIR)
-        media_dir.mkdir(parents=True, exist_ok=True)
-        app.mount("/media", StaticFiles(directory=str(media_dir)), name="media")
+        app.include_router(media.router)  # signed-URL image serving
 
     @app.exception_handler(RequestValidationError)
     async def _validation_handler(_: Request, exc: RequestValidationError) -> JSONResponse:

@@ -8,6 +8,7 @@ from app.core.security import CurrentUser, DbSession
 from app.models.garment import Garment
 from app.models.outfit import Outfit
 from app.schemas.user import UserOut, UserStats, UserUpdate
+from app.services import analytics
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -19,9 +20,15 @@ async def get_me(user: CurrentUser) -> UserOut:
 
 @router.put("/me", response_model=UserOut)
 async def update_me(body: UserUpdate, user: CurrentUser, db: DbSession) -> UserOut:
-    for field, value in body.model_dump(exclude_unset=True).items():
+    changes = body.model_dump(exclude_unset=True)
+    newly_onboarded = changes.get("onboarding_complete") and not user.onboarding_complete
+    for field, value in changes.items():
         setattr(user, field, value)
     await db.flush()
+    if newly_onboarded:
+        analytics.track(
+            user.id, analytics.ONBOARDING_COMPLETED, city=user.city, style=user.regional_style
+        )
     return user
 
 

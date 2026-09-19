@@ -17,7 +17,7 @@ router = APIRouter(prefix="/outfits", tags=["outfits"])
 async def _options_out(db, weather, rows, hint, batch_id=None) -> OutfitOptionsOut:
     return OutfitOptionsOut(
         weather=svc.weather_out(weather),
-        options=[await svc.to_out(db, r) for r in rows],
+        options=await svc.to_out_many(db, rows),
         batch_id=batch_id if batch_id else (rows[0].batch_id if rows else None),
         hint=hint,
     )
@@ -50,7 +50,7 @@ async def history(
 ) -> OutfitListOut:
     rows, total = await svc.list_outfits(db, user, page=page, page_size=page_size)
     return OutfitListOut(
-        items=[await svc.to_out(db, r) for r in rows], total=total, page=page, page_size=page_size
+        items=await svc.to_out_many(db, rows), total=total, page=page, page_size=page_size
     )
 
 
@@ -63,7 +63,7 @@ async def saved(
 ) -> OutfitListOut:
     rows, total = await svc.list_outfits(db, user, saved_only=True, page=page, page_size=page_size)
     return OutfitListOut(
-        items=[await svc.to_out(db, r) for r in rows], total=total, page=page, page_size=page_size
+        items=await svc.to_out_many(db, rows), total=total, page=page, page_size=page_size
     )
 
 

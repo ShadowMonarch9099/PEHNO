@@ -1,4 +1,4 @@
-# Local full-stack: API + Postgres + Redis (+ Celery worker/beat from week 5 onward).
+# Local full-stack: API + Postgres + Redis + Celery worker/beat.
 # Usage: docker compose -f infra/docker-compose.yml up
 services:
   db:
@@ -25,15 +25,32 @@ services:
       context: ..
       dockerfile: apps/api/Dockerfile
     env_file: ../apps/api/.env
-    environment:
+    environment: &api_env
       DATABASE_URL: postgresql+asyncpg://pehno:pehno@db:5432/pehno
+      CELERY_BROKER_URL: redis://redis:6379/0
       REDIS_URL: redis://redis:6379/0
       LOCAL_MEDIA_DIR: /data/media
+      KNOWLEDGE_DIR: /app/packages/ai/data
     ports: ["8000:8000"]
     volumes: [media:/data/media]
     depends_on:
       db: { condition: service_healthy }
       redis: { condition: service_started }
+
+  worker:
+    build: { context: .., dockerfile: apps/api/Dockerfile }
+    command: celery -A app.tasks worker --loglevel=info --concurrency=2
+    env_file: ../apps/api/.env
+    environment: *api_env
+    volumes: [media:/data/media]
+    depends_on: [api]
+
+  beat:
+    build: { context: .., dockerfile: apps/api/Dockerfile }
+    command: celery -A app.tasks beat --loglevel=info
+    env_file: ../apps/api/.env
+    environment: *api_env
+    depends_on: [redis]
 
 volumes:
   pgdata:

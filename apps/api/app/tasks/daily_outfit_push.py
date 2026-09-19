@@ -1,42 +1,47 @@
 """
 Morning "Today's look" push (07:30 IST by default). Generates each user's daily
-outfit and sends a notification deep-linking to it.
+outfit, logs the send (for open-rate measurement) and notifies with a deep link.
 """
 import logging
 
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 
 from app.core import database
+from app.core.database import utcnow
+from app.models.notification import NotificationLog
 from app.models.user import User
-from app.services import outfit_service
+from app.services import analytics, outfit_service
+from app.services.festival_service import today_ist
 from app.services.notifications import Push, get_notifier
 from app.tasks import celery_app, run_async
 
 log = logging.getLogger(__name__)
 
 
-def _copy(outfit, weather) -> Push:
-    names = (
-        [g.garment_type.replace("_", " ") for g in outfit.garments]
-        if hasattr(outfit, "garments")
-        else []
-    )
+def _copy(outfit, weather, notification_id: str) -> Push:
+    names = [g.garment_type.replace("_", " ") for g in outfit.garments]
     body = f"{weather.temp_c:.0f}°C in {weather.city}. "
     body += (
-        "Your look is ready — tap to see it."
-        if not names
-        else f"Try your {' + '.join(names[:2])} today."
+        f"Try your {' + '.join(names[:2])} today."
+        if names
+        else "Your look is ready — tap to see it."
     )
     return Push(
         title="Today's look ✨",
         body=body,
-        data={"url": "pehno://outfits/daily", "outfit_id": str(outfit.id)},
+        data={
+            "url": "pehno://outfits/daily",
+            "outfit_id": str(outfit.id),
+            "notification_id": notification_id,
+        },
     )
 
 
 async def push_daily_outfits() -> dict:
     sent = skipped = failed = 0
     notifier = get_notifier()
+    day_key = today_ist().isoformat()
     async with database.SessionLocal() as db:
         users = (
             (
@@ -53,21 +58,34 @@ async def push_daily_outfits() -> dict:
         )
         for user in users:
             try:
-                weather, rows, hint = await outfit_service.daily(db, user)
+                weather, rows, _hint = await outfit_service.daily(db, user)
                 if not rows:
                     skipped += 1
                     continue
+                entry = NotificationLog(
+                    user_id=user.id, kind="daily_outfit", key=day_key, sent_at=utcnow()
+                )
+                db.add(entry)
+                try:
+                    await db.flush()
+                except IntegrityError:  # already pushed today (job re-run)
+                    await db.rollback()
+                    skipped += 1
+                    continue
                 out = await outfit_service.to_out(db, rows[0])
-                ok = await notifier.send(user.fcm_token, _copy(out, weather))
-                if ok:
+                if await notifier.send(user.fcm_token, _copy(out, weather, str(entry.id))):
                     sent += 1
+                    analytics.track(user.id, analytics.PUSH_SENT, kind="daily_outfit")
+                    await db.commit()
                 else:
                     failed += 1
+                    await db.rollback()
                     user.fcm_token = None  # unregistered token — stop trying
+                    await db.commit()
             except Exception:
                 failed += 1
+                await db.rollback()
                 log.exception("daily push failed for user %s", user.id)
-        await db.commit()
     log.info(
         "daily push: sent=%d skipped=%d failed=%d via %s", sent, skipped, failed, notifier.name
     )

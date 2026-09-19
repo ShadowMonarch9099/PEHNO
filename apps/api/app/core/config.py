@@ -85,6 +85,8 @@ class Settings(BaseSettings):
 
     # ── Observability ────────────────────────────────────────────────────────
     SENTRY_DSN: str = ""
+    POSTHOG_API_KEY: str = ""
+    POSTHOG_HOST: str = "https://app.posthog.com"
 
     @field_validator("JWT_SECRET")
     @classmethod

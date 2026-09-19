@@ -16,6 +16,7 @@ from app.models.feedback import ClassificationFeedback
 from app.models.garment import ClassificationStatus, Garment
 from app.models.user import User
 from app.schemas.garment import GarmentUpdate
+from app.services import analytics
 from app.services.classifier import classify_image
 from app.services.storage import get_storage
 
@@ -69,6 +70,13 @@ async def run_classification_job(garment_id: uuid.UUID | str) -> None:
         try:
             await classify_garment(db, garment)
             await db.commit()
+            analytics.track(
+                garment.user_id,
+                analytics.GARMENT_CLASSIFIED,
+                garment_type=garment.garment_type,
+                confidence=garment.ai_confidence,
+                backend=(garment.ai_labels or {}).get("backend"),
+            )
             log.info(
                 "classified %s → %s/%s (%.2f, %s)",
                 gid,

@@ -28,3 +28,4 @@ redis==5.0.1
 
 # ── Observability ──────────────────────────────────────────────
 sentry-sdk[fastapi]==1.40.0
+posthog==3.4.0

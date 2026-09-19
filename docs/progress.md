@@ -12,7 +12,7 @@ Status: ✅ done · 🔧 in progress · ⬜ not started · ⚠️ deviates from 
 | Weeks 5–7 — Garment AI | ✅ pipeline / ⚠️ model | ⚠️ No labelled Indian dataset exists yet, so no fine-tuned ViT. Shipping CLIP zero-shot as the MVP model (40% on a 5-photo smoke set — see [packages/ai/README.md](../packages/ai/README.md)); training + eval scripts are ready. The 85% gate is blocked on collecting a labelled eval set. |
 | Weeks 8–9 — Style engine v1 | ✅ | ⚠️ No OpenWeather key / Firebase creds available: weather falls back to a per-city monthly climatology table, push to a console notifier. Both switch on via env. Celery beat schedule defined; run `scripts/run_daily_push.py` locally. |
 | Weeks 10–11 — Festival intelligence | ✅ | ⚠️ Lunar-calendar dates for 2025–2027 are hand-entered and must be re-verified each year (`packages/ai/data/festivals.json`). |
-| Week 12 — Polish & launch | ⬜ | |
+| Week 12 — Polish & launch | ✅ code / ⬜ ops | Store submission, PostHog/Firebase/MSG91 accounts and the 100-user cohort need accounts and people — see [launch-checklist.md](launch-checklist.md). |
 
 ### Weeks 1–2 deliverables
 - [x] Monorepo per spec: `apps/api`, `apps/mobile`, `packages/*`, `infra/`, `docs/`
@@ -58,6 +58,16 @@ Status: ✅ done · 🔧 in progress · ⬜ not started · ⚠️ deviates from 
 - [x] Festival alert Celery task (09:00 IST) with a `notification_log` table so each (user, festival, year, lead) fires once; manual runner supports `festivals`
 - [x] Mobile: FestivalHome (Navratri tracker card, countdown banners with swatches), FestivalDetail (colours, dress code, curated looks), NavratriTracker (9-day grid, matching garments)
 - [x] 11 new tests (85 total); verified live
+
+### Week 12 deliverables
+- [x] Bug bash: signed expiring URLs for local media (was public), N+1 in outfit lists, OTP lockout persistence, festival-date weather for curated looks, Windows-safe script output
+- [x] Analytics: server-side event contract (`app/services/analytics.py`) — PostHog when keyed, logged otherwise; instrumented signup/login, onboarding, upload, classify, correct/confirm, outfit generate/feedback/save/wear, festival view, push sent/opened
+- [x] Push open tracking: `notification_log.opened_at`, `POST /notifications/{id}/opened`; every push payload carries `notification_id`; daily push deduped per day
+- [x] `scripts/mvp_metrics.py` computes the three MVP gates (7-day return, push open rate, classification acceptance)
+- [x] Mobile: push registration + open handling (`services/push.ts`), `eas.json` build/submit profiles, store ids in `app.json`
+- [x] `infra/docker-compose.yml` runs API + worker + beat + Postgres + Redis
+- [x] `docs/launch-checklist.md`
+- [x] 86 tests
 
 ## Phase 2 — Commerce (Weeks 13–28)
 ⬜ Not started.

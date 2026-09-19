@@ -15,6 +15,7 @@ from app.core.query import json_list_contains
 from app.models.garment import ClassificationStatus, Garment
 from app.models.user import User
 from app.schemas.garment import GarmentOut, GarmentUpdate
+from app.services import analytics
 from app.services.classification_service import record_feedback
 from app.services.image_service import InvalidImageError, process_garment_image
 from app.services.storage import get_storage
@@ -77,6 +78,7 @@ async def create_from_upload(db: AsyncSession, user: User, data: bytes) -> Garme
     )
     db.add(garment)
     await db.flush()
+    analytics.track(user.id, analytics.GARMENT_UPLOADED, bytes=len(data))
     return garment
 
 
@@ -128,7 +130,14 @@ async def list_garments(
 
 async def update_garment(db: AsyncSession, garment: Garment, patch: GarmentUpdate) -> Garment:
     changes = patch.model_dump(exclude_unset=True)
-    await record_feedback(db, garment, changes)  # training data: what the AI said vs the user
+    corrections = await record_feedback(db, garment, changes)  # what the AI said vs the user
+    if corrections:
+        analytics.track(
+            garment.user_id,
+            analytics.GARMENT_CORRECTED,
+            fields=sorted(changes.keys() & GarmentUpdate.CLASSIFICATION_FIELDS),
+            ai_confidence=garment.ai_confidence,
+        )
     for field, value in changes.items():
         setattr(garment, field, value)
     if changes.keys() & GarmentUpdate.CLASSIFICATION_FIELDS:
@@ -158,6 +167,12 @@ async def confirm_labels(db: AsyncSession, garment: Garment) -> Garment:
     if garment.classification_status != ClassificationStatus.complete:
         garment.classification_status = ClassificationStatus.complete
     await db.flush()
+    analytics.track(
+        garment.user_id,
+        analytics.GARMENT_CONFIRMED,
+        garment_type=garment.garment_type,
+        ai_confidence=garment.ai_confidence,
+    )
     return garment
 
 

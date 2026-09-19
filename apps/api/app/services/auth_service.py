@@ -24,6 +24,7 @@ from app.core.database import utcnow
 from app.core.security import create_access_token, create_refresh_token, decode_token
 from app.models.auth import OtpCode, RefreshToken
 from app.models.user import User
+from app.services import analytics
 from app.services.otp import get_otp_provider
 
 
@@ -107,6 +108,7 @@ async def verify_otp(db: AsyncSession, phone: str, code: str) -> TokenPair:
         db.add(user)
     user.last_login_at = now
     await db.flush()
+    analytics.track(user.id, analytics.SIGNED_UP if is_new else analytics.LOGGED_IN)
 
     return await _issue_tokens(db, user, is_new)
 

@@ -22,3 +22,4 @@ class NotificationLog(UUIDPrimaryKeyMixin, Base):
     )  # daily_outfit | festival_alert | care_reminder
     key: Mapped[str] = mapped_column(String(120), nullable=False)  # e.g. "diwali:2026:14"
     sent_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    opened_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

@@ -7,8 +7,8 @@ from sqlalchemy import select
 from app.core.security import CurrentUser, DbSession
 from app.models.garment import ClassificationStatus, Garment
 from app.schemas.festival import FestivalDetailOut, FestivalOut, NavratriTodayOut
+from app.services import analytics, outfit_service, wardrobe_service
 from app.services import festival_service as fs
-from app.services import outfit_service, wardrobe_service
 
 router = APIRouter(prefix="/festivals", tags=["festivals"])
 
@@ -78,7 +78,8 @@ async def detail(slug: str, user: CurrentUser, db: DbSession) -> FestivalDetailO
         limit=5,
         weather_date=max(occ.start, today),
     )
-    looks = [await outfit_service.to_out(db, r) for r in rows]
+    looks = await outfit_service.to_out_many(db, rows)
+    analytics.track(user.id, analytics.FESTIVAL_VIEWED, festival=slug, looks=len(looks))
     return FestivalDetailOut(
         **_festival_out(occ, user.city, today).model_dump(), looks=looks, hint=hint
     )

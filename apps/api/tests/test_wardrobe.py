@@ -26,7 +26,12 @@ async def _one(client, h) -> dict:
 
 
 def _key(g: dict) -> str:
-    return g["image_url"].split("/media/")[1]
+    return g["image_url"].split("/media/")[1].split("?")[0]
+
+
+def _path(g: dict) -> str:
+    """URL path + signed query, relative to the API base."""
+    return "/media/" + g["image_url"].split("/media/")[1]
 
 
 async def test_upload_single_creates_pending_garment_and_files(client):
@@ -42,7 +47,7 @@ async def test_upload_single_creates_pending_garment_and_files(client):
     assert g["wear_count"] == 0
     assert g["cost_per_wear"] is None
     assert g["image_url"].startswith(f"{settings.PUBLIC_BASE_URL}/media/garments/")
-    assert g["thumbnail_url"].endswith("_thumb.jpg")
+    assert "_thumb.jpg?" in g["thumbnail_url"]
 
     full = Path(settings.LOCAL_MEDIA_DIR) / _key(g)
     thumb = Path(settings.LOCAL_MEDIA_DIR) / _key(g).replace(".jpg", "_thumb.jpg")
@@ -53,9 +58,12 @@ async def test_upload_single_creates_pending_garment_and_files(client):
     with Image.open(thumb) as im:
         assert im.size == (settings.THUMBNAIL_SIDE, settings.THUMBNAIL_SIDE)
 
-    r = await client.get(f"/media/{_key(g)}")
+    r = await client.get(_path(g))
     assert r.status_code == 200
     assert r.headers["content-type"].startswith("image/jpeg")
+    # unsigned / tampered links are refused
+    assert (await client.get(f"/media/{_key(g)}")).status_code == 403
+    assert (await client.get(_path(g).replace("sig=", "sig=0"))).status_code == 403
 
 
 async def test_upload_bulk_with_partial_rejects(client):
