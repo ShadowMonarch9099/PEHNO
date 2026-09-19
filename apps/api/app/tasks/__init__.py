@@ -28,6 +28,7 @@ celery_app = Celery(
         "app.tasks.festival_alert",
         "app.tasks.billing_reconcile",
         "app.tasks.weekly_gap_report",
+        "app.tasks.care_reminder",
     ],
 )
 celery_app.conf.update(
@@ -42,6 +43,10 @@ celery_app.conf.update(
         "weekly-gap-report": {
             "task": "pehno.weekly_gap_report",
             "schedule": crontab(day_of_week="mon", hour=8, minute=0),
+        },
+        "care-reminders": {
+            "task": "pehno.send_care_reminders",
+            "schedule": crontab(day_of_week="sun", hour=10, minute=0),
         },
         "billing-reconcile": {
             "task": "pehno.reconcile_subscriptions",

@@ -27,7 +27,7 @@ class Plan:
 # Feature key → minimum tier. Everything not listed is free.
 FEATURE_TIERS: dict[str, SubscriptionTier] = {
     "festival_looks": SubscriptionTier.plus,  # curated looks + Navratri wardrobe matches
-    "fabric_care": SubscriptionTier.plus,  # care profiles + care reminders
+    "fabric_care": SubscriptionTier.plus,  # wear-threshold care reminders (profiles are free)
     "gap_report": SubscriptionTier.plus,  # weeks 15–17
     "travel_packing": SubscriptionTier.plus,  # phase 3
     "scan_mode": SubscriptionTier.pro,  # weeks 22–24
@@ -37,7 +37,7 @@ FEATURE_TIERS: dict[str, SubscriptionTier] = {
 
 FEATURE_LABELS: dict[str, str] = {
     "festival_looks": "Festival looks curated from your wardrobe",
-    "fabric_care": "Fabric care profiles & reminders",
+    "fabric_care": "Fabric care reminders",
     "gap_report": "Wardrobe gap analysis",
     "travel_packing": "Travel packing planner",
     "scan_mode": "Shopping scan mode",

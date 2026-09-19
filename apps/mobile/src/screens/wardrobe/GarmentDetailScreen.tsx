@@ -2,7 +2,7 @@
  * GarmentDetail — photo, classification, stats (wears, cost-per-wear), actions.
  */
 import React, { useEffect, useState } from 'react';
-import { Alert, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Alert, Image, ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AiSuggestionCard } from '../../components/garment/AiSuggestionCard';
 import { Chip, PrimaryButton, ScreenHeader, SecondaryButton } from '../../components/ui';
@@ -17,7 +17,7 @@ const rupees = (n: number | null) => (n === null ? '—' : `₹${n.toLocaleStrin
 export default function GarmentDetailScreen({ route, navigation }: WardrobeScreenProps<'GarmentDetail'>) {
   const { garmentId } = route.params;
   const cached = useWardrobeStore((s) => s.garments.find((g) => g.id === garmentId));
-  const { upsert, remove, logWear, confirm, reclassify, update } = useWardrobeStore();
+  const { upsert, remove, logWear, confirm, reclassify, update, cared, setCareReminders } = useWardrobeStore();
   const options = useMetaStore((s) => s.options);
   const [busy, setBusy] = useState(false);
   usePendingPoll();
@@ -123,6 +123,19 @@ export default function GarmentDetailScreen({ route, navigation }: WardrobeScree
             {care.storage ? <Row k="Store" v={care.storage} /> : null}
             {care.monsoon ? <Row k="Monsoon" v={care.monsoon} /> : null}
             {care.dry_clean ? <Text style={styles.careNote}>🧼 Dry clean recommended</Text> : null}
+            <View style={[styles.careBox, g.care_due && styles.careBoxDue]}>
+              <View style={styles.flex}>
+                <Text style={typography.h4}>{g.care_due ? 'Time for a clean' : `Worn ${g.wears_since_care} of ${g.care_threshold} times since last clean`}</Text>
+                <Text style={typography.caption}>{g.last_cared_at ? `Last cleaned ${new Date(g.last_cared_at).toLocaleDateString('en-IN')}` : 'Not cleaned yet'}</Text>
+              </View>
+              <TouchableOpacity style={styles.careBtn} onPress={() => run(() => cared(g.id))} disabled={busy}>
+                <Text style={styles.careBtnText}>I cleaned it</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.toggleRow}>
+              <Text style={typography.body2}>Care reminders for this item</Text>
+              <Switch value={g.care_reminders_enabled} onValueChange={(v) => run(() => setCareReminders(g.id, v))} trackColor={{ true: colors.primary }} />
+            </View>
           </Section>
         ) : null}
         {g.notes ? (
@@ -167,6 +180,12 @@ const styles = StyleSheet.create({
   body: { padding: spacing.xl, gap: spacing.lg, paddingBottom: spacing.xxl },
   image: { width: '100%', aspectRatio: 0.85, borderRadius: borderRadius.xl, backgroundColor: colors.borderLight },
   careNote: { ...typography.caption, marginTop: spacing.xs },
+  flex: { flex: 1 },
+  careBox: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, padding: spacing.md, borderRadius: borderRadius.lg, backgroundColor: colors.surfaceElevated, marginTop: spacing.sm },
+  careBoxDue: { borderWidth: 1, borderColor: colors.warning },
+  careBtn: { paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderRadius: borderRadius.pill, borderWidth: 1, borderColor: colors.primary },
+  careBtnText: { ...typography.label, color: colors.primary },
+  toggleRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: spacing.xs },
   statsRow: { flexDirection: 'row', gap: spacing.sm },
   stat: { flex: 1, backgroundColor: colors.surfaceElevated, borderRadius: borderRadius.lg, padding: spacing.md, alignItems: 'center', gap: 2 },
   statValue: { ...typography.h3 },

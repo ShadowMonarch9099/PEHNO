@@ -76,10 +76,18 @@ Status: ✅ done · 🔧 in progress · ⬜ not started · ⚠️ deviates from 
 | Weeks 13–14 — Freemium paywall | ✅ | ⚠️ Plus priced ₹199 (plan/deck), not the ₹149 in the old README. Razorpay runs behind a provider interface; the mock provider + `POST /billing/dev/activate` (DEBUG only) stand in until keys and dashboard plan ids exist. |
 | Weeks 15–17 — Wardrobe gap analysis | ✅ | ⚠️ The plan asks for qualitative user testing of gap recommendations before the full UI — the UI is built, but the *validation* still needs real users (see launch checklist). Redis cache used when `REDIS_URL` is set; in-process otherwise. |
 | Weeks 18–19 — Affiliate commerce | ✅ structure / ⚠️ partners | Myntra/Ajio/Nykaa/Meesho have no public product APIs: cards are curated per-platform *searches* wrapped in a configurable network deep-link template with our click id as `subid`. Real product cards arrive when a partner catalogue is approved (`ProductSource` seam). Admin dashboard app itself is still pending; `/admin/metrics` feeds it. |
-| Weeks 20–21 — Fabric care & ROI | ⬜ | Care profiles + CPW already shipped in Phase 1; reminders/underutilised pending |
+| Weeks 20–21 — Fabric care & ROI | ✅ | Care profiles stay free; wear-threshold *reminders* are Plus. |
 | Weeks 22–24 — Shopping scan mode | ⬜ | |
 | Weeks 25–28 — Festival expansion & cities | ⬜ | |
 | Admin dashboard (Phase 2 pages) | ⬜ | |
+
+### Weeks 20–21 deliverables
+- [x] Per-fabric `reminder_after_wears` thresholds in `care_profiles.json` (cotton 5, silk/banarasi 2, polyester 7, …); `wears_since_care`, `last_cared_at`, `care_reminders_enabled` on garments (migration with server defaults)
+- [x] `POST /wardrobe/{id}/cared` (reset), `PUT /wardrobe/{id}/care-reminders` (per-item opt-out); `care_due`/`care_threshold` on every garment response
+- [x] Sunday 10:00 IST `pehno.send_care_reminders` for Plus/Pro users, one push per threshold crossing, deep-linked to the garment
+- [x] `GET /wardrobe/roi` — cost-per-wear leaderboard worst-first with great/ok/poor verdicts relative to the type's price band + summary; `GET /wardrobe/underutilized` — 90+ days idle (or never worn after 30 days) with 1–2 pairing suggestions favouring in-rotation partners
+- [x] Mobile: RoiScreen (leaderboard + underutilised tabs), care box + reminder toggle + "I cleaned it" on GarmentDetail, "Wardrobe value" entry on WardrobeHome
+- [x] 8 new tests (123 total)
 
 ### Weeks 18–19 deliverables
 - [x] `affiliate_service.py`: per-platform search URL builders (Myntra, AJIO, Nykaa Fashion, Meesho), budget-aware platform ordering, network template wrapping (`{url}/{subid}/{cid}`) or utm+subid tagging, `ProductSource` interface with `SearchLinkSource` default

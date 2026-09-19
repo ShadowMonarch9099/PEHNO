@@ -69,4 +69,9 @@ class Garment(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     wear_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     last_worn_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
+    # Care tracking (weeks 20–21): wears since the last clean drive reminders
+    wears_since_care: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    last_cared_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    care_reminders_enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+
     user = relationship("User", back_populates="garments")

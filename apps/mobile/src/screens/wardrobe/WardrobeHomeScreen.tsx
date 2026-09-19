@@ -80,10 +80,16 @@ export default function WardrobeHomeScreen({ navigation }: WardrobeScreenProps<'
       ) : null}
 
       {!hasFilter && total >= 5 ? (
-        <TouchableOpacity style={styles.gapCard} onPress={() => navigation.navigate('GapReport')} accessibilityRole="button">
-          <Text style={styles.gapTitle}>🧩 What's missing?</Text>
-          <Text style={typography.caption}>The one piece that unlocks the most new outfits{ent?.features.gap_report.unlocked ? '' : ' · Plus'}</Text>
-        </TouchableOpacity>
+        <View style={styles.toolRow}>
+          <TouchableOpacity style={[styles.gapCard, styles.flex]} onPress={() => navigation.navigate('GapReport')} accessibilityRole="button">
+            <Text style={styles.gapTitle}>🧩 What's missing?</Text>
+            <Text style={typography.caption}>Unlock more outfits{ent?.features.gap_report.unlocked ? '' : ' · Plus'}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.gapCard, styles.flex]} onPress={() => navigation.navigate('Roi')} accessibilityRole="button">
+            <Text style={styles.gapTitle}>₹ Wardrobe value</Text>
+            <Text style={typography.caption}>Cost per wear & idle pieces</Text>
+          </TouchableOpacity>
+        </View>
       ) : null}
 
       {!hasFilter && total < WARDROBE_GOAL ? (
@@ -139,7 +145,9 @@ const styles = StyleSheet.create({
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', paddingHorizontal: spacing.md, paddingTop: spacing.sm },
   count: { ...typography.label, marginBottom: spacing.xs },
   goal: { paddingHorizontal: spacing.md, paddingTop: spacing.md },
-  gapCard: { marginHorizontal: spacing.md, marginTop: spacing.md, padding: spacing.md, borderRadius: borderRadius.lg, backgroundColor: colors.surfaceElevated, borderWidth: 1, borderColor: colors.borderLight, gap: 2 },
+  toolRow: { flexDirection: 'row', gap: spacing.sm, marginHorizontal: spacing.md, marginTop: spacing.md },
+  flex: { flex: 1 },
+  gapCard: { padding: spacing.md, borderRadius: borderRadius.lg, backgroundColor: colors.surfaceElevated, borderWidth: 1, borderColor: colors.borderLight, gap: 2 },
   gapTitle: { ...typography.h4 },
   nudge: { marginHorizontal: spacing.md, marginTop: spacing.md, padding: spacing.md, borderRadius: borderRadius.lg, backgroundColor: colors.primary, gap: 2 },
   nudgeTitle: { ...typography.h4, color: colors.textInverse },

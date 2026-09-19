@@ -15,7 +15,7 @@ from app.core.query import json_list_contains
 from app.models.garment import ClassificationStatus, Garment
 from app.models.user import User
 from app.schemas.garment import GarmentOut, GarmentUpdate
-from app.services import analytics, gap_service
+from app.services import analytics, care_service, gap_service
 from app.services.classification_service import record_feedback
 from app.services.image_service import InvalidImageError, process_garment_image
 from app.services.storage import get_storage
@@ -54,6 +54,11 @@ def to_out(g: Garment) -> GarmentOut:
         wear_count=g.wear_count,
         last_worn_at=g.last_worn_at,
         cost_per_wear=cpw,
+        wears_since_care=g.wears_since_care,
+        last_cared_at=g.last_cared_at,
+        care_reminders_enabled=g.care_reminders_enabled,
+        care_due=care_service.care_due(g),
+        care_threshold=care_service.reminder_threshold(g.fabric_type),
         created_at=g.created_at,
         updated_at=g.updated_at,
     )
@@ -179,6 +184,7 @@ async def confirm_labels(db: AsyncSession, garment: Garment) -> Garment:
 
 async def log_wear(db: AsyncSession, garment: Garment) -> Garment:
     garment.wear_count += 1
+    garment.wears_since_care += 1
     garment.last_worn_at = utcnow()
     await db.flush()
     return garment

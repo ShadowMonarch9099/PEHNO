@@ -5,7 +5,8 @@
     "storage": "Wrap in muslin cloth, store flat or rolled. Never fold zari on itself",
     "dry_clean": true,
     "notes": "Store with silica gel packets to prevent tarnishing of zari. Air out before storing.",
-    "monsoon": "Airtight box with silica gel and neem leaves; check monthly for zari tarnish."
+    "monsoon": "Airtight box with silica gel and neem leaves; check monthly for zari tarnish.",
+    "reminder_after_wears": 2
   },
   "chiffon": {
     "wash": "Hand wash cold, very gentle",
@@ -13,7 +14,8 @@
     "storage": "Hang to preserve sheer quality",
     "dry_clean": false,
     "notes": "Extremely delicate. Handle with care to avoid pulls or tears.",
-    "monsoon": "Quick-dry; keep away from damp walls to prevent water marks."
+    "monsoon": "Quick-dry; keep away from damp walls to prevent water marks.",
+    "reminder_after_wears": 3
   },
   "cotton": {
     "wash": "Machine wash cold (30°C), gentle cycle",
@@ -21,7 +23,8 @@
     "storage": "Store folded or in drawer",
     "dry_clean": false,
     "notes": "Can be machine dried on low. Use mild detergent.",
-    "monsoon": "Dry completely before storing; damp cotton mildews fast in monsoon."
+    "monsoon": "Dry completely before storing; damp cotton mildews fast in monsoon.",
+    "reminder_after_wears": 5
   },
   "crepe": {
     "wash": "Hand wash or gentle machine wash in cold water",
@@ -29,7 +32,8 @@
     "storage": "Fold or hang — both suitable",
     "dry_clean": false,
     "notes": "Dries quickly. Minimal ironing needed.",
-    "monsoon": "Quick-dry; store flat in a dry drawer."
+    "monsoon": "Quick-dry; store flat in a dry drawer.",
+    "reminder_after_wears": 4
   },
   "georgette": {
     "wash": "Hand wash cold or dry clean",
@@ -37,7 +41,8 @@
     "storage": "Hang to maintain drape",
     "dry_clean": false,
     "notes": "Handle gently — georgette can snag. Do not wring.",
-    "monsoon": "Dries fast — ideal monsoon fabric. Hang in a ventilated wardrobe."
+    "monsoon": "Dries fast — ideal monsoon fabric. Hang in a ventilated wardrobe.",
+    "reminder_after_wears": 3
   },
   "kanjeevaram": {
     "wash": "Dry clean recommended; hand wash in cold water as alternative",
@@ -45,7 +50,8 @@
     "storage": "Wrap in muslin, store folded with tissue between pleats",
     "dry_clean": true,
     "notes": "Never expose to harsh chemicals. Rotate storage every 3-6 months to prevent creasing.",
-    "monsoon": "Muslin wrap plus silica gel; refold along different lines every month."
+    "monsoon": "Muslin wrap plus silica gel; refold along different lines every month.",
+    "reminder_after_wears": 2
   },
   "khadi": {
     "wash": "Hand wash cold with mild soap",
@@ -53,7 +59,8 @@
     "storage": "Store folded in a clean cotton bag",
     "dry_clean": false,
     "notes": "Gets softer with each wash. Air dry in shade to prevent fading.",
-    "monsoon": "Dry thoroughly in shade; khadi holds moisture and can mildew."
+    "monsoon": "Dry thoroughly in shade; khadi holds moisture and can mildew.",
+    "reminder_after_wears": 4
   },
   "linen": {
     "wash": "Machine wash cold or hand wash",
@@ -61,7 +68,8 @@
     "storage": "Hang to prevent heavy creases",
     "dry_clean": false,
     "notes": "Air dry flat. Embrace natural wrinkles or steam.",
-    "monsoon": "Air out weekly; store with silica gel to avoid musty smell."
+    "monsoon": "Air out weekly; store with silica gel to avoid musty smell.",
+    "reminder_after_wears": 4
   },
   "net": {
     "wash": "Hand wash very gently or dry clean",
@@ -69,7 +77,8 @@
     "storage": "Store flat to prevent distortion of weave",
     "dry_clean": true,
     "notes": "Extremely delicate fabric — store away from rough surfaces.",
-    "monsoon": "Hang loosely; humidity can make net sag if folded tight."
+    "monsoon": "Hang loosely; humidity can make net sag if folded tight.",
+    "reminder_after_wears": 3
   },
   "polyester": {
     "wash": "Machine wash cold, gentle cycle",
@@ -77,7 +86,8 @@
     "storage": "Fold or hang — low maintenance",
     "dry_clean": false,
     "notes": "Avoid high heat in dryer. Washes and dries quickly.",
-    "monsoon": "Monsoon-friendly; dries fast and resists mildew."
+    "monsoon": "Monsoon-friendly; dries fast and resists mildew.",
+    "reminder_after_wears": 7
   },
   "raw_silk": {
     "wash": "Dry clean recommended; hand wash cold as alternative",
@@ -85,7 +95,8 @@
     "storage": "Store hanging in muslin cloth, avoid plastic",
     "dry_clean": true,
     "notes": "Avoid water spots. Do not wring. Keep in cool, dry place.",
-    "monsoon": "Store in muslin with silica gel; avoid plastic covers that trap humidity."
+    "monsoon": "Store in muslin with silica gel; avoid plastic covers that trap humidity.",
+    "reminder_after_wears": 2
   },
   "rayon": {
     "wash": "Hand wash cold or dry clean; avoid machine wash",
@@ -93,7 +104,8 @@
     "storage": "Hang to prevent wrinkles",
     "dry_clean": false,
     "notes": "May shrink in hot water. Do not wring. Air dry in shade.",
-    "monsoon": "Dry fully before folding; rayon weakens when damp."
+    "monsoon": "Dry fully before folding; rayon weakens when damp.",
+    "reminder_after_wears": 4
   },
   "satin": {
     "wash": "Hand wash cold or dry clean",
@@ -101,7 +113,8 @@
     "storage": "Hang or fold with tissue paper",
     "dry_clean": false,
     "notes": "Avoid snags. Keep away from sharp jewelry when wearing.",
-    "monsoon": "Store in a cool dry place; humidity dulls the sheen."
+    "monsoon": "Store in a cool dry place; humidity dulls the sheen.",
+    "reminder_after_wears": 3
   },
   "silk": {
     "wash": "Hand wash cold with silk-safe detergent OR dry clean",
@@ -109,7 +122,8 @@
     "storage": "Hang on padded hangers or store in muslin bag",
     "dry_clean": true,
     "notes": "Never wring. Keep away from direct sunlight to prevent fading.",
-    "monsoon": "Keep in a breathable muslin bag with silica gel; never store damp."
+    "monsoon": "Keep in a breathable muslin bag with silica gel; never store damp.",
+    "reminder_after_wears": 2
   },
   "unknown": {
     "wash": "Hand wash cold or dry clean",
@@ -117,7 +131,8 @@
     "storage": "Fold and store in a dry place",
     "dry_clean": false,
     "notes": "Fabric not identified yet — edit the item to get accurate care advice.",
-    "monsoon": "Store dry with silica gel during monsoon."
+    "monsoon": "Store dry with silica gel during monsoon.",
+    "reminder_after_wears": 5
   },
   "velvet": {
     "wash": "Dry clean only",
@@ -125,6 +140,7 @@
     "storage": "Hang separately to prevent pile crushing",
     "dry_clean": true,
     "notes": "Brush gently with soft brush to restore pile. Store with cedar blocks.",
-    "monsoon": "Avoid wearing in monsoon; store in a garment bag with silica gel."
+    "monsoon": "Avoid wearing in monsoon; store in a garment bag with silica gel.",
+    "reminder_after_wears": 2
   }
 }

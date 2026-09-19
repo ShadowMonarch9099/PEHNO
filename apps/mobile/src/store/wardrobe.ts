@@ -24,6 +24,8 @@ interface WardrobeState {
   logWear: (id: string) => Promise<Garment>;
   confirm: (id: string) => Promise<Garment>;
   reclassify: (id: string) => Promise<Garment>;
+  cared: (id: string) => Promise<Garment>;
+  setCareReminders: (id: string, enabled: boolean) => Promise<Garment>;
   upsert: (g: Garment) => void;
   /** Re-fetch garments still classifying. Returns true if any remain pending. */
   pollPending: () => Promise<boolean>;
@@ -87,6 +89,18 @@ export const useWardrobeStore = create<WardrobeState>((set, get) => ({
 
   reclassify: async (id) => {
     const g = await wardrobeApi.reclassify(id);
+    get().upsert(g);
+    return g;
+  },
+
+  cared: async (id) => {
+    const g = await wardrobeApi.cared(id);
+    get().upsert(g);
+    return g;
+  },
+
+  setCareReminders: async (id, enabled) => {
+    const g = await wardrobeApi.setCareReminders(id, enabled);
     get().upsert(g);
     return g;
   },

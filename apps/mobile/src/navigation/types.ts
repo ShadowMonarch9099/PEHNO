@@ -24,6 +24,7 @@ export type WardrobeStackParamList = {
   GarmentEdit: { garmentId: string };
   GapReport: undefined;
   GapItem: { gap: Gap };
+  Roi: undefined;
 };
 
 export type OutfitStackParamList = {

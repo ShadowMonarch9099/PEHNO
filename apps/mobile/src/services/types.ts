@@ -130,8 +130,30 @@ export interface Garment {
   wear_count: number;
   last_worn_at: string | null;
   cost_per_wear: number | null;
+  wears_since_care: number;
+  last_cared_at: string | null;
+  care_reminders_enabled: boolean;
+  care_due: boolean;
+  care_threshold: number;
   created_at: string;
   updated_at: string;
+}
+
+export interface RoiRow {
+  garment: Garment;
+  cost_per_wear: number | null;
+  verdict: 'great' | 'ok' | 'poor' | 'unworn' | 'unpriced';
+}
+
+export interface RoiReport {
+  rows: RoiRow[];
+  summary: { garments: number; priced: number; worn: number; avg_cost_per_wear: number | null; best: number | null; worst: number | null };
+}
+
+export interface Underutilised {
+  garment: Garment;
+  days_idle: number | null;
+  pairings: { garment: Garment; occasion: string }[];
 }
 
 export interface GarmentList {

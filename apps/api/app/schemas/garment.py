@@ -42,6 +42,11 @@ class GarmentOut(APIModel):
     wear_count: int
     last_worn_at: UTCDateTime | None
     cost_per_wear: Money | None
+    wears_since_care: int
+    last_cared_at: UTCDateTime | None
+    care_reminders_enabled: bool
+    care_due: bool
+    care_threshold: int
     created_at: UTCDateTime
     updated_at: UTCDateTime
 
@@ -128,3 +133,29 @@ class GarmentUpdate(BaseModel):
 class UploadResultOut(BaseModel):
     created: list[GarmentOut]
     rejected: list[dict]  # {"filename": ..., "reason": ...}
+
+
+class CareRemindersIn(BaseModel):
+    enabled: bool
+
+
+class RoiRowOut(BaseModel):
+    garment: GarmentOut
+    cost_per_wear: float | None
+    verdict: str  # great | ok | poor | unworn | unpriced
+
+
+class RoiOut(BaseModel):
+    rows: list[RoiRowOut]
+    summary: dict  # {priced, worn, avg_cost_per_wear, best, worst}
+
+
+class PairingOut(BaseModel):
+    garment: GarmentOut
+    occasion: str
+
+
+class UnderutilisedOut(BaseModel):
+    garment: GarmentOut
+    days_idle: int | None  # None = never worn
+    pairings: list[PairingOut]

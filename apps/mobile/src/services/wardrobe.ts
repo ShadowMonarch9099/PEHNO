@@ -1,5 +1,5 @@
 import { api } from './api';
-import type { Garment, GarmentFilters, GarmentList, GarmentUpdate, UploadResult } from './types';
+import type { Garment, GarmentFilters, GarmentList, GarmentUpdate, RoiReport, Underutilised, UploadResult } from './types';
 
 export interface LocalPhoto {
   uri: string;
@@ -17,6 +17,11 @@ export const wardrobeApi = {
   logWear: (id: string) => api.post<Garment>(`/wardrobe/${id}/wear`).then((r) => r.data),
   confirm: (id: string) => api.post<Garment>(`/wardrobe/${id}/confirm`).then((r) => r.data),
   reclassify: (id: string) => api.post<Garment>(`/wardrobe/${id}/reclassify`).then((r) => r.data),
+  cared: (id: string) => api.post<Garment>(`/wardrobe/${id}/cared`).then((r) => r.data),
+  setCareReminders: (id: string, enabled: boolean) =>
+    api.put<Garment>(`/wardrobe/${id}/care-reminders`, { enabled }).then((r) => r.data),
+  roi: () => api.get<RoiReport>('/wardrobe/roi').then((r) => r.data),
+  underutilised: () => api.get<Underutilised[]>('/wardrobe/underutilized').then((r) => r.data),
 
   /** Upload up to 10 photos in one multipart request. */
   upload: (photos: LocalPhoto[], onProgress?: (fraction: number) => void) => {

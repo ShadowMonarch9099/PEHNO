@@ -2,16 +2,29 @@
 /wardrobe — garment upload, listing, edits, wear log.
 """
 import uuid
+from datetime import UTC
 from typing import Annotated
 
 from fastapi import APIRouter, BackgroundTasks, File, HTTPException, Query, UploadFile, status
 from sqlalchemy import func, select
 
 from app.core.config import settings
+from app.core.database import utcnow
 from app.core.security import CurrentUser, DbSession
 from app.models.garment import ClassificationStatus, Garment
 from app.schemas.common import Message
-from app.schemas.garment import GarmentListOut, GarmentOut, GarmentUpdate, UploadResultOut
+from app.schemas.garment import (
+    CareRemindersIn,
+    GarmentListOut,
+    GarmentOut,
+    GarmentUpdate,
+    PairingOut,
+    RoiOut,
+    RoiRowOut,
+    UnderutilisedOut,
+    UploadResultOut,
+)
+from app.services import care_service
 from app.services import wardrobe_service as svc
 from app.services.classification_service import run_classification_job
 from app.services.entitlements import PaywallError, garment_limit
@@ -98,6 +111,52 @@ async def list_garments(
     )
 
 
+# Static paths must precede /{garment_id} or FastAPI tries to parse them as UUIDs.
+@router.get("/roi", response_model=RoiOut)
+async def roi(user: CurrentUser, db: DbSession) -> RoiOut:
+    """Cost-per-wear for every garment, worst value first."""
+    rows = await care_service.roi_rows(db, user)
+    priced = [r for r in rows if r.cost_per_wear is not None]
+    cpws = [float(r.cost_per_wear) for r in priced]
+    return RoiOut(
+        rows=[
+            RoiRowOut(
+                garment=svc.to_out(r.garment),
+                cost_per_wear=float(r.cost_per_wear) if r.cost_per_wear else None,
+                verdict=r.verdict,
+            )
+            for r in rows
+        ],
+        summary={
+            "garments": len(rows),
+            "priced": sum(1 for r in rows if r.garment.purchase_price is not None),
+            "worn": sum(1 for r in rows if r.garment.wear_count > 0),
+            "avg_cost_per_wear": round(sum(cpws) / len(cpws), 2) if cpws else None,
+            "best": min(cpws) if cpws else None,
+            "worst": max(cpws) if cpws else None,
+        },
+    )
+
+
+@router.get("/underutilized", response_model=list[UnderutilisedOut])
+async def underutilized(user: CurrentUser, db: DbSession) -> list[UnderutilisedOut]:
+    """Garments unworn for 90+ days, each with fresh pairing suggestions."""
+    now = utcnow()
+    out = []
+    for g, pairings in await care_service.underutilised(db, user):
+        last = g.last_worn_at
+        if last is not None and last.tzinfo is None:
+            last = last.replace(tzinfo=UTC)
+        out.append(
+            UnderutilisedOut(
+                garment=svc.to_out(g),
+                days_idle=(now - last).days if last else None,
+                pairings=[PairingOut(garment=svc.to_out(p), occasion=occ) for p, occ in pairings],
+            )
+        )
+    return out
+
+
 @router.get("/{garment_id}", response_model=GarmentOut)
 async def get_garment(garment_id: uuid.UUID, user: CurrentUser, db: DbSession) -> GarmentOut:
     return svc.to_out(await svc.get_owned(db, user, garment_id))
@@ -143,3 +202,22 @@ async def reclassify(
     await db.commit()
     dispatch(background, classify_garment_task, run_classification_job, garment.id)
     return svc.to_out(garment)
+
+
+# ── care & ROI (weeks 20–21) ──────────────────────────────────────────────────
+
+
+@router.post("/{garment_id}/cared", response_model=GarmentOut)
+async def mark_cared(garment_id: uuid.UUID, user: CurrentUser, db: DbSession) -> GarmentOut:
+    """'I washed / dry-cleaned this' — resets the wears-since-care counter."""
+    garment = await svc.get_owned(db, user, garment_id)
+    return svc.to_out(await care_service.mark_cared(db, garment))
+
+
+@router.put("/{garment_id}/care-reminders", response_model=GarmentOut)
+async def care_reminders(
+    garment_id: uuid.UUID, body: CareRemindersIn, user: CurrentUser, db: DbSession
+) -> GarmentOut:
+    """Per-item opt-out of care reminders."""
+    garment = await svc.get_owned(db, user, garment_id)
+    return svc.to_out(await care_service.set_reminders(db, garment, body.enabled))
