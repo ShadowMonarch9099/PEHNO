@@ -11,6 +11,7 @@ from collections.abc import Awaitable, Callable
 from typing import Any
 
 from celery import Celery
+from celery.schedules import crontab
 from fastapi import BackgroundTasks
 
 from app.core.config import settings
@@ -21,7 +22,7 @@ celery_app = Celery(
     "pehno",
     broker=settings.CELERY_BROKER_URL or "memory://",
     backend=None,
-    include=["app.tasks.classify"],
+    include=["app.tasks.classify", "app.tasks.daily_outfit_push"],
 )
 celery_app.conf.update(
     task_always_eager=not settings.CELERY_BROKER_URL,
@@ -31,6 +32,15 @@ celery_app.conf.update(
     enable_utc=True,
     worker_prefetch_multiplier=1,  # classification is CPU-heavy; don't hoard tasks
     task_acks_late=True,
+    beat_schedule={
+        "daily-outfit-push": {
+            "task": "pehno.push_daily_outfits",
+            # Celery beat uses the app timezone (Asia/Kolkata) for crontab.
+            "schedule": crontab(
+                hour=settings.DAILY_PUSH_HOUR_IST, minute=settings.DAILY_PUSH_MINUTE_IST
+            ),
+        },
+    },
 )
 
 CELERY_ENABLED = bool(settings.CELERY_BROKER_URL)

@@ -73,6 +73,16 @@ class Settings(BaseSettings):
     CELERY_BROKER_URL: str = ""
     REDIS_URL: str = ""
 
+    # ── Weather ──────────────────────────────────────────────────────────────
+    # Empty → monthly climatology table for the user's city (offline, deterministic).
+    OPENWEATHER_API_KEY: str = ""
+
+    # ── Push notifications ───────────────────────────────────────────────────
+    # Empty → console notifier (logs). Set to a service-account JSON string/path for FCM.
+    FIREBASE_SERVICE_ACCOUNT: str = ""
+    DAILY_PUSH_HOUR_IST: int = 7
+    DAILY_PUSH_MINUTE_IST: int = 30
+
     # ── Observability ────────────────────────────────────────────────────────
     SENTRY_DSN: str = ""
 

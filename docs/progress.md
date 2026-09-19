@@ -10,7 +10,7 @@ Status: ✅ done · 🔧 in progress · ⬜ not started · ⚠️ deviates from 
 | Weeks 1–2 — Setup & infrastructure | ✅ | See below. ⚠️ Local SQLite instead of Supabase (see [decisions.md](decisions.md#local-database)). Railway deploy job exists but is inert until `RAILWAY_TOKEN` is set. |
 | Weeks 3–4 — Onboarding flow | ✅ | ⚠️ Client-side image resize deferred (server resizes; picker sends JPEG q=0.85). Classification is stubbed as `pending` until weeks 5–7. |
 | Weeks 5–7 — Garment AI | ✅ pipeline / ⚠️ model | ⚠️ No labelled Indian dataset exists yet, so no fine-tuned ViT. Shipping CLIP zero-shot as the MVP model (40% on a 5-photo smoke set — see [packages/ai/README.md](../packages/ai/README.md)); training + eval scripts are ready. The 85% gate is blocked on collecting a labelled eval set. |
-| Weeks 8–9 — Style engine v1 | ⬜ | |
+| Weeks 8–9 — Style engine v1 | ✅ | ⚠️ No OpenWeather key / Firebase creds available: weather falls back to a per-city monthly climatology table, push to a console notifier. Both switch on via env. Celery beat schedule defined; run `scripts/run_daily_push.py` locally. |
 | Weeks 10–11 — Festival intelligence | ⬜ | |
 | Week 12 — Polish & launch | ⬜ | |
 
@@ -41,6 +41,15 @@ Status: ✅ done · 🔧 in progress · ⬜ not started · ⚠️ deviates from 
 - [x] Mobile: AI suggestion card (confirm / pick alternative / edit / retry), polling while pending, care section on GarmentDetail
 - [x] 21 new tests (55 total); verified live with real Wikimedia photos through the API
 - [ ] **Open:** collect a labelled eval set (≥30 phone photos per garment type) — the first data task for the team
+
+### Weeks 8–9 deliverables
+- [x] `outfit_engine.py`: 5 scoring layers (weather, occasion, colour + skin tone, festival, personalisation) + composition by garment role (`full`, `full+layer`, `top+bottom(+layer)`); score floor drops clearly-wrong options; stable daily seed; "show me another" exclusion
+- [x] Knowledge base: `role`/`layer_ok` on garment types, `color_harmony.json`, `climatology.json`, festival `colors`
+- [x] Weather service: OpenWeather (lat/lon from cities.json, 30-min cache) → climatology fallback; season inference
+- [x] `/outfits`: daily (stable per day, regenerate), generate (occasion + optional festival, 1–5 options), feedback ±1, save/unsave, wear (logs garment wears, counts as like), history, saved
+- [x] Notifications: console / FCM behind one interface; `pehno.push_daily_outfits` Celery task on a 07:30 IST beat; manual runner script
+- [x] Mobile: DailyLook (weather card, look, like/dislike/save/wear, show-me-another), OccasionPicker, OutfitResult (3 looks as tabs), OutfitHistory / Saved; OutfitCard + WeatherCard components
+- [x] 19 new tests (74 total); verified live
 
 ## Phase 2 — Commerce (Weeks 13–28)
 ⬜ Not started.

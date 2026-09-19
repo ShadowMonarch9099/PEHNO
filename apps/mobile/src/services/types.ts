@@ -195,3 +195,50 @@ export interface City {
   state: string;
   region: string;
 }
+
+// ── Outfits ────────────────────────────────────────────────────────────────
+
+export interface WeatherInfo {
+  city: string;
+  temp_c: number;
+  feels_like_c: number;
+  humidity: number;
+  condition: 'sunny' | 'cloudy' | 'humid' | 'rain' | 'foggy' | 'cold';
+  season: 'summer' | 'monsoon' | 'winter' | 'transition';
+  source: 'openweather' | 'climatology';
+  description: string;
+  fabric_tip: string;
+}
+
+export interface Outfit {
+  id: string;
+  occasion: string;
+  festival: string | null;
+  garments: Garment[];
+  weather_condition: string;
+  temperature_celsius: number;
+  season: string;
+  score: number;
+  rationale: string[];
+  feedback: 1 | -1 | null;
+  is_saved: boolean;
+  is_daily: boolean;
+  for_date: string | null;
+  batch_id: string | null;
+  worn_at: string | null;
+  created_at: string;
+}
+
+export interface OutfitOptions {
+  weather: WeatherInfo;
+  options: Outfit[];
+  batch_id: string | null;
+  hint: string | null;
+}
+
+export interface OutfitList {
+  items: Outfit[];
+  total: number;
+  page: number;
+  page_size: number;
+}

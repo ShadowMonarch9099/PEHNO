@@ -1,0 +1,162 @@
+{
+ "neutrals": [
+  "white",
+  "cream",
+  "beige",
+  "black",
+  "grey",
+  "golden"
+ ],
+ "pairs": {
+  "red": [
+   "golden",
+   "green",
+   "cream",
+   "white",
+   "navy"
+  ],
+  "maroon": [
+   "golden",
+   "cream",
+   "beige",
+   "green",
+   "pink"
+  ],
+  "pink": [
+   "golden",
+   "green",
+   "navy",
+   "white",
+   "grey",
+   "teal"
+  ],
+  "orange": [
+   "navy",
+   "blue",
+   "teal",
+   "white",
+   "green"
+  ],
+  "yellow": [
+   "purple",
+   "navy",
+   "blue",
+   "green",
+   "maroon"
+  ],
+  "golden": [
+   "maroon",
+   "red",
+   "green",
+   "navy",
+   "purple",
+   "teal"
+  ],
+  "green": [
+   "golden",
+   "red",
+   "maroon",
+   "pink",
+   "orange",
+   "white"
+  ],
+  "teal": [
+   "golden",
+   "orange",
+   "pink",
+   "cream",
+   "maroon"
+  ],
+  "blue": [
+   "golden",
+   "orange",
+   "white",
+   "cream",
+   "yellow"
+  ],
+  "navy": [
+   "golden",
+   "pink",
+   "orange",
+   "cream",
+   "red"
+  ],
+  "purple": [
+   "golden",
+   "yellow",
+   "cream",
+   "pink",
+   "green"
+  ],
+  "brown": [
+   "cream",
+   "teal",
+   "orange",
+   "golden",
+   "green"
+  ],
+  "multicolor": [
+   "white",
+   "cream",
+   "black",
+   "beige"
+  ]
+ },
+ "clashes": [
+  [
+   "red",
+   "orange"
+  ],
+  [
+   "red",
+   "pink"
+  ],
+  [
+   "green",
+   "blue"
+  ],
+  [
+   "purple",
+   "brown"
+  ],
+  [
+   "orange",
+   "pink"
+  ]
+ ],
+ "skin_tone_flatters": {
+  "fair": [
+   "maroon",
+   "navy",
+   "green",
+   "purple",
+   "pink",
+   "teal"
+  ],
+  "wheatish": [
+   "golden",
+   "orange",
+   "teal",
+   "green",
+   "maroon",
+   "brown"
+  ],
+  "medium": [
+   "orange",
+   "pink",
+   "blue",
+   "golden",
+   "red",
+   "purple"
+  ],
+  "dark": [
+   "white",
+   "pink",
+   "blue",
+   "yellow",
+   "teal",
+   "cream",
+   "golden"
+  ]
+ }
+}

@@ -23,6 +23,13 @@ export type WardrobeStackParamList = {
   GarmentEdit: { garmentId: string };
 };
 
+export type OutfitStackParamList = {
+  DailyLook: undefined;
+  OccasionPicker: undefined;
+  OutfitResult: { occasion: string; festival?: string };
+  OutfitHistory: { saved?: boolean };
+};
+
 export type MainTabParamList = {
   Wardrobe: undefined;
   Outfits: undefined;
@@ -34,6 +41,10 @@ export type AuthScreenProps<T extends keyof AuthStackParamList> = NativeStackScr
 export type OnboardingScreenProps<T extends keyof OnboardingStackParamList> = NativeStackScreenProps<
   OnboardingStackParamList,
   T
+>;
+export type OutfitScreenProps<T extends keyof OutfitStackParamList> = CompositeScreenProps<
+  NativeStackScreenProps<OutfitStackParamList, T>,
+  BottomTabScreenProps<MainTabParamList>
 >;
 export type WardrobeScreenProps<T extends keyof WardrobeStackParamList> = CompositeScreenProps<
   NativeStackScreenProps<WardrobeStackParamList, T>,

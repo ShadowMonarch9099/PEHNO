@@ -65,6 +65,9 @@ npx tsc --noEmit -p apps/mobile
 | `DATABASE_URL` | `sqlite+aiosqlite:///./pehno.db` | `postgresql+asyncpg://…supabase.co:5432/postgres` |
 | `STORAGE_BACKEND` | `local` (served at `/media`) | `supabase` (+ `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`) |
 | `OTP_PROVIDER` | `console` | `msg91` (+ `MSG91_AUTH_KEY`, `MSG91_TEMPLATE_ID`) |
+| `OPENWEATHER_API_KEY` | empty (monthly climatology per city) | live weather |
+| `FIREBASE_SERVICE_ACCOUNT` | empty (console notifier) | FCM push |
+| `CELERY_BROKER_URL` | empty (in-process jobs) | Redis; run `celery -A app.tasks worker` and `celery -A app.tasks beat` |
 | `SENTRY_DSN` | empty (disabled) | your DSN |
 
 Full-stack locally with Docker: `docker compose -f infra/docker-compose.yml up`.
@@ -79,6 +82,8 @@ GET  /users/me             PUT  /users/me            GET  /users/me/stats
 POST /wardrobe/upload      GET  /wardrobe            GET  /wardrobe/{id}
 PUT  /wardrobe/{id}        DELETE /wardrobe/{id}     POST /wardrobe/{id}/wear
 POST /wardrobe/{id}/confirm                          POST /wardrobe/{id}/reclassify
+GET  /outfits/daily        POST /outfits/generate    GET  /outfits/history     GET /outfits/saved
+POST /outfits/{id}/feedback  POST|DELETE /outfits/{id}/save  POST /outfits/{id}/wear
 GET  /meta/wardrobe-options                          GET  /meta/cities
 GET  /media/{key}          (local storage backend only)
 ```
