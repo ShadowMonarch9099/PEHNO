@@ -34,6 +34,7 @@ frontend/     Web design prototype (reference only — not wired to the API)
 cd apps/api
 python -m venv venv && venv/Scripts/activate        # Windows; use source venv/bin/activate on macOS/Linux
 pip install -r requirements-dev.txt
+pip install -r requirements-ml.txt   # optional: CLIP zero-shot classifier (~2 GB); skip and set CLASSIFIER_BACKEND=rules
 cp .env.example .env                                 # defaults: SQLite, console OTP, local media
 alembic upgrade head
 uvicorn main:app --reload
@@ -77,6 +78,7 @@ POST /auth/logout          POST /auth/logout-all
 GET  /users/me             PUT  /users/me            GET  /users/me/stats
 POST /wardrobe/upload      GET  /wardrobe            GET  /wardrobe/{id}
 PUT  /wardrobe/{id}        DELETE /wardrobe/{id}     POST /wardrobe/{id}/wear
+POST /wardrobe/{id}/confirm                          POST /wardrobe/{id}/reclassify
 GET  /meta/wardrobe-options                          GET  /meta/cities
 GET  /media/{key}          (local storage backend only)
 ```

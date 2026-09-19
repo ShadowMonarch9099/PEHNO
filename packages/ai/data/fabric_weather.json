@@ -82,5 +82,11 @@
     "monsoon": "good",
     "winter": "caution",
     "notes": "A semi-synthetic fabric that mimics the drape and comfort of natural fabrics. Breathable and lightweight — excellent for summer and transitional weather. Affordable alternative to silk for casual and semi-formal occasions. Avoid heavy rain as it loses shape when wet."
+  },
+  "silk": {
+    "summer": "caution",
+    "monsoon": "avoid",
+    "winter": "excellent",
+    "notes": "Soft/art silk. Breathes poorly in peak heat and water-spots in rain; ideal for winter evenings and festive occasions."
   }
 }

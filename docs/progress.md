@@ -9,7 +9,7 @@ Status: ✅ done · 🔧 in progress · ⬜ not started · ⚠️ deviates from 
 |---|---|---|
 | Weeks 1–2 — Setup & infrastructure | ✅ | See below. ⚠️ Local SQLite instead of Supabase (see [decisions.md](decisions.md#local-database)). Railway deploy job exists but is inert until `RAILWAY_TOKEN` is set. |
 | Weeks 3–4 — Onboarding flow | ✅ | ⚠️ Client-side image resize deferred (server resizes; picker sends JPEG q=0.85). Classification is stubbed as `pending` until weeks 5–7. |
-| Weeks 5–7 — Garment AI | ⬜ | |
+| Weeks 5–7 — Garment AI | ✅ pipeline / ⚠️ model | ⚠️ No labelled Indian dataset exists yet, so no fine-tuned ViT. Shipping CLIP zero-shot as the MVP model (40% on a 5-photo smoke set — see [packages/ai/README.md](../packages/ai/README.md)); training + eval scripts are ready. The 85% gate is blocked on collecting a labelled eval set. |
 | Weeks 8–9 — Style engine v1 | ⬜ | |
 | Weeks 10–11 — Festival intelligence | ⬜ | |
 | Week 12 — Polish & launch | ⬜ | |
@@ -31,6 +31,16 @@ Status: ✅ done · 🔧 in progress · ⬜ not started · ⚠️ deviates from 
 - [x] Wardrobe API: list with occasion/fabric/season/type/status filters + pagination (dialect-portable JSON containment), get, update (vocabulary-validated; classification edits set `user_verified`), delete (removes files), wear log, cost-per-wear
 - [x] Mobile: WardrobeHome (2-col grid, filter tabs, 30-item goal bar, FAB), Upload (camera / multi-gallery, preview grid, progress, partial-reject alert), GarmentDetail (stats, details, wear/edit/delete), GarmentEdit (chip pickers, price, notes), SettingsHome (profile + sign out)
 - [x] 11 new API tests (34 total)
+
+### Weeks 5–7 deliverables
+- [x] Classifier pipeline `apps/api/app/services/classifier`: deterministic colour extraction → pluggable vision backend (`rules` / `zero_shot` CLIP / `vit`) → knowledge rules (occasions, seasons, regional style, care)
+- [x] `packages/ai/data/care_profiles.json` (per-fabric care incl. monsoon), `silk` added to fabric matrix
+- [x] Async classification: upload returns immediately (`pending`); job runs via Celery when `CELERY_BROKER_URL` is set, otherwise as an in-process background task. `POST /wardrobe/{id}/reclassify`
+- [x] Correction loop: `classification_feedback` table populated on every AI-vs-user label difference; `POST /wardrobe/{id}/confirm` for positive signal; `ai_labels` snapshot kept on the garment
+- [x] `scripts/export_training_data.py` → JSONL + images; `packages/ai/training/train_vit.py` (HF Trainer, taxonomy-locked labels); `packages/ai/eval/evaluate.py` (accuracy, per-class recall, confusion, 85% gate)
+- [x] Mobile: AI suggestion card (confirm / pick alternative / edit / retry), polling while pending, care section on GarmentDetail
+- [x] 21 new tests (55 total); verified live with real Wikimedia photos through the API
+- [ ] **Open:** collect a labelled eval set (≥30 phone photos per garment type) — the first data task for the team
 
 ## Phase 2 — Commerce (Weeks 13–28)
 ⬜ Not started.

@@ -37,7 +37,7 @@ async def test_upload_single_creates_pending_garment_and_files(client):
     assert body["rejected"] == []
     assert len(body["created"]) == 1
     g = body["created"][0]
-    assert g["classification_status"] == "pending"
+    assert g["classification_status"] == "pending"  # job hasn't run when the response is built
     assert g["garment_type"] == "unknown"
     assert g["wear_count"] == 0
     assert g["cost_per_wear"] is None
@@ -109,7 +109,9 @@ async def test_list_filters_and_pagination(client):
     assert (await ids_for(occasion="office"))[0] == [ids[0]]
     assert (await ids_for(fabric="cotton"))[1] == 2
     assert (await ids_for(season="winter"))[0] == [ids[1]]
-    assert (await ids_for(status="pending"))[0] == [ids[2]]
+    # With the rules backend the background job completes instantly in tests.
+    assert (await ids_for(status="complete"))[1] == 3
+    assert (await ids_for(status="pending"))[1] == 0
     got, total = await ids_for(page=2, page_size=2)
     assert total == 3 and len(got) == 1
 
@@ -138,7 +140,7 @@ async def test_update_metadata_and_correction_marks_verified(client):
     assert r.status_code == 200, r.text
     g = r.json()
     assert g["purchase_price"] == 1500.0 and g["condition"] == "new"
-    assert g["user_verified"] is False and g["classification_status"] == "pending"
+    assert g["user_verified"] is False and g["classification_status"] == "complete"
 
     r = await client.put(
         f"/wardrobe/{gid}",

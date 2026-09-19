@@ -27,6 +27,14 @@ class SupabaseStorage(StorageBackend):
             )
             r.raise_for_status()
 
+    async def get(self, key: str) -> bytes:
+        async with httpx.AsyncClient(timeout=30) as client:
+            r = await client.get(
+                f"{self.base}/object/authenticated/{self.bucket}/{key}", headers=self._headers
+            )
+            r.raise_for_status()
+            return r.content
+
     async def delete(self, key: str) -> None:
         async with httpx.AsyncClient(timeout=30) as client:
             r = await client.delete(

@@ -33,6 +33,8 @@ class GarmentOut(APIModel):
     classification_status: ClassificationStatus
     user_verified: bool
     care_profile: dict
+    ai_labels: dict | None
+    classified_at: UTCDateTime | None
     purchase_price: Money | None
     purchase_date: date | None
     condition: GarmentCondition

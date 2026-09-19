@@ -15,6 +15,7 @@ from app.core.query import json_list_contains
 from app.models.garment import ClassificationStatus, Garment
 from app.models.user import User
 from app.schemas.garment import GarmentOut, GarmentUpdate
+from app.services.classification_service import record_feedback
 from app.services.image_service import InvalidImageError, process_garment_image
 from app.services.storage import get_storage
 
@@ -43,6 +44,8 @@ def to_out(g: Garment) -> GarmentOut:
         classification_status=g.classification_status,
         user_verified=g.user_verified,
         care_profile=g.care_profile,
+        ai_labels=g.ai_labels,
+        classified_at=g.classified_at,
         purchase_price=g.purchase_price,
         purchase_date=g.purchase_date,
         condition=g.condition,
@@ -125,6 +128,7 @@ async def list_garments(
 
 async def update_garment(db: AsyncSession, garment: Garment, patch: GarmentUpdate) -> Garment:
     changes = patch.model_dump(exclude_unset=True)
+    await record_feedback(db, garment, changes)  # training data: what the AI said vs the user
     for field, value in changes.items():
         setattr(garment, field, value)
     if changes.keys() & GarmentUpdate.CLASSIFICATION_FIELDS:
@@ -146,6 +150,15 @@ async def delete_garment(db: AsyncSession, garment: Garment) -> None:
                 log.exception("Failed to delete %s", key)
     await db.delete(garment)
     await db.flush()
+
+
+async def confirm_labels(db: AsyncSession, garment: Garment) -> Garment:
+    """User says the AI got it right — a positive training signal."""
+    garment.user_verified = True
+    if garment.classification_status != ClassificationStatus.complete:
+        garment.classification_status = ClassificationStatus.complete
+    await db.flush()
+    return garment
 
 
 async def log_wear(db: AsyncSession, garment: Garment) -> Garment:

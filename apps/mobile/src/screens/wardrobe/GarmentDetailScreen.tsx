@@ -4,7 +4,9 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { AiSuggestionCard } from '../../components/garment/AiSuggestionCard';
 import { Chip, PrimaryButton, ScreenHeader, SecondaryButton } from '../../components/ui';
+import { usePendingPoll } from '../../hooks/usePendingPoll';
 import type { WardrobeScreenProps } from '../../navigation/types';
 import { wardrobeApi } from '../../services';
 import { labelFor, useMetaStore, useWardrobeStore } from '../../store';
@@ -15,9 +17,10 @@ const rupees = (n: number | null) => (n === null ? '—' : `₹${n.toLocaleStrin
 export default function GarmentDetailScreen({ route, navigation }: WardrobeScreenProps<'GarmentDetail'>) {
   const { garmentId } = route.params;
   const cached = useWardrobeStore((s) => s.garments.find((g) => g.id === garmentId));
-  const { upsert, remove, logWear } = useWardrobeStore();
+  const { upsert, remove, logWear, confirm, reclassify, update } = useWardrobeStore();
   const options = useMetaStore((s) => s.options);
   const [busy, setBusy] = useState(false);
+  usePendingPoll();
 
   useEffect(() => {
     // Always refetch: classification may have completed since the grid loaded.
@@ -32,8 +35,17 @@ export default function GarmentDetailScreen({ route, navigation }: WardrobeScree
     );
   }
   const g = cached;
-  const pending = g.classification_status === 'pending';
   const title = g.garment_type === 'unknown' ? 'New item' : labelFor(options.garment_types, g.garment_type);
+  const care = g.care_profile;
+
+  const run = async (fn: () => Promise<unknown>) => {
+    setBusy(true);
+    try {
+      await fn();
+    } finally {
+      setBusy(false);
+    }
+  };
 
   const confirmDelete = () =>
     Alert.alert('Remove this item?', 'It will be deleted from your wardrobe.', [
@@ -53,14 +65,7 @@ export default function GarmentDetailScreen({ route, navigation }: WardrobeScree
       },
     ]);
 
-  const wear = async () => {
-    setBusy(true);
-    try {
-      await logWear(g.id);
-    } finally {
-      setBusy(false);
-    }
-  };
+  const wear = () => run(() => logWear(g.id));
 
   return (
     <SafeAreaView style={styles.container}>
@@ -68,11 +73,15 @@ export default function GarmentDetailScreen({ route, navigation }: WardrobeScree
       <ScrollView contentContainerStyle={styles.body}>
         <Image source={{ uri: g.image_url }} style={styles.image} resizeMode="cover" />
 
-        {pending ? (
-          <View style={styles.notice}>
-            <Text style={styles.noticeText}>✨ Classifying… you can fill in details yourself meanwhile.</Text>
-          </View>
-        ) : null}
+        <AiSuggestionCard
+          garment={g}
+          typeOptions={options.garment_types}
+          busy={busy}
+          onConfirm={() => run(() => confirm(g.id))}
+          onPickType={(slug) => run(() => update(g.id, { garment_type: slug }))}
+          onEdit={() => navigation.navigate('GarmentEdit', { garmentId: g.id })}
+          onRetry={() => run(() => reclassify(g.id))}
+        />
 
         <View style={styles.statsRow}>
           <Stat label="Worn" value={`${g.wear_count}×`} />
@@ -107,6 +116,15 @@ export default function GarmentDetailScreen({ route, navigation }: WardrobeScree
             </View>
           </Section>
         ) : null}
+        {care.wash || care.storage ? (
+          <Section title="Care">
+            {care.wash ? <Row k="Wash" v={care.wash} /> : null}
+            {care.iron ? <Row k="Iron" v={care.iron} /> : null}
+            {care.storage ? <Row k="Store" v={care.storage} /> : null}
+            {care.monsoon ? <Row k="Monsoon" v={care.monsoon} /> : null}
+            {care.dry_clean ? <Text style={styles.careNote}>🧼 Dry clean recommended</Text> : null}
+          </Section>
+        ) : null}
         {g.notes ? (
           <Section title="Notes">
             <Text style={typography.body2}>{g.notes}</Text>
@@ -139,7 +157,7 @@ const Section = ({ title, children }: { title: string; children: React.ReactNode
 );
 const Row = ({ k, v }: { k: string; v: string }) => (
   <View style={styles.row}>
-    <Text style={typography.body2}>{k}</Text>
+    <Text style={[typography.body2, styles.rowKey]}>{k}</Text>
     <Text style={styles.rowValue}>{v}</Text>
   </View>
 );
@@ -148,15 +166,15 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
   body: { padding: spacing.xl, gap: spacing.lg, paddingBottom: spacing.xxl },
   image: { width: '100%', aspectRatio: 0.85, borderRadius: borderRadius.xl, backgroundColor: colors.borderLight },
-  notice: { backgroundColor: colors.surfaceElevated, borderRadius: borderRadius.lg, padding: spacing.md },
-  noticeText: { ...typography.body2 },
+  careNote: { ...typography.caption, marginTop: spacing.xs },
   statsRow: { flexDirection: 'row', gap: spacing.sm },
   stat: { flex: 1, backgroundColor: colors.surfaceElevated, borderRadius: borderRadius.lg, padding: spacing.md, alignItems: 'center', gap: 2 },
   statValue: { ...typography.h3 },
   section: { gap: spacing.sm },
   sectionTitle: { ...typography.label, textTransform: 'uppercase', letterSpacing: 1 },
   row: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: spacing.xs, borderBottomWidth: 1, borderBottomColor: colors.borderLight },
-  rowValue: { ...typography.body2, color: colors.textPrimary, fontWeight: '600', textTransform: 'capitalize' },
+  rowKey: { width: 92 },
+  rowValue: { ...typography.body2, color: colors.textPrimary, fontWeight: '600', flex: 1, textAlign: 'right' },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   footer: { padding: spacing.xl, gap: spacing.sm, borderTopWidth: 1, borderTopColor: colors.borderLight },
   footerRow: { flexDirection: 'row', gap: spacing.sm },

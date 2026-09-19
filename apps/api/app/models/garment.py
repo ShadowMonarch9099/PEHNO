@@ -50,6 +50,10 @@ class Garment(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     )
     user_verified: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     care_profile: Mapped[dict] = mapped_column(JSONColumn, nullable=False, default=dict)
+    # Snapshot of what the model said (labels, candidates, backend) — survives user edits
+    # so corrections can be diffed against the original prediction.
+    ai_labels: Mapped[dict | None] = mapped_column(JSONColumn, nullable=True)
+    classified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     # User metadata
     purchase_price: Mapped[Decimal | None] = mapped_column(Numeric(10, 2), nullable=True)

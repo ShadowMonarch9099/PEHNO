@@ -58,6 +58,21 @@ class Settings(BaseSettings):
     THUMBNAIL_SIDE: int = 320
     IMAGE_TARGET_BYTES: int = 300 * 1024
 
+    # ── Garment AI ───────────────────────────────────────────────────────────
+    # rules     → colour extraction + knowledge-base rules only (no model; CI/tests)
+    # zero_shot → CLIP zero-shot over the Indian garment taxonomy (no training data needed)
+    # vit       → fine-tuned ViT from packages/ai/models/garment_classifier (when trained)
+    CLASSIFIER_BACKEND: Literal["rules", "zero_shot", "vit"] = "zero_shot"
+    HF_CLIP_MODEL: str = "patrickjohncyh/fashion-clip"
+    VIT_MODEL_DIR: str = "../../packages/ai/models/garment_classifier"
+    CLASSIFIER_MIN_CONFIDENCE: float = 0.30  # below this the type stays "unknown"
+    CLASSIFIER_DEVICE: str = "cpu"
+
+    # ── Background jobs ──────────────────────────────────────────────────────
+    # Empty → run jobs in-process (FastAPI BackgroundTasks). Set to use Celery workers.
+    CELERY_BROKER_URL: str = ""
+    REDIS_URL: str = ""
+
     # ── Observability ────────────────────────────────────────────────────────
     SENTRY_DSN: str = ""
 

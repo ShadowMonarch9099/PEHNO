@@ -10,6 +10,8 @@ os.environ.setdefault("DATABASE_URL", "sqlite+aiosqlite://")
 os.environ.setdefault("JWT_SECRET", "test-secret-key-for-ci-32chars-long")
 os.environ.setdefault("OTP_PROVIDER", "console")
 os.environ.setdefault("LOCAL_MEDIA_DIR", "./.test-media")
+os.environ.setdefault("CLASSIFIER_BACKEND", "rules")
+os.environ.setdefault("CELERY_BROKER_URL", "")
 
 import pytest  # noqa: E402
 from httpx import AsyncClient  # noqa: E402
@@ -20,6 +22,7 @@ from sqlalchemy.ext.asyncio import (  # noqa: E402
 )
 from sqlalchemy.pool import StaticPool  # noqa: E402
 
+from app.core import database  # noqa: E402
 from app.core.database import Base, get_db  # noqa: E402
 from app.main import app  # noqa: E402
 from app.routers import auth as auth_router  # noqa: E402
@@ -44,7 +47,7 @@ async def db(engine) -> AsyncSession:
 
 
 @pytest.fixture
-async def client(engine):
+async def client(engine, monkeypatch):
     session_factory = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
     async def _override_db():
@@ -57,6 +60,8 @@ async def client(engine):
                 raise
 
     app.dependency_overrides[get_db] = _override_db
+    # Background jobs open their own session; point them at the test engine.
+    monkeypatch.setattr(database, "SessionLocal", session_factory)
     for limiter in (
         auth_router.send_limiter_phone,
         auth_router.send_limiter_ip,

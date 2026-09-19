@@ -22,5 +22,9 @@ httpx>=0.24,<0.26
 aiofiles==23.2.1
 Pillow==10.2.0
 
+# ── Background jobs ────────────────────────────────────────────
+celery==5.3.6
+redis==5.0.1
+
 # ── Observability ──────────────────────────────────────────────
 sentry-sdk[fastapi]==1.40.0

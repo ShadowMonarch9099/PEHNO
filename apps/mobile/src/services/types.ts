@@ -77,6 +77,34 @@ export type ClassificationStatus = 'pending' | 'complete' | 'failed';
 export type GarmentCondition = 'new' | 'good' | 'worn';
 export type Season = 'summer' | 'monsoon' | 'winter' | 'all_season';
 
+export interface CareProfile {
+  wash?: string;
+  iron?: string;
+  storage?: string;
+  dry_clean?: boolean;
+  notes?: string;
+  monsoon?: string;
+}
+
+export interface Candidate {
+  label: string;
+  confidence: number;
+}
+
+/** Snapshot of the model's prediction, kept even after the user edits the item. */
+export interface AiLabels {
+  garment_type: string;
+  fabric_type: string;
+  color_primary: string;
+  color_accent: string | null;
+  occasion_tags: string[];
+  season_tags: string[];
+  regional_style: string | null;
+  confidence: number;
+  backend: string;
+  candidates: { garment_types: Candidate[]; fabrics: Candidate[] };
+}
+
 export interface Garment {
   id: string;
   image_url: string;
@@ -91,7 +119,9 @@ export interface Garment {
   ai_confidence: number;
   classification_status: ClassificationStatus;
   user_verified: boolean;
-  care_profile: Record<string, unknown>;
+  care_profile: CareProfile;
+  ai_labels: AiLabels | null;
+  classified_at: string | null;
   purchase_price: number | null;
   purchase_date: string | null;
   condition: GarmentCondition;

@@ -102,3 +102,8 @@ uploads/
 *.sqlite*
 apps/api/media/
 apps/api/.test-media/
+
+# AI artefacts
+packages/ai/data/exports/
+packages/ai/models/*
+!packages/ai/models/.gitkeep

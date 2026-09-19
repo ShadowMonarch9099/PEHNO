@@ -15,6 +15,8 @@ export const wardrobeApi = {
     api.put<Garment>(`/wardrobe/${id}`, patch).then((r) => r.data),
   remove: (id: string) => api.delete(`/wardrobe/${id}`).then(() => undefined),
   logWear: (id: string) => api.post<Garment>(`/wardrobe/${id}/wear`).then((r) => r.data),
+  confirm: (id: string) => api.post<Garment>(`/wardrobe/${id}/confirm`).then((r) => r.data),
+  reclassify: (id: string) => api.post<Garment>(`/wardrobe/${id}/reclassify`).then((r) => r.data),
 
   /** Upload up to 10 photos in one multipart request. */
   upload: (photos: LocalPhoto[], onProgress?: (fraction: number) => void) => {

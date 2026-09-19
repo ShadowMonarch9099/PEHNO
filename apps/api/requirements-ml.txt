@@ -1,0 +1,5 @@
+# Vision model dependencies (CLASSIFIER_BACKEND=zero_shot | vit). ~2 GB; not needed
+# for CI or for CLASSIFIER_BACKEND=rules.
+-r requirements.txt
+torch==2.2.0
+transformers==4.37.2

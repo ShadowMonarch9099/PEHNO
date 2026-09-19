@@ -13,3 +13,7 @@ class StorageBackend(ABC):
     @abstractmethod
     def url_for(self, key: str) -> str:
         """Return a URL a client can fetch. May be time-limited (signed)."""
+
+    @abstractmethod
+    async def get(self, key: str) -> bytes:
+        """Read an object's bytes (used by the classifier)."""

@@ -22,7 +22,11 @@ interface WardrobeState {
   update: (id: string, patch: Parameters<typeof wardrobeApi.update>[1]) => Promise<Garment>;
   remove: (id: string) => Promise<void>;
   logWear: (id: string) => Promise<Garment>;
+  confirm: (id: string) => Promise<Garment>;
+  reclassify: (id: string) => Promise<Garment>;
   upsert: (g: Garment) => void;
+  /** Re-fetch garments still classifying. Returns true if any remain pending. */
+  pollPending: () => Promise<boolean>;
 }
 
 export const useWardrobeStore = create<WardrobeState>((set, get) => ({
@@ -73,6 +77,26 @@ export const useWardrobeStore = create<WardrobeState>((set, get) => ({
     const g = await wardrobeApi.logWear(id);
     get().upsert(g);
     return g;
+  },
+
+  confirm: async (id) => {
+    const g = await wardrobeApi.confirm(id);
+    get().upsert(g);
+    return g;
+  },
+
+  reclassify: async (id) => {
+    const g = await wardrobeApi.reclassify(id);
+    get().upsert(g);
+    return g;
+  },
+
+  pollPending: async () => {
+    const pending = get().garments.filter((g) => g.classification_status === 'pending');
+    if (!pending.length) return false;
+    const fresh = await Promise.all(pending.map((g) => wardrobeApi.get(g.id).catch(() => null)));
+    fresh.forEach((g) => g && get().upsert(g));
+    return get().garments.some((g) => g.classification_status === 'pending');
   },
 
   upsert: (g) =>

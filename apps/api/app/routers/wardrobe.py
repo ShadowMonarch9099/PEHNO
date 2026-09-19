@@ -4,7 +4,7 @@
 import uuid
 from typing import Annotated
 
-from fastapi import APIRouter, File, HTTPException, Query, UploadFile, status
+from fastapi import APIRouter, BackgroundTasks, File, HTTPException, Query, UploadFile, status
 
 from app.core.config import settings
 from app.core.security import CurrentUser, DbSession
@@ -12,7 +12,10 @@ from app.models.garment import ClassificationStatus
 from app.schemas.common import Message
 from app.schemas.garment import GarmentListOut, GarmentOut, GarmentUpdate, UploadResultOut
 from app.services import wardrobe_service as svc
+from app.services.classification_service import run_classification_job
 from app.services.image_service import InvalidImageError
+from app.tasks import dispatch
+from app.tasks.classify import classify_garment_task
 
 router = APIRouter(prefix="/wardrobe", tags=["wardrobe"])
 
@@ -21,6 +24,7 @@ router = APIRouter(prefix="/wardrobe", tags=["wardrobe"])
 async def upload(
     user: CurrentUser,
     db: DbSession,
+    background: BackgroundTasks,
     files: Annotated[list[UploadFile], File(description="1–10 garment photos")],
 ) -> UploadResultOut:
     """
@@ -46,6 +50,10 @@ async def upload(
             rejected.append({"filename": f.filename or "", "reason": str(e)})
     if not created:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, rejected[0]["reason"])
+    # Commit before dispatch so the job (separate session/worker) can see the rows.
+    await db.commit()
+    for g in created:
+        dispatch(background, classify_garment_task, run_classification_job, g.id)
     return UploadResultOut(created=created, rejected=rejected)
 
 
@@ -101,3 +109,24 @@ async def delete_garment(garment_id: uuid.UUID, user: CurrentUser, db: DbSession
 async def log_wear(garment_id: uuid.UUID, user: CurrentUser, db: DbSession) -> GarmentOut:
     garment = await svc.get_owned(db, user, garment_id)
     return svc.to_out(await svc.log_wear(db, garment))
+
+
+@router.post("/{garment_id}/confirm", response_model=GarmentOut)
+async def confirm_labels(garment_id: uuid.UUID, user: CurrentUser, db: DbSession) -> GarmentOut:
+    """Mark the AI labels as correct (positive training signal)."""
+    garment = await svc.get_owned(db, user, garment_id)
+    return svc.to_out(await svc.confirm_labels(db, garment))
+
+
+@router.post(
+    "/{garment_id}/reclassify", response_model=GarmentOut, status_code=status.HTTP_202_ACCEPTED
+)
+async def reclassify(
+    garment_id: uuid.UUID, user: CurrentUser, db: DbSession, background: BackgroundTasks
+) -> GarmentOut:
+    """Re-run classification (e.g. after a failure or a model upgrade)."""
+    garment = await svc.get_owned(db, user, garment_id)
+    garment.classification_status = ClassificationStatus.pending
+    await db.commit()
+    dispatch(background, classify_garment_task, run_classification_job, garment.id)
+    return svc.to_out(garment)

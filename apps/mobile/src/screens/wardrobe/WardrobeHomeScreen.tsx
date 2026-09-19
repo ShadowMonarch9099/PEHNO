@@ -8,6 +8,7 @@ import { FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, useWindow
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { GarmentCard } from '../../components/garment/GarmentCard';
 import { ChipGroup, ProgressBar } from '../../components/ui';
+import { usePendingPoll } from '../../hooks/usePendingPoll';
 import type { WardrobeScreenProps } from '../../navigation/types';
 import type { Season } from '../../services/types';
 import { useAuthStore, useMetaStore, useWardrobeStore, WARDROBE_GOAL } from '../../store';
@@ -26,6 +27,7 @@ export default function WardrobeHomeScreen({ navigation }: WardrobeScreenProps<'
   const { garments, total, filters, loading, error, refresh, setFilters, clearFilters } = useWardrobeStore();
   const { options, load } = useMetaStore();
   const [tab, setTab] = useState<FilterTab>('occasion');
+  usePendingPoll();
 
   useEffect(() => {
     void load();

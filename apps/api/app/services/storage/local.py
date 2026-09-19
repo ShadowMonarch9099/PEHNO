@@ -28,6 +28,10 @@ class LocalStorage(StorageBackend):
         async with aiofiles.open(p, "wb") as f:
             await f.write(data)
 
+    async def get(self, key: str) -> bytes:
+        async with aiofiles.open(self._path(key), "rb") as f:
+            return await f.read()
+
     async def delete(self, key: str) -> None:
         p = self._path(key)
         if p.exists():

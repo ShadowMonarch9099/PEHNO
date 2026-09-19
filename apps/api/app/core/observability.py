@@ -11,7 +11,8 @@ def setup_logging() -> None:
         level=logging.DEBUG if settings.DEBUG else logging.INFO,
         format="%(asctime)s %(levelname)s %(name)s: %(message)s",
     )
-    logging.getLogger("sqlalchemy.engine").setLevel(logging.WARNING)
+    for noisy in ("sqlalchemy.engine", "aiosqlite", "httpx", "httpcore", "urllib3", "PIL"):
+        logging.getLogger(noisy).setLevel(logging.WARNING)
 
 
 def setup_sentry() -> None:

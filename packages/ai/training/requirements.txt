@@ -1,0 +1,6 @@
+torch==2.2.0
+transformers==4.37.2
+datasets==2.16.1
+scikit-learn==1.4.0
+Pillow==10.2.0
+accelerate==0.26.1
