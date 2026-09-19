@@ -75,11 +75,18 @@ Status: ✅ done · 🔧 in progress · ⬜ not started · ⚠️ deviates from 
 |---|---|---|
 | Weeks 13–14 — Freemium paywall | ✅ | ⚠️ Plus priced ₹199 (plan/deck), not the ₹149 in the old README. Razorpay runs behind a provider interface; the mock provider + `POST /billing/dev/activate` (DEBUG only) stand in until keys and dashboard plan ids exist. |
 | Weeks 15–17 — Wardrobe gap analysis | ✅ | ⚠️ The plan asks for qualitative user testing of gap recommendations before the full UI — the UI is built, but the *validation* still needs real users (see launch checklist). Redis cache used when `REDIS_URL` is set; in-process otherwise. |
-| Weeks 18–19 — Affiliate commerce | ⬜ | |
+| Weeks 18–19 — Affiliate commerce | ✅ structure / ⚠️ partners | Myntra/Ajio/Nykaa/Meesho have no public product APIs: cards are curated per-platform *searches* wrapped in a configurable network deep-link template with our click id as `subid`. Real product cards arrive when a partner catalogue is approved (`ProductSource` seam). Admin dashboard app itself is still pending; `/admin/metrics` feeds it. |
 | Weeks 20–21 — Fabric care & ROI | ⬜ | Care profiles + CPW already shipped in Phase 1; reminders/underutilised pending |
 | Weeks 22–24 — Shopping scan mode | ⬜ | |
 | Weeks 25–28 — Festival expansion & cities | ⬜ | |
 | Admin dashboard (Phase 2 pages) | ⬜ | |
+
+### Weeks 18–19 deliverables
+- [x] `affiliate_service.py`: per-platform search URL builders (Myntra, AJIO, Nykaa Fashion, Meesho), budget-aware platform ordering, network template wrapping (`{url}/{subid}/{cid}`) or utm+subid tagging, `ProductSource` interface with `SearchLinkSource` default
+- [x] `affiliate_clicks` table; `GET /commerce/affiliate-links` (Plus), `POST /commerce/affiliate-click` (returns tracked URL; click id = network subid), `POST /commerce/affiliate-conversion` postback (shared secret, idempotent) that nudges the user to add the purchase to their wardrobe
+- [x] `GET /admin/metrics` (X-Admin-Key): users/DAU/tiers, MRR, active subs, activity, 30-day affiliate clicks/conversions/commission by platform
+- [x] Mobile: GapItem "Shop this gap" — colour switcher, per-platform cards with price band, tracked open, untracked notice
+- [x] 7 new tests (115 total)
 
 ### Weeks 15–17 deliverables
 - [x] `gap_analyzer.py`: distinct-outfit combination graph per occasion (same composition rules as the engine, clash-aware colours); for every (garment type × occasion) simulates one purchase and counts distinct new outfits; weights by the user's 90-day occasion history, budget (typical price bands added to the taxonomy) and regional style; occasion-aware colour suggestions; count-based plain-language rationale ("You have 6 tops for Casual but only 1 bottom — …")

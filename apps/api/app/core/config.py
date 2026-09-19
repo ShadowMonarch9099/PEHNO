@@ -96,6 +96,20 @@ class Settings(BaseSettings):
     RAZORPAY_PLAN_PLUS: str = ""  # plan_xxx ids created in the Razorpay dashboard
     RAZORPAY_PLAN_PRO: str = ""
 
+    # ── Affiliate commerce ───────────────────────────────────────────────────
+    # Network deep-link template wrapping a product/search URL. Placeholders:
+    #   {url} (encoded target), {subid} (our click id for postbacks), {cid} (network id)
+    # e.g. Cuelinks: https://linksredirect.com/?cid={cid}&source=linkkit&subid={subid}&url={url}
+    # Empty → plain platform URLs tagged utm_source=pehno&subid=…
+    AFFILIATE_NETWORK_TEMPLATE: str = ""
+    AFFILIATE_NETWORK_ID: str = ""
+    MYNTRA_AFFILIATE_ID: str = ""
+    AJIO_AFFILIATE_ID: str = ""
+    NYKAA_AFFILIATE_ID: str = ""
+    MEESHO_AFFILIATE_ID: str = ""
+    AFFILIATE_POSTBACK_SECRET: str = ""  # shared secret for conversion postbacks
+    ADMIN_API_KEY: str = ""  # X-Admin-Key for /admin/* (empty = admin routes disabled)
+
     # ── Observability ────────────────────────────────────────────────────────
     SENTRY_DSN: str = ""
     POSTHOG_API_KEY: str = ""

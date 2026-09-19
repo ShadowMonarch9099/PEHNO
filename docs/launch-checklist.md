@@ -17,6 +17,7 @@ What the code already does is ticked. Unticked items need accounts, keys or peop
 - [ ] OpenWeatherMap key → `OPENWEATHER_API_KEY` (until then: monthly climatology per city)
 - [ ] Firebase project: service-account JSON → `FIREBASE_SERVICE_ACCOUNT`; `apps/mobile/google-services.json` (Android) and APNs key (iOS) in EAS credentials
 - [ ] PostHog project → `POSTHOG_API_KEY` (until then: events are logged server-side)
+- [ ] Affiliate network (Cuelinks / EarnKaro / vCommission): campaign ids for Myntra, AJIO, Nykaa Fashion, Meesho → `AFFILIATE_NETWORK_TEMPLATE`, `AFFILIATE_NETWORK_ID`, per-platform ids; configure the network's conversion postback to `POST /commerce/affiliate-conversion` with `X-Postback-Secret`
 - [ ] Razorpay account: create monthly plans for Plus (₹199) and Pro (₹399) → `RAZORPAY_PLAN_PLUS/PRO`, key id/secret, webhook secret; point the webhook at `/billing/webhook/razorpay`; set `BILLING_PROVIDER=razorpay`
 
 ## Mobile release

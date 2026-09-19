@@ -4,6 +4,7 @@ Base.metadata.create_all see the full schema.
 """
 from app.models.auth import OtpCode, RefreshToken
 from app.models.billing import BillingEvent, Subscription
+from app.models.commerce import AffiliateClick
 from app.models.feedback import ClassificationFeedback
 from app.models.festival import Festival
 from app.models.garment import Garment
@@ -22,4 +23,5 @@ __all__ = [
     "NotificationLog",
     "Subscription",
     "BillingEvent",
+    "AffiliateClick",
 ]

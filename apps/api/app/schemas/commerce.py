@@ -24,3 +24,43 @@ class GapReportOut(BaseModel):
     #: [garment_id, combinations] — the pieces doing the most work in the wardrobe
     most_versatile: list[tuple[str, int]]
     hint: str | None = None
+
+
+class ProductCardOut(BaseModel):
+    platform: str
+    platform_label: str
+    name: str
+    query: str
+    product_url: str
+    price_min_inr: int | None
+    price_max_inr: int | None
+    image_url: str | None
+    is_search: bool
+
+
+class AffiliateLinksOut(BaseModel):
+    gap_type: str
+    color: str | None
+    fabric: str | None
+    budget_inr: int | None
+    cards: list[ProductCardOut]
+    #: True when no network/affiliate ids are configured — links are plain (untracked) searches
+    untracked: bool
+
+
+class AffiliateClickIn(BaseModel):
+    platform: str
+    product_url: str
+    gap_type: str | None = None
+    garment_id: str | None = None
+
+
+class AffiliateClickOut(BaseModel):
+    click_id: str
+    affiliate_url: str
+
+
+class ConversionPostbackIn(BaseModel):
+    subid: str
+    order_value_inr: int | None = None
+    commission_inr: int | None = None

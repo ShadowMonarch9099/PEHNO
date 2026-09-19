@@ -12,6 +12,7 @@ from fastapi.responses import JSONResponse
 from app.core.config import settings
 from app.core.observability import setup_logging, setup_sentry
 from app.routers import (
+    admin,
     auth,
     billing,
     commerce,
@@ -62,6 +63,7 @@ def create_app() -> FastAPI:
     app.include_router(notifications.router)
     app.include_router(billing.router)
     app.include_router(commerce.router)
+    app.include_router(admin.router)
     app.include_router(meta.router)
 
     if settings.STORAGE_BACKEND == "local":

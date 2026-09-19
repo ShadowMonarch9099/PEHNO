@@ -365,3 +365,24 @@ export interface GapReport {
   most_versatile: [string, number][];
   hint: string | null;
 }
+
+export interface ProductCard {
+  platform: 'myntra' | 'ajio' | 'nykaa' | 'meesho';
+  platform_label: string;
+  name: string;
+  query: string;
+  product_url: string;
+  price_min_inr: number | null;
+  price_max_inr: number | null;
+  image_url: string | null;
+  is_search: boolean;
+}
+
+export interface AffiliateLinks {
+  gap_type: string;
+  color: string | null;
+  fabric: string | null;
+  budget_inr: number | null;
+  cards: ProductCard[];
+  untracked: boolean;
+}
