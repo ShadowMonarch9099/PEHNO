@@ -32,6 +32,7 @@ What the code already does is ticked. Unticked items need accounts, keys or peop
 - [ ] Re-verify 2026/2027 lunar festival dates in `packages/ai/data/festivals.json`
 
 ## Beta cohort (100 users, Mumbai · Delhi · Bengaluru)
+- [ ] Gap-report validation (plan weeks 15–17): show 10 beta users their report and ask whether the #1 gap is something they'd actually buy — tune `gap_analyzer` weights from that before promoting the feature
 - [ ] Onboard via the OTP flow; confirm daily push arrives 07:30 IST
 - [ ] Weekly: `python scripts/mvp_metrics.py --days 7` → 7-day return ≥ 60%, push open > 30%, classification acceptance > 80%
 - [ ] Weekly: `python scripts/export_training_data.py` to bank corrections

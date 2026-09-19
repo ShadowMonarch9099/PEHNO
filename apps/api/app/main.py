@@ -14,6 +14,7 @@ from app.core.observability import setup_logging, setup_sentry
 from app.routers import (
     auth,
     billing,
+    commerce,
     festivals,
     health,
     media,
@@ -60,6 +61,7 @@ def create_app() -> FastAPI:
     app.include_router(festivals.router)
     app.include_router(notifications.router)
     app.include_router(billing.router)
+    app.include_router(commerce.router)
     app.include_router(meta.router)
 
     if settings.STORAGE_BACKEND == "local":

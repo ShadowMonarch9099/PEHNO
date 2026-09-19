@@ -15,7 +15,7 @@ from app.core.query import json_list_contains
 from app.models.garment import ClassificationStatus, Garment
 from app.models.user import User
 from app.schemas.garment import GarmentOut, GarmentUpdate
-from app.services import analytics
+from app.services import analytics, gap_service
 from app.services.classification_service import record_feedback
 from app.services.image_service import InvalidImageError, process_garment_image
 from app.services.storage import get_storage
@@ -159,6 +159,7 @@ async def delete_garment(db: AsyncSession, garment: Garment) -> None:
                 log.exception("Failed to delete %s", key)
     await db.delete(garment)
     await db.flush()
+    gap_service.invalidate(garment.user_id)
 
 
 async def confirm_labels(db: AsyncSession, garment: Garment) -> Garment:

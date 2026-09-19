@@ -74,12 +74,20 @@ Status: ✅ done · 🔧 in progress · ⬜ not started · ⚠️ deviates from 
 | Block | Status | Notes |
 |---|---|---|
 | Weeks 13–14 — Freemium paywall | ✅ | ⚠️ Plus priced ₹199 (plan/deck), not the ₹149 in the old README. Razorpay runs behind a provider interface; the mock provider + `POST /billing/dev/activate` (DEBUG only) stand in until keys and dashboard plan ids exist. |
-| Weeks 15–17 — Wardrobe gap analysis | ⬜ | |
+| Weeks 15–17 — Wardrobe gap analysis | ✅ | ⚠️ The plan asks for qualitative user testing of gap recommendations before the full UI — the UI is built, but the *validation* still needs real users (see launch checklist). Redis cache used when `REDIS_URL` is set; in-process otherwise. |
 | Weeks 18–19 — Affiliate commerce | ⬜ | |
 | Weeks 20–21 — Fabric care & ROI | ⬜ | Care profiles + CPW already shipped in Phase 1; reminders/underutilised pending |
 | Weeks 22–24 — Shopping scan mode | ⬜ | |
 | Weeks 25–28 — Festival expansion & cities | ⬜ | |
 | Admin dashboard (Phase 2 pages) | ⬜ | |
+
+### Weeks 15–17 deliverables
+- [x] `gap_analyzer.py`: distinct-outfit combination graph per occasion (same composition rules as the engine, clash-aware colours); for every (garment type × occasion) simulates one purchase and counts distinct new outfits; weights by the user's 90-day occasion history, budget (typical price bands added to the taxonomy) and regional style; occasion-aware colour suggestions; count-based plain-language rationale ("You have 6 tops for Casual but only 1 bottom — …")
+- [x] `gap_service.py`: weekly cache (Redis `gap:{user_id}` or in-process), invalidated when the wardrobe grows by 3+ garments or on delete; budget requests bypass cache; `most_versatile` pieces
+- [x] `GET /commerce/gap-report?budget=&refresh=` (Plus gate → 402 locked preview)
+- [x] Monday 08:00 IST `pehno.weekly_gap_report` for Plus/Pro users with push + dedupe
+- [x] Mobile: GapReportScreen (budget chips/custom, stats, ranked gap cards, locked ghost preview for free), GapItemScreen (colours, fabrics, occasions, price band; affiliate slot for weeks 18–19), "What's missing?" entry on WardrobeHome, `commerce/gap-report` deep link
+- [x] 12 new tests (108 total); verified live
 
 ### Weeks 13–14 deliverables
 - [x] `entitlements.py`: plans (Free / Plus ₹199 / Pro ₹399), feature→tier map, free garment limit (30), nudge threshold (20); 402 `PaywallError` with `{message, feature, required_tier, upgrade_path}`; `/users/me.entitlements`

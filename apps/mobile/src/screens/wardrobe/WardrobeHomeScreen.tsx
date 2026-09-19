@@ -79,6 +79,13 @@ export default function WardrobeHomeScreen({ navigation }: WardrobeScreenProps<'
         </TouchableOpacity>
       ) : null}
 
+      {!hasFilter && total >= 5 ? (
+        <TouchableOpacity style={styles.gapCard} onPress={() => navigation.navigate('GapReport')} accessibilityRole="button">
+          <Text style={styles.gapTitle}>🧩 What's missing?</Text>
+          <Text style={typography.caption}>The one piece that unlocks the most new outfits{ent?.features.gap_report.unlocked ? '' : ' · Plus'}</Text>
+        </TouchableOpacity>
+      ) : null}
+
       {!hasFilter && total < WARDROBE_GOAL ? (
         <View style={styles.goal}>
           <ProgressBar value={goal / WARDROBE_GOAL} label="Wardrobe goal" hint={`${goal} / ${WARDROBE_GOAL}`} />
@@ -132,6 +139,8 @@ const styles = StyleSheet.create({
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', paddingHorizontal: spacing.md, paddingTop: spacing.sm },
   count: { ...typography.label, marginBottom: spacing.xs },
   goal: { paddingHorizontal: spacing.md, paddingTop: spacing.md },
+  gapCard: { marginHorizontal: spacing.md, marginTop: spacing.md, padding: spacing.md, borderRadius: borderRadius.lg, backgroundColor: colors.surfaceElevated, borderWidth: 1, borderColor: colors.borderLight, gap: 2 },
+  gapTitle: { ...typography.h4 },
   nudge: { marginHorizontal: spacing.md, marginTop: spacing.md, padding: spacing.md, borderRadius: borderRadius.lg, backgroundColor: colors.primary, gap: 2 },
   nudgeTitle: { ...typography.h4, color: colors.textInverse },
   nudgeText: { ...typography.caption, color: colors.textInverse },

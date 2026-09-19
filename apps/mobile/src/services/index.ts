@@ -8,4 +8,5 @@ export { metaApi } from './meta';
 export { outfitsApi } from './outfits';
 export { festivalsApi } from './festivals';
 export { billingApi } from './billing';
+export { commerceApi } from './commerce';
 export { tokenStorage } from './tokens';

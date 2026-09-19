@@ -8,6 +8,8 @@ import { NavigationContainer, type LinkingOptions } from '@react-navigation/nati
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import GapItemScreen from '../screens/commerce/GapItemScreen';
+import GapReportScreen from '../screens/commerce/GapReportScreen';
 import FestivalDetailScreen from '../screens/festival/FestivalDetailScreen';
 import FestivalHomeScreen from '../screens/festival/FestivalHomeScreen';
 import NavratriTrackerScreen from '../screens/festival/NavratriTrackerScreen';
@@ -53,7 +55,7 @@ const linking: LinkingOptions<MainTabParamList> = {
   prefixes: ['pehno://', 'https://app.pehno.in'],
   config: {
     screens: {
-      Wardrobe: { screens: { WardrobeHome: 'wardrobe', GarmentDetail: 'wardrobe/:garmentId', Upload: 'wardrobe/upload' } },
+      Wardrobe: { screens: { WardrobeHome: 'wardrobe', GarmentDetail: 'wardrobe/:garmentId', Upload: 'wardrobe/upload', GapReport: 'commerce/gap-report' } },
       Outfits: { screens: { DailyLook: 'outfits/daily', OutfitResult: 'outfits/:occasion', OutfitHistory: 'outfits/history' } },
       Festivals: { screens: { FestivalHome: 'festivals', FestivalDetail: 'festivals/:slug', NavratriTracker: 'festivals/navratri' } },
       Settings: { screens: { SettingsHome: 'settings', Subscription: 'settings/subscription' } },
@@ -90,6 +92,8 @@ function WardrobeNavigator() {
       <WardrobeStack.Screen name="Upload" component={UploadScreen} />
       <WardrobeStack.Screen name="GarmentDetail" component={GarmentDetailScreen} />
       <WardrobeStack.Screen name="GarmentEdit" component={GarmentEditScreen} />
+      <WardrobeStack.Screen name="GapReport" component={GapReportScreen} />
+      <WardrobeStack.Screen name="GapItem" component={GapItemScreen} />
     </WardrobeStack.Navigator>
   );
 }

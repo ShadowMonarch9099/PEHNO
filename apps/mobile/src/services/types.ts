@@ -339,3 +339,29 @@ export interface BillingState {
   entitlements: Entitlements;
   subscription: Subscription | null;
 }
+
+// ── Commerce ───────────────────────────────────────────────────────────────
+
+export interface Gap {
+  rank: number;
+  garment_type: string;
+  label: string;
+  occasions: string[];
+  new_outfits: number;
+  score: number;
+  suggested_colors: string[];
+  suggested_fabrics: string[];
+  typical_price_inr: [number, number];
+  rationale: string;
+}
+
+export interface GapReport {
+  computed_at: string;
+  cached: boolean;
+  wardrobe_size: number;
+  current_outfits: number;
+  budget_inr: number | null;
+  gaps: Gap[];
+  most_versatile: [string, number][];
+  hint: string | null;
+}

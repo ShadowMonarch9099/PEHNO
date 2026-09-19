@@ -27,6 +27,7 @@ celery_app = Celery(
         "app.tasks.daily_outfit_push",
         "app.tasks.festival_alert",
         "app.tasks.billing_reconcile",
+        "app.tasks.weekly_gap_report",
     ],
 )
 celery_app.conf.update(
@@ -38,6 +39,10 @@ celery_app.conf.update(
     worker_prefetch_multiplier=1,  # classification is CPU-heavy; don't hoard tasks
     task_acks_late=True,
     beat_schedule={
+        "weekly-gap-report": {
+            "task": "pehno.weekly_gap_report",
+            "schedule": crontab(day_of_week="mon", hour=8, minute=0),
+        },
         "billing-reconcile": {
             "task": "pehno.reconcile_subscriptions",
             "schedule": crontab(hour=2, minute=0),
