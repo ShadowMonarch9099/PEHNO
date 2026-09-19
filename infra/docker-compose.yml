@@ -22,8 +22,8 @@ services:
 
   api:
     build:
-      context: ../apps/api
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: apps/api/Dockerfile
     env_file: ../apps/api/.env
     environment:
       DATABASE_URL: postgresql+asyncpg://pehno:pehno@db:5432/pehno

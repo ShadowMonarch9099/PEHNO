@@ -1,0 +1,135 @@
+/**
+ * WardrobeHome — 2-column grid, occasion/fabric/season filters, 30-item goal, upload FAB.
+ */
+import { Feather } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { GarmentCard } from '../../components/garment/GarmentCard';
+import { ChipGroup, ProgressBar } from '../../components/ui';
+import type { WardrobeScreenProps } from '../../navigation/types';
+import type { Season } from '../../services/types';
+import { useAuthStore, useMetaStore, useWardrobeStore, WARDROBE_GOAL } from '../../store';
+import { borderRadius, colors, shadows, spacing, typography } from '../../theme';
+
+type FilterTab = 'occasion' | 'fabric' | 'season';
+const TABS: { slug: FilterTab; label: string }[] = [
+  { slug: 'occasion', label: 'Occasion' },
+  { slug: 'fabric', label: 'Fabric' },
+  { slug: 'season', label: 'Season' },
+];
+
+export default function WardrobeHomeScreen({ navigation }: WardrobeScreenProps<'WardrobeHome'>) {
+  const { width } = useWindowDimensions();
+  const user = useAuthStore((s) => s.user);
+  const { garments, total, filters, loading, error, refresh, setFilters, clearFilters } = useWardrobeStore();
+  const { options, load } = useMetaStore();
+  const [tab, setTab] = useState<FilterTab>('occasion');
+
+  useEffect(() => {
+    void load();
+  }, [load]);
+
+  useFocusEffect(
+    useCallback(() => {
+      void refresh();
+    }, [refresh]),
+  );
+
+  const cardWidth = (width - spacing.md * 3) / 2;
+  const hasFilter = Boolean(filters.occasion || filters.fabric || filters.season);
+  const goal = Math.min(total, WARDROBE_GOAL);
+
+  const tabOptions = tab === 'occasion' ? options.occasions : tab === 'fabric' ? options.fabrics : options.seasons;
+  const tabValue = tab === 'occasion' ? filters.occasion : tab === 'fabric' ? filters.fabric : filters.season;
+  const onTabChange = (slug: string) => {
+    const current = tabValue;
+    const next = current === slug ? undefined : slug;
+    if (tab === 'occasion') setFilters({ occasion: next });
+    else if (tab === 'fabric') setFilters({ fabric: next });
+    else setFilters({ season: next as Season | undefined });
+  };
+
+  return (
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <View style={styles.header}>
+        <View>
+          <Text style={typography.caption}>Namaste{user?.name ? `, ${user.name.split(' ')[0]}` : ''}</Text>
+          <Text style={typography.h1}>Your wardrobe</Text>
+        </View>
+        <Text style={styles.count}>{total} items</Text>
+      </View>
+
+      {!hasFilter && total < WARDROBE_GOAL ? (
+        <View style={styles.goal}>
+          <ProgressBar value={goal / WARDROBE_GOAL} label="Wardrobe goal" hint={`${goal} / ${WARDROBE_GOAL}`} />
+        </View>
+      ) : null}
+
+      <View style={styles.filters}>
+        <ChipGroup options={TABS} value={tab} onChange={setTab} scroll />
+        <ChipGroup
+          options={tabOptions}
+          value={tabValue ?? null}
+          onChange={onTabChange}
+          scroll
+          allLabel="All"
+          onAll={clearFilters}
+        />
+      </View>
+
+      <FlatList
+        data={garments}
+        keyExtractor={(g) => g.id}
+        numColumns={2}
+        columnWrapperStyle={styles.row}
+        contentContainerStyle={styles.grid}
+        refreshControl={<RefreshControl refreshing={loading} onRefresh={refresh} tintColor={colors.primary} />}
+        renderItem={({ item }) => (
+          <GarmentCard garment={item} width={cardWidth} onPress={() => navigation.navigate('GarmentDetail', { garmentId: item.id })} />
+        )}
+        ListEmptyComponent={
+          loading ? null : (
+            <View style={styles.empty}>
+              <Text style={styles.emptyEmoji}>🧺</Text>
+              <Text style={typography.h3}>{hasFilter ? 'Nothing matches' : 'Your wardrobe is empty'}</Text>
+              <Text style={styles.emptyText}>
+                {error ?? (hasFilter ? 'Try another filter.' : 'Tap + to photograph your first pieces.')}
+              </Text>
+            </View>
+          )
+        }
+      />
+
+      <TouchableOpacity style={styles.fab} onPress={() => navigation.navigate('Upload')} accessibilityRole="button" accessibilityLabel="Add garments">
+        <Feather name="plus" size={28} color={colors.textInverse} />
+      </TouchableOpacity>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: colors.background },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', paddingHorizontal: spacing.md, paddingTop: spacing.sm },
+  count: { ...typography.label, marginBottom: spacing.xs },
+  goal: { paddingHorizontal: spacing.md, paddingTop: spacing.md },
+  filters: { paddingHorizontal: spacing.md, paddingTop: spacing.md, gap: spacing.sm },
+  grid: { padding: spacing.md, gap: spacing.md, paddingBottom: 100 },
+  row: { gap: spacing.md },
+  empty: { alignItems: 'center', paddingTop: spacing.xxl, gap: spacing.sm, paddingHorizontal: spacing.xl },
+  emptyEmoji: { fontSize: 48 },
+  emptyText: { ...typography.body2, textAlign: 'center' },
+  fab: {
+    position: 'absolute',
+    right: spacing.lg,
+    bottom: spacing.lg,
+    width: 60,
+    height: 60,
+    borderRadius: borderRadius.pill,
+    backgroundColor: colors.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...shadows.lg,
+  },
+});

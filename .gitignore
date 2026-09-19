@@ -87,9 +87,6 @@ web-build/
 *.hprof
 .buck/
 
-# Docker
-.dockerignore
-
 # Celery
 celerybeat-schedule
 celerybeat-schedule.db

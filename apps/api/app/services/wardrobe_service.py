@@ -1,0 +1,158 @@
+"""
+Wardrobe: garment lifecycle (upload → pending classification → user edits → wear log).
+"""
+import logging
+import uuid
+from decimal import Decimal
+
+from fastapi import HTTPException, status
+from fastapi.concurrency import run_in_threadpool
+from sqlalchemy import func, select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.core.database import utcnow
+from app.core.query import json_list_contains
+from app.models.garment import ClassificationStatus, Garment
+from app.models.user import User
+from app.schemas.garment import GarmentOut, GarmentUpdate
+from app.services.image_service import InvalidImageError, process_garment_image
+from app.services.storage import get_storage
+
+log = logging.getLogger(__name__)
+
+
+def to_out(g: Garment) -> GarmentOut:
+    storage = get_storage()
+    cpw = (
+        (Decimal(g.purchase_price) / g.wear_count).quantize(Decimal("0.01"))
+        if g.purchase_price is not None and g.wear_count > 0
+        else None
+    )
+    return GarmentOut(
+        id=g.id,
+        image_url=storage.url_for(g.image_key),
+        thumbnail_url=storage.url_for(g.thumbnail_key) if g.thumbnail_key else None,
+        garment_type=g.garment_type,
+        fabric_type=g.fabric_type,
+        color_primary=g.color_primary,
+        color_accent=g.color_accent,
+        occasion_tags=g.occasion_tags,
+        season_tags=g.season_tags,
+        regional_style=g.regional_style,
+        ai_confidence=g.ai_confidence,
+        classification_status=g.classification_status,
+        user_verified=g.user_verified,
+        care_profile=g.care_profile,
+        purchase_price=g.purchase_price,
+        purchase_date=g.purchase_date,
+        condition=g.condition,
+        notes=g.notes,
+        wear_count=g.wear_count,
+        last_worn_at=g.last_worn_at,
+        cost_per_wear=cpw,
+        created_at=g.created_at,
+        updated_at=g.updated_at,
+    )
+
+
+async def create_from_upload(db: AsyncSession, user: User, data: bytes) -> Garment:
+    """Process + store the image and create a pending garment. Raises InvalidImageError."""
+    processed = await run_in_threadpool(process_garment_image, data)
+    storage = get_storage()
+    gid = uuid.uuid4()
+    image_key = f"garments/{user.id}/{gid}.jpg"
+    thumb_key = f"garments/{user.id}/{gid}_thumb.jpg"
+    await storage.put(image_key, processed.full)
+    await storage.put(thumb_key, processed.thumbnail)
+
+    garment = Garment(
+        id=gid,
+        user_id=user.id,
+        image_key=image_key,
+        thumbnail_key=thumb_key,
+        classification_status=ClassificationStatus.pending,
+    )
+    db.add(garment)
+    await db.flush()
+    return garment
+
+
+async def get_owned(db: AsyncSession, user: User, garment_id: uuid.UUID) -> Garment:
+    g = await db.get(Garment, garment_id)
+    if g is None or g.user_id != user.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Garment not found")
+    return g
+
+
+async def list_garments(
+    db: AsyncSession,
+    user: User,
+    *,
+    occasion: str | None = None,
+    fabric: str | None = None,
+    season: str | None = None,
+    garment_type: str | None = None,
+    status_: ClassificationStatus | None = None,
+    page: int = 1,
+    page_size: int = 50,
+) -> tuple[list[Garment], int]:
+    q = select(Garment).where(Garment.user_id == user.id)
+    if occasion:
+        q = q.where(json_list_contains(Garment.occasion_tags, occasion))
+    if season:
+        q = q.where(json_list_contains(Garment.season_tags, season))
+    if fabric:
+        q = q.where(Garment.fabric_type == fabric)
+    if garment_type:
+        q = q.where(Garment.garment_type == garment_type)
+    if status_:
+        q = q.where(Garment.classification_status == status_)
+
+    total = (await db.execute(select(func.count()).select_from(q.subquery()))).scalar_one()
+    rows = (
+        (
+            await db.execute(
+                q.order_by(Garment.created_at.desc())
+                .offset((page - 1) * page_size)
+                .limit(page_size)
+            )
+        )
+        .scalars()
+        .all()
+    )
+    return list(rows), total
+
+
+async def update_garment(db: AsyncSession, garment: Garment, patch: GarmentUpdate) -> Garment:
+    changes = patch.model_dump(exclude_unset=True)
+    for field, value in changes.items():
+        setattr(garment, field, value)
+    if changes.keys() & GarmentUpdate.CLASSIFICATION_FIELDS:
+        garment.user_verified = True
+        # A user-labelled garment counts as classified even if the model never ran.
+        if garment.classification_status != ClassificationStatus.complete:
+            garment.classification_status = ClassificationStatus.complete
+    await db.flush()
+    return garment
+
+
+async def delete_garment(db: AsyncSession, garment: Garment) -> None:
+    storage = get_storage()
+    for key in (garment.image_key, garment.thumbnail_key):
+        if key:
+            try:
+                await storage.delete(key)
+            except Exception:  # storage cleanup must never block the delete
+                log.exception("Failed to delete %s", key)
+    await db.delete(garment)
+    await db.flush()
+
+
+async def log_wear(db: AsyncSession, garment: Garment) -> Garment:
+    garment.wear_count += 1
+    garment.last_worn_at = utcnow()
+    await db.flush()
+    return garment
+
+
+__all__ = ["InvalidImageError"]

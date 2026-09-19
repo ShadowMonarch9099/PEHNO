@@ -1,0 +1,22 @@
+[
+  {"slug": "mumbai",      "name": "Mumbai",      "state": "Maharashtra",    "region": "west",  "lat": 19.0760, "lon": 72.8777},
+  {"slug": "delhi",       "name": "Delhi",       "state": "Delhi",          "region": "north", "lat": 28.6139, "lon": 77.2090},
+  {"slug": "bengaluru",   "name": "Bengaluru",   "state": "Karnataka",      "region": "south", "lat": 12.9716, "lon": 77.5946},
+  {"slug": "hyderabad",   "name": "Hyderabad",   "state": "Telangana",      "region": "south", "lat": 17.3850, "lon": 78.4867},
+  {"slug": "chennai",     "name": "Chennai",     "state": "Tamil Nadu",     "region": "south", "lat": 13.0827, "lon": 80.2707},
+  {"slug": "kolkata",     "name": "Kolkata",     "state": "West Bengal",    "region": "east",  "lat": 22.5726, "lon": 88.3639},
+  {"slug": "pune",        "name": "Pune",        "state": "Maharashtra",    "region": "west",  "lat": 18.5204, "lon": 73.8567},
+  {"slug": "ahmedabad",   "name": "Ahmedabad",   "state": "Gujarat",        "region": "west",  "lat": 23.0225, "lon": 72.5714},
+  {"slug": "jaipur",      "name": "Jaipur",      "state": "Rajasthan",      "region": "north", "lat": 26.9124, "lon": 75.7873},
+  {"slug": "lucknow",     "name": "Lucknow",     "state": "Uttar Pradesh",  "region": "north", "lat": 26.8467, "lon": 80.9462},
+  {"slug": "chandigarh",  "name": "Chandigarh",  "state": "Chandigarh",     "region": "north", "lat": 30.7333, "lon": 76.7794},
+  {"slug": "surat",       "name": "Surat",       "state": "Gujarat",        "region": "west",  "lat": 21.1702, "lon": 72.8311},
+  {"slug": "kochi",       "name": "Kochi",       "state": "Kerala",         "region": "south", "lat": 9.9312,  "lon": 76.2673},
+  {"slug": "thiruvananthapuram", "name": "Thiruvananthapuram", "state": "Kerala", "region": "south", "lat": 8.5241, "lon": 76.9366},
+  {"slug": "coimbatore",  "name": "Coimbatore",  "state": "Tamil Nadu",     "region": "south", "lat": 11.0168, "lon": 76.9558},
+  {"slug": "indore",      "name": "Indore",      "state": "Madhya Pradesh", "region": "north", "lat": 22.7196, "lon": 75.8577},
+  {"slug": "nagpur",      "name": "Nagpur",      "state": "Maharashtra",    "region": "west",  "lat": 21.1458, "lon": 79.0882},
+  {"slug": "bhubaneswar", "name": "Bhubaneswar", "state": "Odisha",         "region": "east",  "lat": 20.2961, "lon": 85.8245},
+  {"slug": "guwahati",    "name": "Guwahati",    "state": "Assam",          "region": "east",  "lat": 26.1445, "lon": 91.7362},
+  {"slug": "goa",         "name": "Goa",         "state": "Goa",            "region": "west",  "lat": 15.4909, "lon": 73.8278}
+]

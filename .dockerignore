@@ -1,0 +1,13 @@
+# Context root is the repo (see apps/api/Dockerfile)
+**/node_modules
+**/venv
+**/__pycache__
+**/*.db
+**/.env
+apps/api/media
+apps/api/.test-media
+apps/api/tests
+apps/mobile
+frontend
+docs
+.git

@@ -12,7 +12,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.core.config import settings
 from app.core.observability import setup_logging, setup_sentry
-from app.routers import auth, health, users
+from app.routers import auth, health, meta, users, wardrobe
 
 
 @asynccontextmanager
@@ -45,6 +45,8 @@ def create_app() -> FastAPI:
     app.include_router(health.router)
     app.include_router(auth.router)
     app.include_router(users.router)
+    app.include_router(wardrobe.router)
+    app.include_router(meta.router)
 
     if settings.STORAGE_BACKEND == "local":
         media_dir = Path(settings.LOCAL_MEDIA_DIR)

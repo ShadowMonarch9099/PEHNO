@@ -1,4 +1,5 @@
 from datetime import UTC, datetime
+from decimal import Decimal
 from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, PlainSerializer
@@ -11,6 +12,11 @@ def _to_utc_iso(value: datetime) -> str:
 
 #: Use for every datetime in a response schema so clients always get an aware UTC ISO string.
 UTCDateTime = Annotated[datetime, PlainSerializer(_to_utc_iso, return_type=str, when_used="json")]
+
+#: Rupee amounts: exact Decimal in Python, plain JSON number (2 dp) on the wire.
+Money = Annotated[
+    Decimal, PlainSerializer(lambda v: float(round(v, 2)), return_type=float, when_used="json")
+]
 
 
 class APIModel(BaseModel):

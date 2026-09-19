@@ -75,6 +75,10 @@ GET  /health
 POST /auth/send-otp        POST /auth/verify-otp     POST /auth/refresh
 POST /auth/logout          POST /auth/logout-all
 GET  /users/me             PUT  /users/me            GET  /users/me/stats
+POST /wardrobe/upload      GET  /wardrobe            GET  /wardrobe/{id}
+PUT  /wardrobe/{id}        DELETE /wardrobe/{id}     POST /wardrobe/{id}/wear
+GET  /meta/wardrobe-options                          GET  /meta/cities
+GET  /media/{key}          (local storage backend only)
 ```
 
 ## Contributing

@@ -63,6 +63,7 @@ export const SecondaryButton: React.FC<ButtonProps> = ({
   onPress,
   disabled = false,
   style,
+  textStyle,
   fullWidth = true,
 }) => {
   return (
@@ -77,7 +78,7 @@ export const SecondaryButton: React.FC<ButtonProps> = ({
       disabled={disabled}
       activeOpacity={0.85}
     >
-      <Text style={styles.secondaryButtonText}>{title}</Text>
+      <Text style={[styles.secondaryButtonText, textStyle]}>{title}</Text>
     </TouchableOpacity>
   );
 };
@@ -392,3 +393,8 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
 });
+
+export { Chip, ChipGroup } from './Chip';
+export { ProgressBar } from './ProgressBar';
+export { ScreenHeader } from './ScreenHeader';
+export { OptionCard } from './OptionCard';

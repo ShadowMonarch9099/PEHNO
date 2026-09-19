@@ -47,6 +47,17 @@ class Settings(BaseSettings):
     GARMENT_IMAGES_BUCKET: str = "garment-images"
     SIGNED_URL_EXPIRY_SECONDS: int = 3600
 
+    # ── Knowledge base ───────────────────────────────────────────────────────
+    # Relative paths resolve from the apps/api directory.
+    KNOWLEDGE_DIR: str = "../../packages/ai/data"
+
+    # ── Uploads ──────────────────────────────────────────────────────────────
+    MAX_UPLOAD_BYTES: int = 12 * 1024 * 1024
+    MAX_BULK_UPLOAD: int = 10
+    IMAGE_MAX_SIDE: int = 1024
+    THUMBNAIL_SIDE: int = 320
+    IMAGE_TARGET_BYTES: int = 300 * 1024
+
     # ── Observability ────────────────────────────────────────────────────────
     SENTRY_DSN: str = ""
 

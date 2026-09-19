@@ -7,13 +7,38 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "scheme": "pehno",
-    "splash": { "image": "./assets/splash.png", "resizeMode": "contain", "backgroundColor": "#fff8f1" },
-    "assetBundlePatterns": ["**/*"],
-    "ios": { "supportsTablet": false, "bundleIdentifier": "in.pehno.app" },
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#fff8f1"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "in.pehno.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Pehno needs camera access to photograph your garments.",
+        "NSPhotoLibraryUsageDescription": "Pehno needs photo library access to add garments to your wardrobe."
+      }
+    },
     "android": {
       "package": "in.pehno.app",
-      "adaptiveIcon": { "foregroundImage": "./assets/adaptive-icon.png", "backgroundColor": "#fff8f1" }
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#fff8f1"
+      }
     },
-    "plugins": ["expo-secure-store"]
+    "plugins": [
+      "expo-secure-store",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Pehno needs photo library access to add garments to your wardrobe.",
+          "cameraPermission": "Pehno needs camera access to photograph your garments."
+        }
+      ]
+    ]
   }
 }
