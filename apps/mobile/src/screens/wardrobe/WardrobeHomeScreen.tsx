@@ -24,6 +24,7 @@ const TABS: { slug: FilterTab; label: string }[] = [
 export default function WardrobeHomeScreen({ navigation }: WardrobeScreenProps<'WardrobeHome'>) {
   const { width } = useWindowDimensions();
   const user = useAuthStore((s) => s.user);
+  const refreshUser = useAuthStore((s) => s.refreshUser);
   const { garments, total, filters, loading, error, refresh, setFilters, clearFilters } = useWardrobeStore();
   const { options, load } = useMetaStore();
   const [tab, setTab] = useState<FilterTab>('occasion');
@@ -36,11 +37,15 @@ export default function WardrobeHomeScreen({ navigation }: WardrobeScreenProps<'
   useFocusEffect(
     useCallback(() => {
       void refresh();
-    }, [refresh]),
+      void refreshUser(); // entitlements (limits, nudge) follow the garment count
+    }, [refresh, refreshUser]),
   );
 
   const cardWidth = (width - spacing.md * 3) / 2;
   const hasFilter = Boolean(filters.occasion || filters.fabric || filters.season);
+  const ent = user?.entitlements ?? null;
+  const showNudge = !hasFilter && ent?.nudge === 'plus_wardrobe_20';
+  const atLimit = !hasFilter && ent?.garment_limit != null && total >= ent.garment_limit;
   const goal = Math.min(total, WARDROBE_GOAL);
 
   const tabOptions = tab === 'occasion' ? options.occasions : tab === 'fabric' ? options.fabrics : options.seasons;
@@ -62,6 +67,17 @@ export default function WardrobeHomeScreen({ navigation }: WardrobeScreenProps<'
         </View>
         <Text style={styles.count}>{total} items</Text>
       </View>
+
+      {showNudge || atLimit ? (
+        <TouchableOpacity
+          style={styles.nudge}
+          onPress={() => navigation.navigate('Settings', { screen: 'Subscription', params: { highlight: 'plus', reason: 'unlimited_wardrobe' } })}
+          accessibilityRole="button"
+        >
+          <Text style={styles.nudgeTitle}>{atLimit ? `You've reached the free limit of ${ent?.garment_limit}` : `${total} items in — you're building something real`}</Text>
+          <Text style={styles.nudgeText}>{atLimit ? 'Plus unlocks an unlimited wardrobe, festival looks and fabric care.' : 'Plus adds festival looks from your own clothes, fabric care and no limits. See plans →'}</Text>
+        </TouchableOpacity>
+      ) : null}
 
       {!hasFilter && total < WARDROBE_GOAL ? (
         <View style={styles.goal}>
@@ -116,6 +132,9 @@ const styles = StyleSheet.create({
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', paddingHorizontal: spacing.md, paddingTop: spacing.sm },
   count: { ...typography.label, marginBottom: spacing.xs },
   goal: { paddingHorizontal: spacing.md, paddingTop: spacing.md },
+  nudge: { marginHorizontal: spacing.md, marginTop: spacing.md, padding: spacing.md, borderRadius: borderRadius.lg, backgroundColor: colors.primary, gap: 2 },
+  nudgeTitle: { ...typography.h4, color: colors.textInverse },
+  nudgeText: { ...typography.caption, color: colors.textInverse },
   filters: { paddingHorizontal: spacing.md, paddingTop: spacing.md, gap: spacing.sm },
   grid: { padding: spacing.md, gap: spacing.md, paddingBottom: 100 },
   row: { gap: spacing.md },

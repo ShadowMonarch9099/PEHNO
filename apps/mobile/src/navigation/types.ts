@@ -1,5 +1,5 @@
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import type { CompositeScreenProps } from '@react-navigation/native';
+import type { CompositeScreenProps, NavigatorScreenParams } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 export type AuthStackParamList = {
@@ -36,11 +36,16 @@ export type FestivalStackParamList = {
   NavratriTracker: undefined;
 };
 
+export type SettingsStackParamList = {
+  SettingsHome: undefined;
+  Subscription: { highlight?: 'plus' | 'pro'; reason?: string } | undefined;
+};
+
 export type MainTabParamList = {
-  Wardrobe: undefined;
-  Outfits: undefined;
-  Festivals: undefined;
-  Settings: undefined;
+  Wardrobe: NavigatorScreenParams<WardrobeStackParamList> | undefined;
+  Outfits: NavigatorScreenParams<OutfitStackParamList> | undefined;
+  Festivals: NavigatorScreenParams<FestivalStackParamList> | undefined;
+  Settings: NavigatorScreenParams<SettingsStackParamList> | undefined;
 };
 
 export type AuthScreenProps<T extends keyof AuthStackParamList> = NativeStackScreenProps<AuthStackParamList, T>;
@@ -50,6 +55,10 @@ export type OnboardingScreenProps<T extends keyof OnboardingStackParamList> = Na
 >;
 export type OutfitScreenProps<T extends keyof OutfitStackParamList> = CompositeScreenProps<
   NativeStackScreenProps<OutfitStackParamList, T>,
+  BottomTabScreenProps<MainTabParamList>
+>;
+export type SettingsScreenProps<T extends keyof SettingsStackParamList> = CompositeScreenProps<
+  NativeStackScreenProps<SettingsStackParamList, T>,
   BottomTabScreenProps<MainTabParamList>
 >;
 export type FestivalScreenProps<T extends keyof FestivalStackParamList> = CompositeScreenProps<

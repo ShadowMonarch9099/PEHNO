@@ -6,7 +6,7 @@ import pytest
 from app.core.config import settings
 from app.models.user import User
 from app.services import festival_service as fs
-from tests.conftest import auth_headers, login
+from tests.conftest import auth_headers, login, upgrade
 from tests.helpers import make_image, upload_files
 
 
@@ -120,8 +120,18 @@ async def test_upcoming_endpoint(client):
     assert any(i["slug"] == "durga-puja" and i["is_relevant"] for i in items)
 
 
+async def test_detail_is_locked_for_free_tier(client):
+    h = auth_headers(await login(client))
+    await _add(client, h, "saree", "banarasi", "red", ["festival"])
+    d = (await client.get("/festivals/diwali", headers=h)).json()
+    assert d["name"] == "Diwali" and d["dress_code"]  # calendar + dress code stay visible
+    assert d["looks"] == [] and d["locked"]["required_tier"] == "plus"
+    assert d["locked"]["feature"] == "festival_looks"
+
+
 async def test_detail_with_curated_looks(client):
     h = auth_headers(await login(client))
+    await upgrade(client, h)
     await _add(client, h, "saree", "banarasi", "red", ["festival", "pooja", "wedding_guest"])
     await _add(client, h, "dupatta", "net", "golden", ["festival", "wedding_guest"])
     await _add(client, h, "anarkali", "georgette", "navy", ["festival", "night_out"])
@@ -146,6 +156,11 @@ async def test_detail_404(client):
 async def test_navratri_today_endpoint_matches_garments(client, monkeypatch):
     h = auth_headers(await login(client))
     await _add(client, h, "kurti", "cotton", "red", ["casual"])
+    monkeypatch.setattr(fs, "today_ist", lambda: date(2026, 10, 13))
+    free = (await client.get("/festivals/navratri/today", headers=h)).json()
+    assert free["today"]["name"] == "Red" and free["matching_garments"] == []
+    assert free["locked"]["required_tier"] == "plus"  # sequence visible, matches locked
+    await upgrade(client, h)
     await _add(client, h, "kurti", "cotton", "green", ["casual"])
     monkeypatch.setattr(fs, "today_ist", lambda: date(2026, 10, 13))  # day 3 → Red
     r = await client.get("/festivals/navratri/today", headers=h)

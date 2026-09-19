@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { GarmentCard } from '../../components/garment/GarmentCard';
-import { ScreenHeader } from '../../components/ui';
+import { GhostLooks, LockedFeature, ScreenHeader } from '../../components/ui';
 import type { FestivalScreenProps } from '../../navigation/types';
 import { festivalsApi } from '../../services';
 import type { NavratriToday } from '../../services/types';
@@ -57,12 +57,17 @@ export default function NavratriTrackerScreen({ navigation }: FestivalScreenProp
             {focus ? (
               <View style={styles.section}>
                 <Text style={styles.sectionTitle}>
-                  {data.is_active ? `Wear ${focus.name} today` : `${focus.name} for day 1`} · {data.matching_garments.length} in your wardrobe
+                  {data.is_active ? `Wear ${focus.name} today` : `${focus.name} for day 1`}
+                  {data.locked ? '' : ` · ${data.matching_garments.length} in your wardrobe`}
                 </Text>
-                {data.matching_garments.length ? (
+                {data.locked ? (
+                  <LockedFeature paywall={data.locked} compact>
+                    <GhostLooks count={2} />
+                  </LockedFeature>
+                ) : data.matching_garments.length ? (
                   <View style={styles.garments}>
                     {data.matching_garments.map((g) => (
-                      <GarmentCard key={g.id} garment={g} width={cardWidth} onPress={() => navigation.navigate('Wardrobe', { screen: 'GarmentDetail', params: { garmentId: g.id } } as never)} />
+                      <GarmentCard key={g.id} garment={g} width={cardWidth} onPress={() => navigation.navigate('Wardrobe', { screen: 'GarmentDetail', params: { garmentId: g.id } })} />
                     ))}
                   </View>
                 ) : (

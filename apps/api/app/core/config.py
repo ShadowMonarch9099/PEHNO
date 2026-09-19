@@ -83,6 +83,19 @@ class Settings(BaseSettings):
     DAILY_PUSH_HOUR_IST: int = 7
     DAILY_PUSH_MINUTE_IST: int = 30
 
+    # ── Billing / plans ──────────────────────────────────────────────────────
+    PLUS_PRICE_INR: int = 199
+    PRO_PRICE_INR: int = 399
+    FREE_GARMENT_LIMIT: int = 30
+    NUDGE_AT_GARMENTS: int = 20
+    # mock (default) → subscriptions activate via a dev endpoint; razorpay → real checkout + webhooks
+    BILLING_PROVIDER: Literal["mock", "razorpay"] = "mock"
+    RAZORPAY_KEY_ID: str = ""
+    RAZORPAY_KEY_SECRET: str = ""
+    RAZORPAY_WEBHOOK_SECRET: str = ""
+    RAZORPAY_PLAN_PLUS: str = ""  # plan_xxx ids created in the Razorpay dashboard
+    RAZORPAY_PLAN_PRO: str = ""
+
     # ── Observability ────────────────────────────────────────────────────────
     SENTRY_DSN: str = ""
     POSTHOG_API_KEY: str = ""

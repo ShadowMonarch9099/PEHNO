@@ -3,17 +3,20 @@
  */
 import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 import { tokenStorage } from './tokens';
-import type { ApiErrorBody, TokenResponse } from './types';
+import type { ApiErrorBody, Paywall, TokenResponse } from './types';
 
 export const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:8000';
 
 export class ApiError extends Error {
   status: number;
   errors?: Record<string, string>;
-  constructor(status: number, detail: string, errors?: Record<string, string>) {
+  /** Set when the API answered 402 — the feature needs a higher tier. */
+  paywall?: Paywall;
+  constructor(status: number, detail: string, errors?: Record<string, string>, paywall?: Paywall) {
     super(detail);
     this.status = status;
     this.errors = errors;
+    this.paywall = paywall;
   }
 }
 
@@ -76,9 +79,13 @@ api.interceptors.response.use(
 
     const status = error.response?.status ?? 0;
     const body = error.response?.data;
+    const rawDetail = body?.detail as unknown;
+    const paywall =
+      status === 402 && rawDetail && typeof rawDetail === 'object' ? (rawDetail as Paywall) : undefined;
     const detail =
-      body?.detail ??
+      paywall?.message ??
+      (typeof rawDetail === 'string' ? rawDetail : undefined) ??
       (status === 0 ? 'Cannot reach the server. Check your connection.' : 'Something went wrong');
-    throw new ApiError(status, detail, body?.errors);
+    throw new ApiError(status, detail, body?.errors, paywall);
   },
 );

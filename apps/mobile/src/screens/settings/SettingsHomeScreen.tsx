@@ -2,15 +2,16 @@
  * SettingsHome — profile summary, tier badge, sign out. Sub-screens arrive later.
  */
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SecondaryButton } from '../../components/ui';
+import type { SettingsScreenProps } from '../../navigation/types';
 import { usersApi } from '../../services';
 import type { UserStats } from '../../services/types';
 import { labelFor, useAuthStore, useMetaStore } from '../../store';
 import { borderRadius, colors, spacing, typography } from '../../theme';
 
-export default function SettingsHomeScreen() {
+export default function SettingsHomeScreen({ navigation }: SettingsScreenProps<'SettingsHome'>) {
   const user = useAuthStore((s) => s.user);
   const signOut = useAuthStore((s) => s.signOut);
   const options = useMetaStore((s) => s.options);
@@ -48,7 +49,11 @@ export default function SettingsHomeScreen() {
           {stats ? <Row k="Wardrobe" v={`${stats.garment_count} items · ${stats.total_wears} wears`} /> : null}
         </View>
 
-        <Text style={typography.caption}>Profile editing, notifications and subscription arrive in later build weeks.</Text>
+        <TouchableOpacity style={styles.rowLink} onPress={() => navigation.navigate('Subscription')} accessibilityRole="button">
+          <Text style={typography.h4}>Subscription</Text>
+          <Text style={typography.caption}>{user.subscription_tier === 'free' ? 'Free · see Plus and Pro' : `${user.subscription_tier === 'pro' ? 'Pro' : 'Plus'} · manage`} →</Text>
+        </TouchableOpacity>
+        <Text style={typography.caption}>Profile editing and notification preferences arrive in later build weeks.</Text>
         <SecondaryButton title="Sign out" onPress={signOut} />
       </ScrollView>
     </SafeAreaView>
@@ -72,6 +77,7 @@ const styles = StyleSheet.create({
   tier: { backgroundColor: colors.surfaceElevated, borderRadius: borderRadius.pill, paddingHorizontal: spacing.sm, paddingVertical: 4, borderWidth: 1, borderColor: colors.border },
   tierText: { ...typography.caption, fontWeight: '700', color: colors.primary },
   card: { backgroundColor: colors.surfaceElevated, borderRadius: borderRadius.lg, padding: spacing.md },
+  rowLink: { backgroundColor: colors.surfaceElevated, borderRadius: borderRadius.lg, padding: spacing.md, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   row: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: spacing.sm, borderBottomWidth: 1, borderBottomColor: colors.borderLight },
   rowValue: { ...typography.body2, color: colors.textPrimary, fontWeight: '600', textTransform: 'capitalize' },
 });

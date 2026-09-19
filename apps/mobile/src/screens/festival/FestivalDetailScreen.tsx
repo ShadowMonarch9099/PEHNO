@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { OutfitCard } from '../../components/outfit/OutfitCard';
-import { ScreenHeader, SecondaryButton } from '../../components/ui';
+import { GhostLooks, LockedFeature, ScreenHeader, SecondaryButton } from '../../components/ui';
 import type { FestivalScreenProps } from '../../navigation/types';
 import { festivalsApi } from '../../services';
 import type { FestivalDetail } from '../../services/types';
@@ -69,7 +69,11 @@ export default function FestivalDetailScreen({ route, navigation }: FestivalScre
             </Section>
 
             <Section title={`Looks from your wardrobe${data.looks.length ? ` (${data.looks.length})` : ''}`}>
-              {data.looks.length ? (
+              {data.locked ? (
+                <LockedFeature paywall={data.locked}>
+                  <GhostLooks />
+                </LockedFeature>
+              ) : data.looks.length ? (
                 data.looks.map((look) => {
                   const o = byId[look.id] ?? look;
                   return (
@@ -78,7 +82,7 @@ export default function FestivalDetailScreen({ route, navigation }: FestivalScre
                       outfit={o}
                       onFeedback={(v) => feedback(o.id, v)}
                       onToggleSave={() => toggleSave(o.id)}
-                      onGarmentPress={(garmentId) => navigation.navigate('Wardrobe', { screen: 'GarmentDetail', params: { garmentId } } as never)}
+                      onGarmentPress={(garmentId) => navigation.navigate('Wardrobe', { screen: 'GarmentDetail', params: { garmentId } })}
                     />
                   );
                 })

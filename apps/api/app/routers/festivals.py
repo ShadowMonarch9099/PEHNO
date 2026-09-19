@@ -9,6 +9,7 @@ from app.models.garment import ClassificationStatus, Garment
 from app.schemas.festival import FestivalDetailOut, FestivalOut, NavratriTodayOut
 from app.services import analytics, outfit_service, wardrobe_service
 from app.services import festival_service as fs
+from app.services.entitlements import PaywallError, has_feature
 
 router = APIRouter(prefix="/festivals", tags=["festivals"])
 
@@ -49,8 +50,9 @@ async def navratri_today(user: CurrentUser, db: DbSession) -> NavratriTodayOut:
     """Today's Navratri colour (or the upcoming sequence) and matching garments from the wardrobe."""
     data = fs.navratri_today()
     matching = []
+    unlocked = has_feature(user, "festival_looks")
     color = data["today"] or (data["sequence"][0] if data["sequence"] else None)
-    if color:
+    if color and unlocked:
         rows = await db.execute(
             select(Garment).where(
                 Garment.user_id == user.id,
@@ -59,7 +61,8 @@ async def navratri_today(user: CurrentUser, db: DbSession) -> NavratriTodayOut:
             )
         )
         matching = [wardrobe_service.to_out(g) for g in rows.scalars().all()]
-    return NavratriTodayOut(**data, matching_garments=matching)
+    locked = None if unlocked else PaywallError("festival_looks").detail
+    return NavratriTodayOut(**data, matching_garments=matching, locked=locked)
 
 
 @router.get("/{slug}", response_model=FestivalDetailOut)
@@ -69,6 +72,13 @@ async def detail(slug: str, user: CurrentUser, db: DbSession) -> FestivalDetailO
     if occ is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Festival not found")
     today = fs.today_ist()
+    base = _festival_out(occ, user.city, today).model_dump()
+    if not has_feature(user, "festival_looks"):
+        # Locked, not hidden: calendar + dress code stay; looks carry the paywall reason.
+        analytics.track(user.id, analytics.FESTIVAL_VIEWED, festival=slug, looks=0, locked=True)
+        return FestivalDetailOut(
+            **base, looks=[], hint=None, locked=PaywallError("festival_looks").detail
+        )
     # Judge fabrics against the weather expected on the festival date, not today's.
     _, rows, hint = await outfit_service.generate(
         db,
@@ -80,6 +90,4 @@ async def detail(slug: str, user: CurrentUser, db: DbSession) -> FestivalDetailO
     )
     looks = await outfit_service.to_out_many(db, rows)
     analytics.track(user.id, analytics.FESTIVAL_VIEWED, festival=slug, looks=len(looks))
-    return FestivalDetailOut(
-        **_festival_out(occ, user.city, today).model_dump(), looks=looks, hint=hint
-    )
+    return FestivalDetailOut(**base, looks=looks, hint=hint, locked=None)

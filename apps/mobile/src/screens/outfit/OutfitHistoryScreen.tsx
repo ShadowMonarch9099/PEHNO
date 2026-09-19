@@ -65,7 +65,7 @@ export default function OutfitHistoryScreen({ route, navigation }: OutfitScreenP
               compact
               onFeedback={(v) => feedback(item.id, v)}
               onToggleSave={() => toggleSave(item.id)}
-              onGarmentPress={(garmentId) => navigation.navigate('Wardrobe', { screen: 'GarmentDetail', params: { garmentId } } as never)}
+              onGarmentPress={(garmentId) => navigation.navigate('Wardrobe', { screen: 'GarmentDetail', params: { garmentId } })}
             />
           </View>
         )}

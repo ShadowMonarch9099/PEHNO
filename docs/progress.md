@@ -70,7 +70,24 @@ Status: ✅ done · 🔧 in progress · ⬜ not started · ⚠️ deviates from 
 - [x] 86 tests
 
 ## Phase 2 — Commerce (Weeks 13–28)
-⬜ Not started.
+
+| Block | Status | Notes |
+|---|---|---|
+| Weeks 13–14 — Freemium paywall | ✅ | ⚠️ Plus priced ₹199 (plan/deck), not the ₹149 in the old README. Razorpay runs behind a provider interface; the mock provider + `POST /billing/dev/activate` (DEBUG only) stand in until keys and dashboard plan ids exist. |
+| Weeks 15–17 — Wardrobe gap analysis | ⬜ | |
+| Weeks 18–19 — Affiliate commerce | ⬜ | |
+| Weeks 20–21 — Fabric care & ROI | ⬜ | Care profiles + CPW already shipped in Phase 1; reminders/underutilised pending |
+| Weeks 22–24 — Shopping scan mode | ⬜ | |
+| Weeks 25–28 — Festival expansion & cities | ⬜ | |
+| Admin dashboard (Phase 2 pages) | ⬜ | |
+
+### Weeks 13–14 deliverables
+- [x] `entitlements.py`: plans (Free / Plus ₹199 / Pro ₹399), feature→tier map, free garment limit (30), nudge threshold (20); 402 `PaywallError` with `{message, feature, required_tier, upgrade_path}`; `/users/me.entitlements`
+- [x] Gates: free garment limit on upload; festival curated looks + Navratri wardrobe matches are Plus (calendar, dress code and colour sequence stay free — locked, not hidden)
+- [x] Billing: `subscriptions` + `billing_events` tables; `RazorpayProvider` (Subscriptions REST API, hosted checkout URL, HMAC webhook verification) and `MockProvider`; `/billing/plans`, `/billing/subscription`, `/billing/subscribe`, `/billing/cancel` (at period end), `/billing/webhook/razorpay` (idempotent by event id), `/billing/dev/activate`
+- [x] Daily reconcile task (02:00 IST) downgrades lapsed subscriptions (3-day renewal grace for active ones)
+- [x] Mobile: SubscriptionScreen (compare table, current plan, hosted checkout, pending-payment confirm, cancel), `LockedFeature` + `GhostLooks`, paywall-aware `ApiError`, 20-item / at-limit nudge on WardrobeHome, 402 handling on upload, locked states on FestivalDetail and NavratriTracker, Settings → Subscription
+- [x] 10 new tests (96 total); verified live
 
 ## Phase 3 — Platform (Weeks 29–52)
 ⬜ Not started.

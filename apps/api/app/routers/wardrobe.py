@@ -5,14 +5,16 @@ import uuid
 from typing import Annotated
 
 from fastapi import APIRouter, BackgroundTasks, File, HTTPException, Query, UploadFile, status
+from sqlalchemy import func, select
 
 from app.core.config import settings
 from app.core.security import CurrentUser, DbSession
-from app.models.garment import ClassificationStatus
+from app.models.garment import ClassificationStatus, Garment
 from app.schemas.common import Message
 from app.schemas.garment import GarmentListOut, GarmentOut, GarmentUpdate, UploadResultOut
 from app.services import wardrobe_service as svc
 from app.services.classification_service import run_classification_job
+from app.services.entitlements import PaywallError, garment_limit
 from app.services.image_service import InvalidImageError
 from app.tasks import dispatch
 from app.tasks.classify import classify_garment_task
@@ -39,6 +41,17 @@ async def upload(
             status.HTTP_422_UNPROCESSABLE_ENTITY,
             f"At most {settings.MAX_BULK_UPLOAD} files per upload",
         )
+
+    limit = garment_limit(user)
+    if limit is not None:
+        count = (
+            await db.execute(select(func.count(Garment.id)).where(Garment.user_id == user.id))
+        ).scalar_one()
+        if count + len(files) > limit:
+            raise PaywallError(
+                "unlimited_wardrobe",
+                message=f"Free includes {limit} garments. Upgrade to Plus for an unlimited wardrobe.",
+            )
 
     created, rejected = [], []
     for f in files:

@@ -3,6 +3,7 @@ ORM models. Import everything here so Alembic autogenerate and
 Base.metadata.create_all see the full schema.
 """
 from app.models.auth import OtpCode, RefreshToken
+from app.models.billing import BillingEvent, Subscription
 from app.models.feedback import ClassificationFeedback
 from app.models.festival import Festival
 from app.models.garment import Garment
@@ -19,4 +20,6 @@ __all__ = [
     "Festival",
     "ClassificationFeedback",
     "NotificationLog",
+    "Subscription",
+    "BillingEvent",
 ]

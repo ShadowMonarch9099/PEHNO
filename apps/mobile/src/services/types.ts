@@ -26,6 +26,7 @@ export interface User {
   subscription_expires_at: string | null;
   onboarding_complete: boolean;
   created_at: string;
+  entitlements?: Entitlements | null;
 }
 
 export type UserUpdate = Partial<
@@ -265,6 +266,7 @@ export interface Festival {
 export interface FestivalDetail extends Festival {
   looks: Outfit[];
   hint: string | null;
+  locked: Paywall | null;
 }
 
 export interface NavratriColor {
@@ -278,6 +280,7 @@ export interface NavratriColor {
 }
 
 export interface NavratriToday {
+  locked: Paywall | null;
   is_active: boolean;
   starts_on: string | null;
   days_until: number | null;
@@ -285,4 +288,54 @@ export interface NavratriToday {
   today: NavratriColor | null;
   sequence: NavratriColor[];
   matching_garments: Garment[];
+}
+
+// ── Billing / entitlements ─────────────────────────────────────────────────
+
+export interface FeatureEntitlement {
+  label: string;
+  unlocked: boolean;
+  required_tier: SubscriptionTier;
+}
+
+export interface Entitlements {
+  tier: SubscriptionTier;
+  expires_at: string | null;
+  garment_limit: number | null;
+  garments_used: number;
+  features: Record<string, FeatureEntitlement>;
+  nudge: 'plus_wardrobe_20' | null;
+}
+
+/** Body of a 402 response: the client renders this as a locked feature + upgrade prompt. */
+export interface Paywall {
+  message: string;
+  feature: string;
+  required_tier: SubscriptionTier;
+  upgrade_path: string;
+}
+
+export interface Plan {
+  tier: SubscriptionTier;
+  name: string;
+  price_inr_month: number;
+  tagline: string;
+  features: string[];
+  garment_limit: number | null;
+}
+
+export interface Subscription {
+  id: string;
+  plan: 'plus' | 'pro';
+  status: 'created' | 'active' | 'cancelled' | 'halted' | 'expired';
+  provider: 'razorpay' | 'mock';
+  checkout_url: string | null;
+  current_period_end: string | null;
+  cancel_at_period_end: boolean;
+  created_at: string;
+}
+
+export interface BillingState {
+  entitlements: Entitlements;
+  subscription: Subscription | null;
 }

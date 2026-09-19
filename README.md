@@ -68,6 +68,7 @@ npx tsc --noEmit -p apps/mobile
 | `OPENWEATHER_API_KEY` | empty (monthly climatology per city) | live weather |
 | `FIREBASE_SERVICE_ACCOUNT` | empty (console notifier) | FCM push |
 | `CELERY_BROKER_URL` | empty (in-process jobs) | Redis; run `celery -A app.tasks worker` and `celery -A app.tasks beat` |
+| `BILLING_PROVIDER` | `mock` (dev activate endpoint) | `razorpay` (+ key id/secret, webhook secret, plan ids) |
 | `POSTHOG_API_KEY` | empty (events logged) | PostHog analytics |
 | `SENTRY_DSN` | empty (disabled) | your DSN |
 
@@ -88,6 +89,8 @@ POST /outfits/{id}/feedback  POST|DELETE /outfits/{id}/save  POST /outfits/{id}/
 GET  /festivals/upcoming   GET  /festivals/{slug}    GET  /festivals/navratri/today
 GET  /meta/wardrobe-options                          GET  /meta/cities
 POST /notifications/{id}/opened
+GET  /billing/plans        GET  /billing/subscription  POST /billing/subscribe  POST /billing/cancel
+POST /billing/webhook/razorpay
 GET  /media/{key}?exp&sig  (local storage backend; signed URLs)
 ```
 

@@ -85,3 +85,12 @@ async def login(client: AsyncClient, phone: str = "9876543210") -> dict:
 
 def auth_headers(tokens: dict) -> dict:
     return {"Authorization": f"Bearer {tokens['access_token']}"}
+
+
+async def upgrade(client: AsyncClient, headers: dict, plan: str = "plus") -> dict:
+    """Subscribe + simulate provider activation (mock billing provider)."""
+    r = await client.post("/billing/subscribe", json={"plan": plan}, headers=headers)
+    assert r.status_code == 201, r.text
+    r = await client.post("/billing/dev/activate", headers=headers)
+    assert r.status_code == 200, r.text
+    return r.json()

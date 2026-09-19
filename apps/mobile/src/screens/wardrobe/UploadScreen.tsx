@@ -61,6 +61,14 @@ export default function UploadScreen({ navigation }: WardrobeScreenProps<'Upload
       }
       navigation.navigate('WardrobeHome');
     } catch (e) {
+      if (e instanceof ApiError && e.paywall) {
+        setProgress(null);
+        Alert.alert('Wardrobe limit reached', e.paywall.message, [
+          { text: 'Not now', style: 'cancel' },
+          { text: 'See plans', onPress: () => navigation.navigate('Settings', { screen: 'Subscription', params: { highlight: 'plus', reason: e.paywall!.feature } }) },
+        ]);
+        return;
+      }
       setError(e instanceof ApiError ? e.message : 'Upload failed. Check your connection and try again.');
       setProgress(null);
     }

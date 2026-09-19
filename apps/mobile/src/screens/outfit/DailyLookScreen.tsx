@@ -79,7 +79,7 @@ export default function DailyLookScreen({ navigation }: OutfitScreenProps<'Daily
             onFeedback={(v) => act(() => feedback(outfit.id, v))}
             onToggleSave={() => act(() => toggleSave(outfit.id))}
             onWear={() => act(() => wear(outfit.id))}
-            onGarmentPress={(garmentId) => navigation.navigate('Wardrobe', { screen: 'GarmentDetail', params: { garmentId } } as never)}
+            onGarmentPress={(garmentId) => navigation.navigate('Wardrobe', { screen: 'GarmentDetail', params: { garmentId } })}
           />
         ) : !loading ? (
           <View style={styles.empty}>

@@ -24,6 +24,7 @@ import OccasionPickerScreen from '../screens/outfit/OccasionPickerScreen';
 import OutfitHistoryScreen from '../screens/outfit/OutfitHistoryScreen';
 import OutfitResultScreen from '../screens/outfit/OutfitResultScreen';
 import SettingsHomeScreen from '../screens/settings/SettingsHomeScreen';
+import SubscriptionScreen from '../screens/settings/SubscriptionScreen';
 import GarmentDetailScreen from '../screens/wardrobe/GarmentDetailScreen';
 import GarmentEditScreen from '../screens/wardrobe/GarmentEditScreen';
 import UploadScreen from '../screens/wardrobe/UploadScreen';
@@ -36,6 +37,7 @@ import type {
   MainTabParamList,
   OnboardingStackParamList,
   OutfitStackParamList,
+  SettingsStackParamList,
   WardrobeStackParamList,
 } from './types';
 
@@ -44,6 +46,7 @@ const OnboardingStack = createNativeStackNavigator<OnboardingStackParamList>();
 const WardrobeStack = createNativeStackNavigator<WardrobeStackParamList>();
 const OutfitStack = createNativeStackNavigator<OutfitStackParamList>();
 const FestivalStack = createNativeStackNavigator<FestivalStackParamList>();
+const SettingsStack = createNativeStackNavigator<SettingsStackParamList>();
 const Tabs = createBottomTabNavigator<MainTabParamList>();
 
 const linking: LinkingOptions<MainTabParamList> = {
@@ -53,7 +56,7 @@ const linking: LinkingOptions<MainTabParamList> = {
       Wardrobe: { screens: { WardrobeHome: 'wardrobe', GarmentDetail: 'wardrobe/:garmentId', Upload: 'wardrobe/upload' } },
       Outfits: { screens: { DailyLook: 'outfits/daily', OutfitResult: 'outfits/:occasion', OutfitHistory: 'outfits/history' } },
       Festivals: { screens: { FestivalHome: 'festivals', FestivalDetail: 'festivals/:slug', NavratriTracker: 'festivals/navratri' } },
-      Settings: 'settings',
+      Settings: { screens: { SettingsHome: 'settings', Subscription: 'settings/subscription' } },
     },
   },
 };
@@ -112,6 +115,15 @@ function FestivalNavigator() {
   );
 }
 
+function SettingsNavigator() {
+  return (
+    <SettingsStack.Navigator screenOptions={{ headerShown: false }}>
+      <SettingsStack.Screen name="SettingsHome" component={SettingsHomeScreen} />
+      <SettingsStack.Screen name="Subscription" component={SubscriptionScreen} />
+    </SettingsStack.Navigator>
+  );
+}
+
 const TAB_ICONS: Record<keyof MainTabParamList, React.ComponentProps<typeof Feather>['name']> = {
   Wardrobe: 'archive',
   Outfits: 'star',
@@ -133,7 +145,7 @@ function MainNavigator() {
       <Tabs.Screen name="Wardrobe" component={WardrobeNavigator} />
       <Tabs.Screen name="Outfits" component={OutfitNavigator} />
       <Tabs.Screen name="Festivals" component={FestivalNavigator} />
-      <Tabs.Screen name="Settings" component={SettingsHomeScreen} />
+      <Tabs.Screen name="Settings" component={SettingsNavigator} />
     </Tabs.Navigator>
   );
 }

@@ -24,6 +24,8 @@ class FestivalOut(BaseModel):
 class FestivalDetailOut(FestivalOut):
     looks: list[OutfitOut]
     hint: str | None
+    #: Present when curated looks need a higher tier: {message, feature, required_tier, upgrade_path}
+    locked: dict | None = None
 
 
 class NavratriColorOut(BaseModel):
@@ -37,6 +39,7 @@ class NavratriColorOut(BaseModel):
 
 
 class NavratriTodayOut(BaseModel):
+    locked: dict | None = None
     is_active: bool
     starts_on: str | None
     days_until: int | None

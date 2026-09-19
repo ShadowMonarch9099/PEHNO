@@ -73,7 +73,7 @@ export default function OutfitResultScreen({ route, navigation }: OutfitScreenPr
             onFeedback={(v) => act(() => feedback(current.id, v))}
             onToggleSave={() => act(() => toggleSave(current.id))}
             onWear={() => act(() => wear(current.id))}
-            onGarmentPress={(garmentId) => navigation.navigate('Wardrobe', { screen: 'GarmentDetail', params: { garmentId } } as never)}
+            onGarmentPress={(garmentId) => navigation.navigate('Wardrobe', { screen: 'GarmentDetail', params: { garmentId } })}
           />
         ) : null}
 

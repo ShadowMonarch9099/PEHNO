@@ -22,6 +22,7 @@ class UserOut(APIModel):
     subscription_expires_at: UTCDateTime | None
     onboarding_complete: bool
     created_at: UTCDateTime
+    entitlements: dict | None = None
 
 
 class UserUpdate(BaseModel):
