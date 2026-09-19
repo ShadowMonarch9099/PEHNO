@@ -12,6 +12,7 @@ os.environ.setdefault("OTP_PROVIDER", "console")
 os.environ.setdefault("LOCAL_MEDIA_DIR", "./.test-media")
 os.environ.setdefault("CLASSIFIER_BACKEND", "rules")
 os.environ.setdefault("CELERY_BROKER_URL", "")
+os.environ.setdefault("SOCIAL_ENABLED", "true")
 
 import pytest  # noqa: E402
 from httpx import AsyncClient  # noqa: E402

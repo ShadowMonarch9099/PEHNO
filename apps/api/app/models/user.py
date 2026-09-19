@@ -74,6 +74,8 @@ class User(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     onboarding_complete: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     last_login_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    # Social: pre-generate share cards on save (opt-in)
+    social_sharing_enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
 
     garments = relationship("Garment", back_populates="user", cascade="all, delete-orphan")
     outfits = relationship("Outfit", back_populates="user", cascade="all, delete-orphan")

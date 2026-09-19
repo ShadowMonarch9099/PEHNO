@@ -27,6 +27,7 @@ export default function DailyLookScreen({ navigation }: OutfitScreenProps<'Daily
   const [error, setError] = useState<string | null>(null);
 
   const outfit = daily.outfit ? (byId[daily.outfit.id] ?? daily.outfit) : null;
+  const social = Boolean(user?.entitlements?.flags?.social);
 
   const refresh = useCallback(
     async (regenerate = false) => {
@@ -79,6 +80,7 @@ export default function DailyLookScreen({ navigation }: OutfitScreenProps<'Daily
             onFeedback={(v) => act(() => feedback(outfit.id, v))}
             onToggleSave={() => act(() => toggleSave(outfit.id))}
             onWear={() => act(() => wear(outfit.id))}
+            onShare={social ? () => navigation.navigate('ShareOutfit', { outfitId: outfit.id }) : undefined}
             onGarmentPress={(garmentId) => navigation.navigate('Wardrobe', { screen: 'GarmentDetail', params: { garmentId } })}
           />
         ) : !loading ? (
@@ -104,6 +106,11 @@ export default function DailyLookScreen({ navigation }: OutfitScreenProps<'Daily
           <TouchableOpacity style={styles.link} onPress={() => navigation.navigate('OutfitHistory', {})}>
             <Text style={styles.linkText}>🕘 History</Text>
           </TouchableOpacity>
+          {social ? (
+            <TouchableOpacity style={styles.link} onPress={() => navigation.navigate('OOTDFeed')}>
+              <Text style={styles.linkText}>🏙️ City looks</Text>
+            </TouchableOpacity>
+          ) : null}
         </View>
       </ScrollView>
     </SafeAreaView>

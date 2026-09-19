@@ -9,4 +9,5 @@ export { outfitsApi } from './outfits';
 export { festivalsApi } from './festivals';
 export { billingApi } from './billing';
 export { commerceApi } from './commerce';
+export { socialApi } from './social';
 export { tokenStorage } from './tokens';

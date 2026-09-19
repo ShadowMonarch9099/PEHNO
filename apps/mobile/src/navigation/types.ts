@@ -33,6 +33,8 @@ export type OutfitStackParamList = {
   OccasionPicker: undefined;
   OutfitResult: { occasion: string; festival?: string };
   OutfitHistory: { saved?: boolean };
+  ShareOutfit: { outfitId: string };
+  OOTDFeed: undefined;
 };
 
 export type FestivalStackParamList = {

@@ -37,6 +37,10 @@ class OutfitOut(APIModel):
     batch_id: uuid.UUID | None
     worn_at: UTCDateTime | None
     created_at: UTCDateTime
+    is_public: bool = False
+    share_url: str | None = None
+    card_url: str | None = None
+    like_count: int = 0
 
 
 class OutfitOptionsOut(BaseModel):

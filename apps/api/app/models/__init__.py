@@ -11,6 +11,7 @@ from app.models.festival import Festival
 from app.models.garment import Garment
 from app.models.notification import NotificationLog
 from app.models.outfit import Outfit
+from app.models.social import OutfitLike
 from app.models.user import User
 
 __all__ = [
@@ -27,4 +28,5 @@ __all__ = [
     "AffiliateClick",
     "BrandPartner",
     "BrandCampaign",
+    "OutfitLike",
 ]

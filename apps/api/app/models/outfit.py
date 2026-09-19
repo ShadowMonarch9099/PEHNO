@@ -35,4 +35,13 @@ class Outfit(UUIDPrimaryKeyMixin, Base):
     worn_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
 
+    # Social (weeks 29–32): nothing is public until the owner shares explicitly
+    is_public: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    shared_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    share_slug: Mapped[str | None] = mapped_column(
+        String(16), nullable=True, unique=True, index=True
+    )
+    share_card_key: Mapped[str | None] = mapped_column(String(512), nullable=True)
+    like_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+
     user = relationship("User", back_populates="outfits")

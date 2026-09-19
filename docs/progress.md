@@ -131,4 +131,20 @@ Status: ✅ done · 🔧 in progress · ⬜ not started · ⚠️ deviates from 
 - [x] 10 new tests (96 total); verified live
 
 ## Phase 3 — Platform (Weeks 29–52)
-⬜ Not started.
+
+| Block | Status | Notes |
+|---|---|---|
+| Weeks 29–32 — Social OOTD layer | ✅ (flag off) | `SOCIAL_ENABLED=false` by default per the plan's warning; flip when wardrobe data quality is high. |
+| Weeks 33–37 — Stylist marketplace | ⬜ | |
+| Weeks 38–41 — Travel packing planner | ⬜ | |
+| Weeks 42–45 — Male wardrobe support | ⬜ | |
+| Weeks 46–48 — Brand partnership layer | ⬜ | Schema scaffold exists |
+| Weeks 49–52 — Tier 2 expansion | ⬜ | Tier-2 cities already in cities.json; Hindi UI pending |
+
+### Weeks 29–32 deliverables
+- [x] Share cards: 1080×1350 Pillow render (collage, per-item type/fabric tags, occasion/festival header, PEHNO watermark, city) stored via the storage backend
+- [x] Privacy model: `is_public` only after an explicit share; unshare hides card, page and feed entry; `social_sharing_enabled` opt-in pref
+- [x] `/social/share-card/{id}` (POST/DELETE), `/social/feed/city` (viewer's city or `?city=`, newest first, 50), `/social/like/{id}` (POST/DELETE, idempotent), `/social/preferences`; public `/s/{slug}` page with Open Graph tags + `/s/{slug}/card.jpg` so WhatsApp/Instagram unfurl the card
+- [x] City aesthetics in `cities.json` (Mumbai minimal, Delhi maximalist, …); share state on every outfit response; `entitlements.flags.social`
+- [x] Mobile: share action on outfit cards, ShareOutfitScreen (card preview, native share sheet, copy link, stop sharing), OOTDFeedScreen (city feed, likes, tap-to-identify pieces); all hidden unless the flag is on
+- [x] 4 new tests (140 total)

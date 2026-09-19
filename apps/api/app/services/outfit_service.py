@@ -14,7 +14,7 @@ from app.models.garment import ClassificationStatus, Garment
 from app.models.outfit import Outfit
 from app.models.user import User
 from app.schemas.outfit import OutfitOut, WeatherOut
-from app.services import analytics, wardrobe_service
+from app.services import analytics, social_service, wardrobe_service
 from app.services import outfit_engine as engine
 from app.services.weather import Weather, get_weather
 
@@ -79,6 +79,10 @@ async def to_out_many(db: AsyncSession, outfits: list[Outfit]) -> list[OutfitOut
             batch_id=o.batch_id,
             worn_at=o.worn_at,
             created_at=o.created_at,
+            is_public=o.is_public,
+            share_url=social_service.share_url(o) if o.is_public else None,
+            card_url=social_service.card_url(o) if o.is_public else None,
+            like_count=o.like_count,
         )
         for o in outfits
     ]

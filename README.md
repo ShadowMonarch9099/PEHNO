@@ -80,6 +80,7 @@ cd apps/admin && npx next build
 | `CELERY_BROKER_URL` | empty (in-process jobs) | Redis; run `celery -A app.tasks worker` and `celery -A app.tasks beat` |
 | `BILLING_PROVIDER` | `mock` (dev activate endpoint) | `razorpay` (+ key id/secret, webhook secret, plan ids) |
 | `POSTHOG_API_KEY` | empty (events logged) | PostHog analytics |
+| `SOCIAL_ENABLED` | `false` | `true` once wardrobe data quality is high (plan's launch gate) |
 | `SENTRY_DSN` | empty (disabled) | your DSN |
 
 Full-stack locally with Docker: `docker compose -f infra/docker-compose.yml up`.
@@ -105,6 +106,8 @@ GET  /billing/plans        GET  /billing/subscription  POST /billing/subscribe  
 POST /billing/webhook/razorpay
 GET  /commerce/gap-report  (Plus)   GET /commerce/affiliate-links   POST /commerce/affiliate-click
 POST /commerce/scan        (Pro)
+POST|DELETE /social/share-card/{id}   GET /social/feed/city   POST|DELETE /social/like/{id}   (SOCIAL_ENABLED)
+GET  /s/{slug}             public share page + /s/{slug}/card.jpg
 GET  /admin/metrics        (X-Admin-Key)
 GET  /media/{key}?exp&sig  (local storage backend; signed URLs)
 ```

@@ -119,6 +119,7 @@ def entitlements_for(user: User, garment_count: int) -> dict:
             for key, tier in FEATURE_TIERS.items()
         },
         # Natural inflection points for an upgrade nudge (client decides presentation).
+        "flags": {"social": settings.SOCIAL_ENABLED},
         "nudge": (
             "plus_wardrobe_20"
             if user.subscription_tier == SubscriptionTier.free

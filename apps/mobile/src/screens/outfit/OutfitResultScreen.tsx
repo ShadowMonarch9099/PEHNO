@@ -10,7 +10,7 @@ import { ChipGroup, ScreenHeader, SecondaryButton } from '../../components/ui';
 import type { OutfitScreenProps } from '../../navigation/types';
 import { ApiError } from '../../services';
 import type { OutfitOptions } from '../../services/types';
-import { labelFor, useMetaStore, useOutfitStore } from '../../store';
+import { labelFor, useAuthStore, useMetaStore, useOutfitStore } from '../../store';
 import { borderRadius, colors, spacing, typography } from '../../theme';
 
 export default function OutfitResultScreen({ route, navigation }: OutfitScreenProps<'OutfitResult'>) {
@@ -50,6 +50,7 @@ export default function OutfitResultScreen({ route, navigation }: OutfitScreenPr
     }
   };
 
+  const social = Boolean(useAuthStore((s) => s.user?.entitlements?.flags?.social));
   const opts = result?.options ?? [];
   const current = opts[Number(tab)] ? (byId[opts[Number(tab)].id] ?? opts[Number(tab)]) : null;
   const title = labelFor(options.occasions, occasion);
@@ -73,6 +74,7 @@ export default function OutfitResultScreen({ route, navigation }: OutfitScreenPr
             onFeedback={(v) => act(() => feedback(current.id, v))}
             onToggleSave={() => act(() => toggleSave(current.id))}
             onWear={() => act(() => wear(current.id))}
+            onShare={social ? () => navigation.navigate('ShareOutfit', { outfitId: current.id }) : undefined}
             onGarmentPress={(garmentId) => navigation.navigate('Wardrobe', { screen: 'GarmentDetail', params: { garmentId } })}
           />
         ) : null}

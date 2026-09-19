@@ -110,6 +110,11 @@ class Settings(BaseSettings):
     AFFILIATE_POSTBACK_SECRET: str = ""  # shared secret for conversion postbacks
     ADMIN_API_KEY: str = ""  # X-Admin-Key for /admin/* (empty = admin routes disabled)
 
+    # ── Social (Phase 3) ─────────────────────────────────────────────────────
+    # Off by default: the build plan says not to launch social until wardrobe data quality is high.
+    SOCIAL_ENABLED: bool = False
+    SHARE_BASE_URL: str = ""  # public origin for share pages; defaults to PUBLIC_BASE_URL
+
     # ── Observability ────────────────────────────────────────────────────────
     SENTRY_DSN: str = ""
     POSTHOG_API_KEY: str = ""

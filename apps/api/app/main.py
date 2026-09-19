@@ -22,6 +22,7 @@ from app.routers import (
     meta,
     notifications,
     outfits,
+    social,
     users,
     wardrobe,
 )
@@ -64,6 +65,8 @@ def create_app() -> FastAPI:
     app.include_router(billing.router)
     app.include_router(commerce.router)
     app.include_router(admin.router)
+    app.include_router(social.router)
+    app.include_router(social.public)
     app.include_router(meta.router)
 
     if settings.STORAGE_BACKEND == "local":

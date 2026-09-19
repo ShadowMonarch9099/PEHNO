@@ -27,6 +27,8 @@ import DailyLookScreen from '../screens/outfit/DailyLookScreen';
 import OccasionPickerScreen from '../screens/outfit/OccasionPickerScreen';
 import OutfitHistoryScreen from '../screens/outfit/OutfitHistoryScreen';
 import OutfitResultScreen from '../screens/outfit/OutfitResultScreen';
+import OOTDFeedScreen from '../screens/social/OOTDFeedScreen';
+import ShareOutfitScreen from '../screens/social/ShareOutfitScreen';
 import SettingsHomeScreen from '../screens/settings/SettingsHomeScreen';
 import SubscriptionScreen from '../screens/settings/SubscriptionScreen';
 import GarmentDetailScreen from '../screens/wardrobe/GarmentDetailScreen';
@@ -58,7 +60,7 @@ const linking: LinkingOptions<MainTabParamList> = {
   config: {
     screens: {
       Wardrobe: { screens: { WardrobeHome: 'wardrobe', GarmentDetail: 'wardrobe/:garmentId', Upload: 'wardrobe/upload', GapReport: 'commerce/gap-report', Roi: 'wardrobe/roi', ScanMode: 'commerce/scan' } },
-      Outfits: { screens: { DailyLook: 'outfits/daily', OutfitResult: 'outfits/:occasion', OutfitHistory: 'outfits/history' } },
+      Outfits: { screens: { DailyLook: 'outfits/daily', OutfitResult: 'outfits/:occasion', OutfitHistory: 'outfits/history', OOTDFeed: 'outfits/feed' } },
       Festivals: { screens: { FestivalHome: 'festivals', FestivalDetail: 'festivals/:slug', NavratriTracker: 'festivals/navratri' } },
       Settings: { screens: { SettingsHome: 'settings', Subscription: 'settings/subscription' } },
     },
@@ -109,6 +111,8 @@ function OutfitNavigator() {
       <OutfitStack.Screen name="OccasionPicker" component={OccasionPickerScreen} />
       <OutfitStack.Screen name="OutfitResult" component={OutfitResultScreen} />
       <OutfitStack.Screen name="OutfitHistory" component={OutfitHistoryScreen} />
+      <OutfitStack.Screen name="ShareOutfit" component={ShareOutfitScreen} />
+      <OutfitStack.Screen name="OOTDFeed" component={OOTDFeedScreen} />
     </OutfitStack.Navigator>
   );
 }

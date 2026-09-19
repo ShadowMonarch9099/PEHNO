@@ -250,6 +250,34 @@ export interface Outfit {
   batch_id: string | null;
   worn_at: string | null;
   created_at: string;
+  is_public: boolean;
+  share_url: string | null;
+  card_url: string | null;
+  like_count: number;
+}
+
+export interface ShareState {
+  outfit_id: string;
+  is_public: boolean;
+  share_url: string | null;
+  card_url: string | null;
+  shared_at: string | null;
+  like_count: number;
+}
+
+export interface FeedItem {
+  outfit_id: string;
+  owner_first_name: string;
+  city: string;
+  aesthetic: string;
+  occasion: string;
+  festival: string | null;
+  card_url: string | null;
+  share_url: string | null;
+  garments: Garment[];
+  like_count: number;
+  liked: boolean;
+  shared_at: string | null;
 }
 
 export interface OutfitOptions {
@@ -326,6 +354,7 @@ export interface Entitlements {
   garment_limit: number | null;
   garments_used: number;
   features: Record<string, FeatureEntitlement>;
+  flags?: { social: boolean };
   nudge: 'plus_wardrobe_20' | null;
 }
 

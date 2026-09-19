@@ -13,12 +13,13 @@ interface Props {
   onFeedback?: (value: 1 | -1) => void;
   onToggleSave?: () => void;
   onWear?: () => void;
+  onShare?: () => void;
   onGarmentPress?: (garmentId: string) => void;
   compact?: boolean;
   busy?: boolean;
 }
 
-export const OutfitCard: React.FC<Props> = ({ outfit: o, onFeedback, onToggleSave, onWear, onGarmentPress, compact, busy }) => {
+export const OutfitCard: React.FC<Props> = ({ outfit: o, onFeedback, onToggleSave, onWear, onShare, onGarmentPress, compact, busy }) => {
   const options = useMetaStore((s) => s.options);
   const worn = Boolean(o.worn_at);
   return (
@@ -49,7 +50,7 @@ export const OutfitCard: React.FC<Props> = ({ outfit: o, onFeedback, onToggleSav
         </View>
       ) : null}
 
-      {onFeedback || onToggleSave || onWear ? (
+      {onFeedback || onToggleSave || onWear || onShare ? (
         <View style={styles.actions}>
           {onFeedback ? (
             <>
@@ -58,6 +59,7 @@ export const OutfitCard: React.FC<Props> = ({ outfit: o, onFeedback, onToggleSav
             </>
           ) : null}
           {onToggleSave ? <IconButton icon="bookmark" active={o.is_saved} onPress={onToggleSave} disabled={busy} label="Save" /> : null}
+          {onShare ? <IconButton icon="share-2" active={o.is_public} onPress={onShare} disabled={busy} label="Share" /> : null}
           {onWear ? (
             <TouchableOpacity style={[styles.wear, worn && styles.wearDone]} onPress={onWear} disabled={busy || worn}>
               <Feather name={worn ? 'check' : 'sun'} size={16} color={worn ? colors.success : colors.textInverse} />
