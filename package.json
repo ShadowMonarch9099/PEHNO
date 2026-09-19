@@ -12,8 +12,9 @@
     "api": "cd apps/api && uvicorn main:app --reload --port 8000",
     "docker:up": "docker compose -f infra/docker-compose.yml up -d",
     "docker:down": "docker compose -f infra/docker-compose.yml down",
-    "typecheck": "tsc --noEmit -p apps/mobile",
-    "test:api": "cd apps/api && pytest -q"
+    "typecheck": "tsc --noEmit -p apps/mobile && npm --workspace @pehno/admin run typecheck",
+    "test:api": "cd apps/api && pytest -q",
+    "admin": "npm --workspace @pehno/admin run dev"
   },
   "devDependencies": {
     "@pehno/config": "*",

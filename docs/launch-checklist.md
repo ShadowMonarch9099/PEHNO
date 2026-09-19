@@ -18,6 +18,7 @@ What the code already does is ticked. Unticked items need accounts, keys or peop
 - [ ] Firebase project: service-account JSON → `FIREBASE_SERVICE_ACCOUNT`; `apps/mobile/google-services.json` (Android) and APNs key (iOS) in EAS credentials
 - [ ] PostHog project → `POSTHOG_API_KEY` (until then: events are logged server-side)
 - [ ] Affiliate network (Cuelinks / EarnKaro / vCommission): campaign ids for Myntra, AJIO, Nykaa Fashion, Meesho → `AFFILIATE_NETWORK_TEMPLATE`, `AFFILIATE_NETWORK_ID`, per-platform ids; configure the network's conversion postback to `POST /commerce/affiliate-conversion` with `X-Postback-Secret`
+- [ ] Admin: Google OAuth client (Web) → `apps/admin/.env` `GOOGLE_CLIENT_ID/SECRET`, `NEXTAUTH_URL`, `NEXTAUTH_SECRET`, `ADMIN_EMAIL_DOMAIN`; deploy `apps/admin` (Vercel/Railway) with `API_URL` + `ADMIN_API_KEY`
 - [ ] Razorpay account: create monthly plans for Plus (₹199) and Pro (₹399) → `RAZORPAY_PLAN_PLUS/PRO`, key id/secret, webhook secret; point the webhook at `/billing/webhook/razorpay`; set `BILLING_PROVIDER=razorpay`
 
 ## Mobile release

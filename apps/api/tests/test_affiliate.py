@@ -1,4 +1,5 @@
 import shutil
+import uuid
 from urllib.parse import parse_qs, urlparse
 
 import pytest
@@ -194,3 +195,51 @@ async def test_admin_metrics_requires_key_and_aggregates(client, monkeypatch):
     assert m["affiliate_30d"] == [
         {"platform": "ajio", "clicks": 1, "conversions": 0, "commission_inr": 0}
     ]
+
+
+async def test_admin_users_analytics_and_brands(client, monkeypatch):
+    monkeypatch.setattr(settings, "ADMIN_API_KEY", "adm-key")
+    A = {"X-Admin-Key": "adm-key"}
+    h = auth_headers(await login(client))
+    await client.put("/users/me", json={"name": "Priya Sharma", "city": "Pune"}, headers=h)
+    await client.post("/wardrobe/upload", files=upload_files(make_image(size=(32, 32))), headers=h)
+    await client.post("/outfits/generate", json={"occasion": "office"}, headers=h)
+
+    r = await client.get("/admin/users", params={"q": "priya"}, headers=A)
+    assert r.status_code == 200 and r.json()["total"] == 1
+    u = r.json()["items"][0]
+    assert u["garment_count"] == 1 and u["city"] == "Pune" and u["tier"] == "free"
+    assert (await client.get("/admin/users", params={"q": "nobody"}, headers=A)).json()[
+        "total"
+    ] == 0
+    assert (await client.get("/admin/users", params={"tier": "pro"}, headers=A)).json()[
+        "total"
+    ] == 0
+
+    w = (await client.get(f"/admin/users/{u['id']}/wardrobe", headers=A)).json()
+    assert w["user"]["name"] == "Priya Sharma" and len(w["garments"]) == 1
+    assert (await client.get(f"/admin/users/{uuid.uuid4()}/wardrobe", headers=A)).status_code == 404
+
+    a = (await client.get("/admin/analytics", params={"days": 7}, headers=A)).json()
+    assert a["user_growth"][-1]["users"] == 1 and isinstance(a["outfits_by_day"], list)
+    assert [s["stage"] for s in a["funnel"]] == [
+        "Signed up",
+        "Uploaded",
+        "10+ items",
+        "30+ items",
+        "Paid",
+    ]
+    assert [s["users"] for s in a["funnel"]] == [1, 1, 0, 0, 0]
+
+    assert (await client.get("/admin/brands", headers=A)).json() == []
+    r = await client.post(
+        "/admin/brands", json={"name": "Fabindia", "website": "https://fabindia.com"}, headers=A
+    )
+    assert (
+        r.status_code == 201 and r.json()["slug"] == "fabindia" and r.json()["status"] == "prospect"
+    )
+    assert (
+        await client.post("/admin/brands", json={"name": "Fabindia"}, headers=A)
+    ).status_code == 409
+    assert (await client.get("/admin/brands", headers=A)).json()[0]["campaign_count"] == 0
+    assert (await client.get("/admin/brands")).status_code == 404  # no key

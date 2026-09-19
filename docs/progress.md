@@ -79,7 +79,12 @@ Status: ✅ done · 🔧 in progress · ⬜ not started · ⚠️ deviates from 
 | Weeks 20–21 — Fabric care & ROI | ✅ | Care profiles stay free; wear-threshold *reminders* are Plus. |
 | Weeks 22–24 — Shopping scan mode | ✅ | Barcode scanning (blueprint's 'extended version') not built — no fabric-composition data source exists. |
 | Weeks 25–28 — Festival expansion & cities | ✅ data & engine / ⬜ growth | ⚠️ 15 new lunar dates are hand-entered (2025–2027) — verify yearly. Influencer push in Pune/Hyderabad/Chennai/Kolkata is an ops task. |
-| Admin dashboard (Phase 2 pages) | ⬜ | |
+| Admin dashboard (Phase 2 pages) | ✅ | Google OAuth needs `GOOGLE_CLIENT_ID/SECRET`; locally a dev password signs in (disabled when `NODE_ENV=production`). |
+
+### Admin dashboard deliverables
+- [x] API: `/admin/metrics` (users, DAU, tiers, MRR, affiliate 30d, outfits 24h, classification acceptance), `/admin/users` (search name/phone/city, tier filter, pagination, garment counts, joined/last active), `/admin/users/{id}/wardrobe`, `/admin/analytics` (user growth, outfits by day, affiliate CTR by platform, upload→10→30→paid funnel), `/admin/brands` list/create; `brand_partners` + `brand_campaigns` schema scaffold
+- [x] `apps/admin` (Next.js 14 App Router, Tailwind in the PEHNO palette, Recharts): `/dashboard`, `/users`, `/users/[id]`, `/analytics` (7/30/90d), `/brands`; NextAuth with Google restricted to `ADMIN_EMAIL_DOMAIN` + dev-password provider outside production; `withAuth` middleware; server-only API client so `ADMIN_API_KEY` never reaches the browser
+- [x] CI job builds the admin app; 1 new API test (136 total); verified in the browser against live data
 
 ### Weeks 25–28 deliverables
 - [x] `festivals.json` 10 → 25 (Eid ul-Adha, Baisakhi, Janmashtami, Raksha Bandhan, Karva Chauth, Makar Sankranti, Ugadi, Gudi Padwa, Bihu, Lohri, New Year, Maha Shivratri, Ram Navami, Hanuman Jayanti, Guru Nanak Jayanti) with dates, regions, palettes, dress codes; Onam (kasavu) and Pongal (Tamil traditional) dress codes rewritten

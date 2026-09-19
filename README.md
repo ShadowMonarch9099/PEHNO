@@ -17,6 +17,7 @@ PEHNO digitises an Indian wardrobe (ethnic, fusion, western), classifies every g
 apps/
   api/        FastAPI backend (Python 3.11, SQLAlchemy 2 async, Alembic)
   mobile/     React Native app (Expo SDK 52, TypeScript, Zustand, React Navigation)
+  admin/      Next.js 14 ops dashboard (NextAuth domain-restricted, Tailwind, Recharts)
 packages/
   ai/data/    Indian knowledge base (festivals, fabric×weather, occasions, garment taxonomy) — core IP
   types/      Shared TypeScript types
@@ -51,11 +52,20 @@ cp .env.example .env    # set EXPO_PUBLIC_API_URL to your machine's LAN IP for a
 npx expo start
 ```
 
+### Admin dashboard
+
+```bash
+cd apps/admin
+cp .env.example .env    # set ADMIN_API_KEY (same as the API) and ADMIN_DEV_PASSWORD for local sign-in
+npm run dev             # http://localhost:3100 — Google sign-in restricted to ADMIN_EMAIL_DOMAIN in production
+```
+
 ### Checks
 
 ```bash
 cd apps/api && ruff check . && ruff format --check . && pytest -q
 npx tsc --noEmit -p apps/mobile
+cd apps/admin && npx next build
 ```
 
 ## Switching to hosted services

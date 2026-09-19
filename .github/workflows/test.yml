@@ -34,3 +34,15 @@ jobs:
         with: { node-version: 20, cache: npm }
       - run: npm ci
       - run: npx tsc --noEmit -p apps/mobile
+
+  admin:
+    name: Admin — build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - run: npm ci
+      - run: npx next build
+        working-directory: apps/admin
+        env: { NEXTAUTH_SECRET: ci-only, ADMIN_API_KEY: ci-only }
