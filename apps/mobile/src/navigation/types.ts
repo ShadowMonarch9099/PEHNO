@@ -25,6 +25,7 @@ export type WardrobeStackParamList = {
   GapReport: undefined;
   GapItem: { gap: Gap };
   Roi: undefined;
+  ScanMode: undefined;
 };
 
 export type OutfitStackParamList = {

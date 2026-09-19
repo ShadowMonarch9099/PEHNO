@@ -94,6 +94,7 @@ POST /notifications/{id}/opened
 GET  /billing/plans        GET  /billing/subscription  POST /billing/subscribe  POST /billing/cancel
 POST /billing/webhook/razorpay
 GET  /commerce/gap-report  (Plus)   GET /commerce/affiliate-links   POST /commerce/affiliate-click
+POST /commerce/scan        (Pro)
 GET  /admin/metrics        (X-Admin-Key)
 GET  /media/{key}?exp&sig  (local storage backend; signed URLs)
 ```

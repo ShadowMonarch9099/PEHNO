@@ -77,9 +77,15 @@ Status: ✅ done · 🔧 in progress · ⬜ not started · ⚠️ deviates from 
 | Weeks 15–17 — Wardrobe gap analysis | ✅ | ⚠️ The plan asks for qualitative user testing of gap recommendations before the full UI — the UI is built, but the *validation* still needs real users (see launch checklist). Redis cache used when `REDIS_URL` is set; in-process otherwise. |
 | Weeks 18–19 — Affiliate commerce | ✅ structure / ⚠️ partners | Myntra/Ajio/Nykaa/Meesho have no public product APIs: cards are curated per-platform *searches* wrapped in a configurable network deep-link template with our click id as `subid`. Real product cards arrive when a partner catalogue is approved (`ProductSource` seam). Admin dashboard app itself is still pending; `/admin/metrics` feeds it. |
 | Weeks 20–21 — Fabric care & ROI | ✅ | Care profiles stay free; wear-threshold *reminders* are Plus. |
-| Weeks 22–24 — Shopping scan mode | ⬜ | |
+| Weeks 22–24 — Shopping scan mode | ✅ | Barcode scanning (blueprint's 'extended version') not built — no fabric-composition data source exists. |
 | Weeks 25–28 — Festival expansion & cities | ⬜ | |
 | Admin dashboard (Phase 2 pages) | ⬜ | |
+
+### Weeks 22–24 deliverables
+- [x] `scan_service.py`: image pipeline → the one classifier (rule 5) → hypothetical garment in the combination graph → compatibility 0–100 (share of eligible partners × new looks), `pairs_with`, distinct `new_outfits`, duplicate detection (type+colour = "very similar", +fabric = "near-identical"), fabric-vs-season note for the user's city, buy/maybe/skip verdict with rationale; graceful "unknown" path
+- [x] `POST /commerce/scan` (multipart, Pro gate, 413/422 handling)
+- [x] Mobile: ScanModeScreen (camera / screenshot, verdict card with stats, duplicate card, pairs carousel, "Bought it → add to wardrobe"), Pro lock preview, wardrobe entry card, `commerce/scan` deep link
+- [x] 7 new tests (130 total); verified live with CLIP (recognised an already-owned saree as a duplicate)
 
 ### Weeks 20–21 deliverables
 - [x] Per-fabric `reminder_after_wears` thresholds in `care_profiles.json` (cotton 5, silk/banarasi 2, polyester 7, …); `wears_since_care`, `last_cared_at`, `care_reminders_enabled` on garments (migration with server defaults)

@@ -1,5 +1,7 @@
 from pydantic import BaseModel
 
+from app.schemas.garment import GarmentOut
+
 
 class GapOut(BaseModel):
     rank: int
@@ -64,3 +66,22 @@ class ConversionPostbackIn(BaseModel):
     subid: str
     order_value_inr: int | None = None
     commission_inr: int | None = None
+
+
+class ScanOut(BaseModel):
+    garment_type: str
+    fabric_type: str
+    color_primary: str
+    color_accent: str | None
+    confidence: float
+    occasion_tags: list[str]
+    season_tags: list[str]
+    compatibility: int
+    pairs_with: list[GarmentOut]
+    new_outfits: int
+    wardrobe_size: int
+    duplicate: GarmentOut | None
+    duplicate_reason: str | None
+    weather_note: str
+    verdict: str  # buy | maybe | skip
+    rationale: list[str]

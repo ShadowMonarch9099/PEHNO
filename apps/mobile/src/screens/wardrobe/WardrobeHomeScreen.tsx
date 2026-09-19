@@ -91,6 +91,12 @@ export default function WardrobeHomeScreen({ navigation }: WardrobeScreenProps<'
           </TouchableOpacity>
         </View>
       ) : null}
+      {!hasFilter && total >= 5 ? (
+        <TouchableOpacity style={[styles.gapCard, styles.scanCard]} onPress={() => navigation.navigate('ScanMode')} accessibilityRole="button">
+          <Text style={styles.gapTitle}>📷 Scan before you buy</Text>
+          <Text style={typography.caption}>Does it work with what you own?{ent?.features.scan_mode.unlocked ? '' : ' · Pro'}</Text>
+        </TouchableOpacity>
+      ) : null}
 
       {!hasFilter && total < WARDROBE_GOAL ? (
         <View style={styles.goal}>
@@ -146,6 +152,7 @@ const styles = StyleSheet.create({
   count: { ...typography.label, marginBottom: spacing.xs },
   goal: { paddingHorizontal: spacing.md, paddingTop: spacing.md },
   toolRow: { flexDirection: 'row', gap: spacing.sm, marginHorizontal: spacing.md, marginTop: spacing.md },
+  scanCard: { marginHorizontal: spacing.md, marginTop: spacing.sm },
   flex: { flex: 1 },
   gapCard: { padding: spacing.md, borderRadius: borderRadius.lg, backgroundColor: colors.surfaceElevated, borderWidth: 1, borderColor: colors.borderLight, gap: 2 },
   gapTitle: { ...typography.h4 },

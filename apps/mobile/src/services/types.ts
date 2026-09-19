@@ -408,3 +408,22 @@ export interface AffiliateLinks {
   cards: ProductCard[];
   untracked: boolean;
 }
+
+export interface ScanResult {
+  garment_type: string;
+  fabric_type: string;
+  color_primary: string;
+  color_accent: string | null;
+  confidence: number;
+  occasion_tags: string[];
+  season_tags: string[];
+  compatibility: number;
+  pairs_with: Garment[];
+  new_outfits: number;
+  wardrobe_size: number;
+  duplicate: Garment | null;
+  duplicate_reason: string | null;
+  weather_note: string;
+  verdict: 'buy' | 'maybe' | 'skip';
+  rationale: string[];
+}

@@ -5,7 +5,7 @@ ROI and scan mode follow in weeks 20–24.
 import uuid
 from typing import Annotated
 
-from fastapi import APIRouter, Header, HTTPException, Query, status
+from fastapi import APIRouter, File, Header, HTTPException, Query, UploadFile, status
 
 from app import knowledge
 from app.core.config import settings
@@ -20,10 +20,12 @@ from app.schemas.commerce import (
     ConversionPostbackIn,
     GapReportOut,
     ProductCardOut,
+    ScanOut,
 )
 from app.schemas.common import Message
-from app.services import affiliate_service, analytics, gap_service
+from app.services import affiliate_service, analytics, gap_service, scan_service, wardrobe_service
 from app.services.entitlements import require_feature
+from app.services.image_service import InvalidImageError
 from app.services.notifications import Push, get_notifier
 
 router = APIRouter(prefix="/commerce", tags=["commerce"])
@@ -191,3 +193,41 @@ async def affiliate_conversion(
                     ),
                 )
     return Message(message="ok")
+
+
+@router.post("/scan", response_model=ScanOut)
+async def scan(
+    user: CurrentUser,
+    db: DbSession,
+    file: Annotated[UploadFile, File(description="Photo or screenshot of the item")],
+) -> ScanOut:
+    """
+    Shopping scan mode (Pro): does this item work with what I own? Reuses the
+    garment classifier, then scores compatibility against the user's wardrobe.
+    """
+    require_feature(user, "scan_mode")
+    data = await file.read()
+    if len(data) > settings.MAX_UPLOAD_BYTES:
+        raise HTTPException(status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, "Image too large")
+    try:
+        r = await scan_service.scan(db, user, data)
+    except InvalidImageError as e:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, str(e)) from e
+    return ScanOut(
+        garment_type=r.garment_type,
+        fabric_type=r.fabric_type,
+        color_primary=r.color_primary,
+        color_accent=r.color_accent,
+        confidence=r.confidence,
+        occasion_tags=r.occasion_tags,
+        season_tags=r.season_tags,
+        compatibility=r.compatibility,
+        pairs_with=[wardrobe_service.to_out(g) for g in r.pairs_with],
+        new_outfits=r.new_outfits,
+        wardrobe_size=r.wardrobe_size,
+        duplicate=wardrobe_service.to_out(r.duplicate) if r.duplicate else None,
+        duplicate_reason=r.duplicate_reason,
+        weather_note=r.weather_note,
+        verdict=r.verdict,
+        rationale=r.rationale,
+    )

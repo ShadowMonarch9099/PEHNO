@@ -11,6 +11,7 @@ import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import GapItemScreen from '../screens/commerce/GapItemScreen';
 import GapReportScreen from '../screens/commerce/GapReportScreen';
 import RoiScreen from '../screens/commerce/RoiScreen';
+import ScanModeScreen from '../screens/commerce/ScanModeScreen';
 import FestivalDetailScreen from '../screens/festival/FestivalDetailScreen';
 import FestivalHomeScreen from '../screens/festival/FestivalHomeScreen';
 import NavratriTrackerScreen from '../screens/festival/NavratriTrackerScreen';
@@ -56,7 +57,7 @@ const linking: LinkingOptions<MainTabParamList> = {
   prefixes: ['pehno://', 'https://app.pehno.in'],
   config: {
     screens: {
-      Wardrobe: { screens: { WardrobeHome: 'wardrobe', GarmentDetail: 'wardrobe/:garmentId', Upload: 'wardrobe/upload', GapReport: 'commerce/gap-report', Roi: 'wardrobe/roi' } },
+      Wardrobe: { screens: { WardrobeHome: 'wardrobe', GarmentDetail: 'wardrobe/:garmentId', Upload: 'wardrobe/upload', GapReport: 'commerce/gap-report', Roi: 'wardrobe/roi', ScanMode: 'commerce/scan' } },
       Outfits: { screens: { DailyLook: 'outfits/daily', OutfitResult: 'outfits/:occasion', OutfitHistory: 'outfits/history' } },
       Festivals: { screens: { FestivalHome: 'festivals', FestivalDetail: 'festivals/:slug', NavratriTracker: 'festivals/navratri' } },
       Settings: { screens: { SettingsHome: 'settings', Subscription: 'settings/subscription' } },
@@ -96,6 +97,7 @@ function WardrobeNavigator() {
       <WardrobeStack.Screen name="GapReport" component={GapReportScreen} />
       <WardrobeStack.Screen name="GapItem" component={GapItemScreen} />
       <WardrobeStack.Screen name="Roi" component={RoiScreen} />
+      <WardrobeStack.Screen name="ScanMode" component={ScanModeScreen} />
     </WardrobeStack.Navigator>
   );
 }
