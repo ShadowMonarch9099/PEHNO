@@ -8,7 +8,9 @@ data/
   garment_labels.json   Indian garment taxonomy: type → typical fabrics, occasions, regions
   fabric_weather.json   fabric × season suitability (excellent / good / caution / avoid)
   occasions.json        occasion → preferred / avoided fabrics
-  festivals.json        10 MVP festivals (25+ in Phase 2)
+  festivals.json        10 MVP festivals with 2025–2027 dates (lunar dates: re-verify yearly), colours, dress codes
+  color_harmony.json    colour pairs / clashes / skin-tone flattering colours for the outfit engine
+  climatology.json      typical monthly weather per region (weather fallback)
   care_profiles.json    per-fabric wash / iron / storage / monsoon advice
   cities.json           launch cities with region + lat/lon
   exports/              (git-ignored) training exports from the API

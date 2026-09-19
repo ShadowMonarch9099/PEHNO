@@ -22,7 +22,7 @@ celery_app = Celery(
     "pehno",
     broker=settings.CELERY_BROKER_URL or "memory://",
     backend=None,
-    include=["app.tasks.classify", "app.tasks.daily_outfit_push"],
+    include=["app.tasks.classify", "app.tasks.daily_outfit_push", "app.tasks.festival_alert"],
 )
 celery_app.conf.update(
     task_always_eager=not settings.CELERY_BROKER_URL,
@@ -33,6 +33,10 @@ celery_app.conf.update(
     worker_prefetch_multiplier=1,  # classification is CPU-heavy; don't hoard tasks
     task_acks_late=True,
     beat_schedule={
+        "festival-alerts": {
+            "task": "pehno.send_festival_alerts",
+            "schedule": crontab(hour=9, minute=0),
+        },
         "daily-outfit-push": {
             "task": "pehno.push_daily_outfits",
             # Celery beat uses the app timezone (Asia/Kolkata) for crontab.

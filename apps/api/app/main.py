@@ -12,7 +12,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.core.config import settings
 from app.core.observability import setup_logging, setup_sentry
-from app.routers import auth, health, meta, outfits, users, wardrobe
+from app.routers import auth, festivals, health, meta, outfits, users, wardrobe
 
 
 @asynccontextmanager
@@ -47,6 +47,7 @@ def create_app() -> FastAPI:
     app.include_router(users.router)
     app.include_router(wardrobe.router)
     app.include_router(outfits.router)
+    app.include_router(festivals.router)
     app.include_router(meta.router)
 
     if settings.STORAGE_BACKEND == "local":

@@ -8,7 +8,9 @@ import { NavigationContainer, type LinkingOptions } from '@react-navigation/nati
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import PlaceholderScreen from '../screens/PlaceholderScreen';
+import FestivalDetailScreen from '../screens/festival/FestivalDetailScreen';
+import FestivalHomeScreen from '../screens/festival/FestivalHomeScreen';
+import NavratriTrackerScreen from '../screens/festival/NavratriTrackerScreen';
 import BodyTypeScreen from '../screens/onboarding/BodyTypeScreen';
 import OtpScreen from '../screens/onboarding/OtpScreen';
 import PhoneScreen from '../screens/onboarding/PhoneScreen';
@@ -30,6 +32,7 @@ import { useAuthStore } from '../store';
 import { colors } from '../theme';
 import type {
   AuthStackParamList,
+  FestivalStackParamList,
   MainTabParamList,
   OnboardingStackParamList,
   OutfitStackParamList,
@@ -40,6 +43,7 @@ const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 const OnboardingStack = createNativeStackNavigator<OnboardingStackParamList>();
 const WardrobeStack = createNativeStackNavigator<WardrobeStackParamList>();
 const OutfitStack = createNativeStackNavigator<OutfitStackParamList>();
+const FestivalStack = createNativeStackNavigator<FestivalStackParamList>();
 const Tabs = createBottomTabNavigator<MainTabParamList>();
 
 const linking: LinkingOptions<MainTabParamList> = {
@@ -48,7 +52,7 @@ const linking: LinkingOptions<MainTabParamList> = {
     screens: {
       Wardrobe: { screens: { WardrobeHome: 'wardrobe', GarmentDetail: 'wardrobe/:garmentId', Upload: 'wardrobe/upload' } },
       Outfits: { screens: { DailyLook: 'outfits/daily', OutfitResult: 'outfits/:occasion', OutfitHistory: 'outfits/history' } },
-      Festivals: 'festivals',
+      Festivals: { screens: { FestivalHome: 'festivals', FestivalDetail: 'festivals/:slug', NavratriTracker: 'festivals/navratri' } },
       Settings: 'settings',
     },
   },
@@ -98,14 +102,22 @@ function OutfitNavigator() {
   );
 }
 
+function FestivalNavigator() {
+  return (
+    <FestivalStack.Navigator screenOptions={{ headerShown: false }}>
+      <FestivalStack.Screen name="FestivalHome" component={FestivalHomeScreen} />
+      <FestivalStack.Screen name="FestivalDetail" component={FestivalDetailScreen} />
+      <FestivalStack.Screen name="NavratriTracker" component={NavratriTrackerScreen} />
+    </FestivalStack.Navigator>
+  );
+}
+
 const TAB_ICONS: Record<keyof MainTabParamList, React.ComponentProps<typeof Feather>['name']> = {
   Wardrobe: 'archive',
   Outfits: 'star',
   Festivals: 'calendar',
   Settings: 'settings',
 };
-
-const FestivalsPlaceholder = () => <PlaceholderScreen title="Festivals" />;
 
 function MainNavigator() {
   return (
@@ -120,7 +132,7 @@ function MainNavigator() {
     >
       <Tabs.Screen name="Wardrobe" component={WardrobeNavigator} />
       <Tabs.Screen name="Outfits" component={OutfitNavigator} />
-      <Tabs.Screen name="Festivals" component={FestivalsPlaceholder} />
+      <Tabs.Screen name="Festivals" component={FestivalNavigator} />
       <Tabs.Screen name="Settings" component={SettingsHomeScreen} />
     </Tabs.Navigator>
   );

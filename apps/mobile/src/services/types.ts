@@ -242,3 +242,47 @@ export interface OutfitList {
   page: number;
   page_size: number;
 }
+
+// ── Festivals ──────────────────────────────────────────────────────────────
+
+export interface Festival {
+  slug: string;
+  name: string;
+  start_date: string;
+  end_date: string;
+  days_until: number;
+  is_active: boolean;
+  is_relevant: boolean;
+  regions: string[];
+  colors: string[];
+  color_guidance: string;
+  dress_code: string;
+  description: string;
+  occasion_tags: string[];
+  lunar_calendar: boolean;
+}
+
+export interface FestivalDetail extends Festival {
+  looks: Outfit[];
+  hint: string | null;
+}
+
+export interface NavratriColor {
+  day: number;
+  date: string;
+  key: string;
+  name: string;
+  hex: string;
+  color_slugs: string[];
+  goddess: string | null;
+}
+
+export interface NavratriToday {
+  is_active: boolean;
+  starts_on: string | null;
+  days_until: number | null;
+  day: number | null;
+  today: NavratriColor | null;
+  sequence: NavratriColor[];
+  matching_garments: Garment[];
+}

@@ -30,6 +30,12 @@ export type OutfitStackParamList = {
   OutfitHistory: { saved?: boolean };
 };
 
+export type FestivalStackParamList = {
+  FestivalHome: undefined;
+  FestivalDetail: { slug: string };
+  NavratriTracker: undefined;
+};
+
 export type MainTabParamList = {
   Wardrobe: undefined;
   Outfits: undefined;
@@ -44,6 +50,10 @@ export type OnboardingScreenProps<T extends keyof OnboardingStackParamList> = Na
 >;
 export type OutfitScreenProps<T extends keyof OutfitStackParamList> = CompositeScreenProps<
   NativeStackScreenProps<OutfitStackParamList, T>,
+  BottomTabScreenProps<MainTabParamList>
+>;
+export type FestivalScreenProps<T extends keyof FestivalStackParamList> = CompositeScreenProps<
+  NativeStackScreenProps<FestivalStackParamList, T>,
   BottomTabScreenProps<MainTabParamList>
 >;
 export type WardrobeScreenProps<T extends keyof WardrobeStackParamList> = CompositeScreenProps<

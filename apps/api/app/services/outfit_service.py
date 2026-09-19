@@ -171,8 +171,9 @@ async def generate(
     is_daily: bool = False,
     for_date: date | None = None,
     exclude: set[frozenset[str]] | None = None,
+    weather_date: date | None = None,
 ) -> tuple[Weather, list[Outfit], str | None]:
-    weather = await get_weather(user.city)
+    weather = await get_weather(user.city, weather_date)
     garments = await _usable_wardrobe(db, user)
     hint = hint_for(garments)
     options = engine.generate(

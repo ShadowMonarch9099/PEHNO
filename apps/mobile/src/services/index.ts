@@ -6,4 +6,5 @@ export { wardrobeApi } from './wardrobe';
 export type { LocalPhoto } from './wardrobe';
 export { metaApi } from './meta';
 export { outfitsApi } from './outfits';
+export { festivalsApi } from './festivals';
 export { tokenStorage } from './tokens';

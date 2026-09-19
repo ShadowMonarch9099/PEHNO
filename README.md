@@ -84,6 +84,7 @@ PUT  /wardrobe/{id}        DELETE /wardrobe/{id}     POST /wardrobe/{id}/wear
 POST /wardrobe/{id}/confirm                          POST /wardrobe/{id}/reclassify
 GET  /outfits/daily        POST /outfits/generate    GET  /outfits/history     GET /outfits/saved
 POST /outfits/{id}/feedback  POST|DELETE /outfits/{id}/save  POST /outfits/{id}/wear
+GET  /festivals/upcoming   GET  /festivals/{slug}    GET  /festivals/navratri/today
 GET  /meta/wardrobe-options                          GET  /meta/cities
 GET  /media/{key}          (local storage backend only)
 ```

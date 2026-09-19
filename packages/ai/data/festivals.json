@@ -28,7 +28,14 @@
       "pink",
       "purple"
     ],
-    "navratri_colors": null
+    "navratri_colors": null,
+    "dates": {
+      "2025": "2025-10-20",
+      "2026": "2026-11-08",
+      "2027": "2027-10-29"
+    },
+    "duration_days": 1,
+    "lunar_calendar": true
   },
   {
     "name": "Navratri",
@@ -117,7 +124,14 @@
       "orange",
       "pink",
       "purple"
-    ]
+    ],
+    "dates": {
+      "2025": "2025-09-22",
+      "2026": "2026-10-11",
+      "2027": "2027-09-30"
+    },
+    "duration_days": 9,
+    "lunar_calendar": true
   },
   {
     "name": "Holi",
@@ -149,7 +163,14 @@
       "green",
       "orange"
     ],
-    "navratri_colors": null
+    "navratri_colors": null,
+    "dates": {
+      "2025": "2025-03-14",
+      "2026": "2026-03-03",
+      "2027": "2027-03-22"
+    },
+    "duration_days": 1,
+    "lunar_calendar": true
   },
   {
     "name": "Eid ul-Fitr",
@@ -185,7 +206,14 @@
       "pink",
       "beige"
     ],
-    "navratri_colors": null
+    "navratri_colors": null,
+    "dates": {
+      "2025": "2025-03-31",
+      "2026": "2026-03-20",
+      "2027": "2027-03-10"
+    },
+    "duration_days": 1,
+    "lunar_calendar": true
   },
   {
     "name": "Ganesh Chaturthi",
@@ -219,7 +247,14 @@
       "green",
       "cream"
     ],
-    "navratri_colors": null
+    "navratri_colors": null,
+    "dates": {
+      "2025": "2025-08-27",
+      "2026": "2026-09-14",
+      "2027": "2027-09-04"
+    },
+    "duration_days": 10,
+    "lunar_calendar": true
   },
   {
     "name": "Dussehra",
@@ -250,7 +285,14 @@
       "yellow",
       "maroon"
     ],
-    "navratri_colors": null
+    "navratri_colors": null,
+    "dates": {
+      "2025": "2025-10-02",
+      "2026": "2026-10-20",
+      "2027": "2027-10-09"
+    },
+    "duration_days": 1,
+    "lunar_calendar": true
   },
   {
     "name": "Durga Puja",
@@ -279,7 +321,14 @@
       "golden",
       "maroon"
     ],
-    "navratri_colors": null
+    "navratri_colors": null,
+    "dates": {
+      "2025": "2025-09-28",
+      "2026": "2026-10-17",
+      "2027": "2027-10-06"
+    },
+    "duration_days": 4,
+    "lunar_calendar": true
   },
   {
     "name": "Onam",
@@ -305,7 +354,14 @@
       "cream",
       "golden"
     ],
-    "navratri_colors": null
+    "navratri_colors": null,
+    "dates": {
+      "2025": "2025-09-05",
+      "2026": "2026-08-26",
+      "2027": "2027-08-15"
+    },
+    "duration_days": 1,
+    "lunar_calendar": true
   },
   {
     "name": "Pongal",
@@ -334,7 +390,14 @@
       "green",
       "red"
     ],
-    "navratri_colors": null
+    "navratri_colors": null,
+    "dates": {
+      "2025": "2025-01-14",
+      "2026": "2026-01-14",
+      "2027": "2027-01-14"
+    },
+    "duration_days": 4,
+    "lunar_calendar": false
   },
   {
     "name": "Christmas",
@@ -365,6 +428,13 @@
       "golden",
       "cream"
     ],
-    "navratri_colors": null
+    "navratri_colors": null,
+    "dates": {
+      "2025": "2025-12-25",
+      "2026": "2026-12-25",
+      "2027": "2027-12-25"
+    },
+    "duration_days": 1,
+    "lunar_calendar": false
   }
 ]

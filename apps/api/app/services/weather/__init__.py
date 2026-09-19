@@ -4,6 +4,7 @@ climatology otherwise or on any failure.
 """
 import logging
 import time
+from datetime import date
 
 from app.core.config import settings
 from app.services.weather.base import Season, Weather
@@ -15,9 +16,15 @@ _cache: dict[str, tuple[float, Weather]] = {}
 CACHE_SECONDS = 1800
 
 
-async def get_weather(city: str) -> Weather:
+async def get_weather(city: str, on: date | None = None) -> Weather:
+    """
+    Weather for `city`. For dates beyond a live forecast's reach (> 3 days out)
+    the monthly climatology is the best available estimate.
+    """
+    if on is not None and (on - date.today()).days > 3:
+        return climatology_weather(city, on)
     if not settings.OPENWEATHER_API_KEY:
-        return climatology_weather(city)
+        return climatology_weather(city, on)
     key = city.lower()
     hit = _cache.get(key)
     if hit and time.monotonic() - hit[0] < CACHE_SECONDS:
