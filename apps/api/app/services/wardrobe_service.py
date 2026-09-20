@@ -52,6 +52,7 @@ def to_out(g: Garment) -> GarmentOut:
         purchase_date=g.purchase_date,
         condition=g.condition,
         notes=g.notes,
+        brand=g.brand,
         wear_count=g.wear_count,
         last_worn_at=g.last_worn_at,
         cost_per_wear=cpw,

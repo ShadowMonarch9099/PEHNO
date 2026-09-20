@@ -9,17 +9,19 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Header, HTTPException, Query, status
 from pydantic import BaseModel
 from sqlalchemy import case, func, or_, select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
 from app.core.database import utcnow
 from app.core.security import DbSession
 from app.models.billing import Subscription, SubscriptionStatus
-from app.models.brand import BrandCampaign, BrandPartner
+from app.models.brand import BrandCampaign, BrandPartner, CampaignEntry
 from app.models.commerce import AffiliateClick
 from app.models.garment import Garment
 from app.models.outfit import Outfit
 from app.models.user import SubscriptionTier, User
-from app.services import stylist_service, wardrobe_service
+from app.schemas.brand import BrandIn, BrandPatch, CampaignIn, CampaignPatch
+from app.services import brand_service, stylist_service, wardrobe_service
 from app.services.entitlements import PLANS
 
 
@@ -278,14 +280,39 @@ async def analytics_series(db: DbSession, days: Annotated[int, Query(ge=7, le=36
     }
 
 
-# ── /brands (scaffold) ───────────────────────────────────────────────────────
+# ── /brands (partner CMS) ────────────────────────────────────────────────────
 
 
-class BrandIn(BaseModel):
-    name: str
-    website: str | None = None
-    contact_email: str | None = None
-    notes: str | None = None
+def _brand_row(b: BrandPartner, campaigns: int = 0) -> dict:
+    return {
+        "id": str(b.id),
+        "name": b.name,
+        "slug": b.slug,
+        "status": b.status.value,
+        "website": b.website,
+        "contact_email": b.contact_email,
+        "tagline": b.tagline,
+        "logo_url": b.logo_url,
+        "notes": b.notes,
+        "campaign_count": campaigns,
+        "created_at": b.created_at.isoformat(),
+    }
+
+
+def _campaign_row(c: BrandCampaign, participants: int = 0) -> dict:
+    return {
+        "id": str(c.id),
+        "brand_id": str(c.brand_id),
+        "title": c.title,
+        "kind": c.kind,
+        "status": c.status,
+        "live": brand_service.is_live(c),
+        "starts_at": c.starts_at.isoformat() if c.starts_at else None,
+        "ends_at": c.ends_at.isoformat() if c.ends_at else None,
+        "config": brand_service.config_of(c).model_dump(mode="json"),
+        "participants": participants,
+        "created_at": c.created_at.isoformat(),
+    }
 
 
 @router.get("/brands")
@@ -302,18 +329,7 @@ async def brands(db: DbSession) -> list[dict]:
             .order_by(BrandPartner.name)
         )
     ).all()
-    return [
-        {
-            "id": str(b.id),
-            "name": b.name,
-            "slug": b.slug,
-            "status": b.status.value,
-            "website": b.website,
-            "campaign_count": n,
-            "created_at": b.created_at.isoformat(),
-        }
-        for b, n in rows
-    ]
+    return [_brand_row(b, n) for b, n in rows]
 
 
 @router.post("/brands", status_code=status.HTTP_201_CREATED)
@@ -324,19 +340,118 @@ async def create_brand(body: BrandIn, db: DbSession) -> dict:
     b = BrandPartner(
         name=body.name.strip(),
         slug=slug,
-        website=body.website,
+        website=str(body.website) if body.website else None,
         contact_email=body.contact_email,
         notes=body.notes,
+        tagline=body.tagline,
+        logo_url=str(body.logo_url) if body.logo_url else None,
     )
     db.add(b)
     await db.flush()
+    return _brand_row(b)
+
+
+async def _brand(db: AsyncSession, brand_id: uuid.UUID) -> BrandPartner:
+    b = await db.get(BrandPartner, brand_id)
+    if b is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Brand not found")
+    return b
+
+
+@router.get("/brands/{brand_id}")
+async def brand_detail(brand_id: uuid.UUID, db: DbSession) -> dict:
+    b = await _brand(db, brand_id)
+    rows = (
+        (
+            await db.execute(
+                select(BrandCampaign)
+                .where(BrandCampaign.brand_id == brand_id)
+                .order_by(BrandCampaign.created_at.desc())
+            )
+        )
+        .scalars()
+        .all()
+    )
+    counts = dict(
+        (
+            await db.execute(
+                select(CampaignEntry.campaign_id, func.count(CampaignEntry.id))
+                .where(CampaignEntry.campaign_id.in_([c.id for c in rows]))
+                .group_by(CampaignEntry.campaign_id)
+            )
+        ).all()
+        if rows
+        else []
+    )
     return {
-        "id": str(b.id),
-        "name": b.name,
-        "slug": b.slug,
-        "status": b.status.value,
-        "campaign_count": 0,
+        **_brand_row(b, len(rows)),
+        "campaigns": [_campaign_row(c, counts.get(c.id, 0)) for c in rows],
     }
+
+
+@router.patch("/brands/{brand_id}")
+async def update_brand(brand_id: uuid.UUID, body: BrandPatch, db: DbSession) -> dict:
+    b = await _brand(db, brand_id)
+    for k, v in body.model_dump(exclude_unset=True).items():
+        setattr(b, k, str(v) if k in ("website", "logo_url") and v is not None else v)
+    await db.flush()
+    return _brand_row(b)
+
+
+@router.post("/brands/{brand_id}/campaigns", status_code=status.HTTP_201_CREATED)
+async def create_campaign(brand_id: uuid.UUID, body: CampaignIn, db: DbSession) -> dict:
+    await _brand(db, brand_id)
+    c = BrandCampaign(
+        brand_id=brand_id,
+        title=body.title.strip(),
+        kind=body.kind.value,
+        status=body.status.value,
+        starts_at=body.starts_at,
+        ends_at=body.ends_at,
+        config=body.config.model_dump(mode="json"),
+    )
+    db.add(c)
+    await db.flush()
+    return _campaign_row(c)
+
+
+async def _campaign(db: AsyncSession, campaign_id: uuid.UUID) -> BrandCampaign:
+    c = await db.get(BrandCampaign, campaign_id)
+    if c is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Campaign not found")
+    return c
+
+
+@router.get("/campaigns/{campaign_id}")
+async def campaign_detail(campaign_id: uuid.UUID, db: DbSession) -> dict:
+    c = await _campaign(db, campaign_id)
+    n = await db.scalar(
+        select(func.count(CampaignEntry.id)).where(CampaignEntry.campaign_id == c.id)
+    )
+    return _campaign_row(c, n or 0)
+
+
+@router.patch("/campaigns/{campaign_id}")
+async def update_campaign(campaign_id: uuid.UUID, body: CampaignPatch, db: DbSession) -> dict:
+    c = await _campaign(db, campaign_id)
+    changes = body.model_dump(exclude_unset=True)
+    for k, v in changes.items():
+        if k == "config":
+            c.config = body.config.model_dump(mode="json")  # validated
+        elif k in ("kind", "status"):
+            setattr(c, k, v.value if hasattr(v, "value") else v)
+        else:
+            setattr(c, k, v)
+    await db.flush()
+    return _campaign_row(c)
+
+
+@router.get("/campaigns/{campaign_id}/performance")
+async def campaign_performance(
+    campaign_id: uuid.UUID, db: DbSession, days: Annotated[int, Query(ge=1, le=365)] = 30
+) -> dict:
+    await _campaign(db, campaign_id)
+    return await brand_service.performance(db, campaign_id, days)
 
 
 # ── /stylists (applications + verification) ─────────────────────────────────

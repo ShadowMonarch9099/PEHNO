@@ -42,6 +42,8 @@ export type OutfitStackParamList = {
   TravelHome: undefined;
   TravelPlanner: undefined;
   TravelPlan: { planId: string };
+  Campaigns: undefined;
+  CampaignDetail: { campaignId: string };
 };
 
 export type FestivalStackParamList = {

@@ -25,6 +25,7 @@ function diff(form: GarmentUpdate, g: Garment): GarmentUpdate {
   if (JSON.stringify(form.season_tags) !== JSON.stringify(g.season_tags)) out.season_tags = form.season_tags;
   if (form.condition !== g.condition) out.condition = form.condition;
   if ((form.notes ?? '') !== (g.notes ?? '')) out.notes = form.notes;
+  if ((form.brand ?? '') !== (g.brand ?? '')) out.brand = form.brand || undefined;
   if (form.purchase_price !== g.purchase_price) out.purchase_price = form.purchase_price;
   return out;
 }
@@ -44,6 +45,7 @@ export default function GarmentEditScreen({ route, navigation }: WardrobeScreenP
     condition: g?.condition ?? 'good',
     purchase_price: g?.purchase_price ?? null,
     notes: g?.notes ?? '',
+    brand: g?.brand ?? '',
   }));
   const [price, setPrice] = useState(g?.purchase_price != null ? String(g.purchase_price) : '');
   const [saving, setSaving] = useState(false);
@@ -122,6 +124,16 @@ export default function GarmentEditScreen({ route, navigation }: WardrobeScreenP
               keyboardType="numeric"
               placeholder="1500"
               placeholderTextColor={colors.textMuted}
+            />
+          </Field>
+          <Field label="Brand (optional)">
+            <TextInput
+              style={styles.input}
+              value={form.brand ?? ''}
+              onChangeText={(brand) => setForm((f) => ({ ...f, brand }))}
+              placeholder="Fabindia, Biba, W…"
+              placeholderTextColor={colors.textMuted}
+              autoCapitalize="words"
             />
           </Field>
           <Field label="Notes">

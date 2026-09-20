@@ -64,6 +64,7 @@ class Garment(UUIDPrimaryKeyMixin, TimestampMixin, Base):
         default=GarmentCondition.good,
     )
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    brand: Mapped[str | None] = mapped_column(String(80), nullable=True, index=True)
 
     # Wear tracking
     wear_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)

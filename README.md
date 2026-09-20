@@ -112,7 +112,8 @@ GET  /stylists             GET /stylists/{id}        POST /stylists/apply      G
 POST /stylists/book        GET /stylists/bookings/my|incoming   POST /stylists/bookings/{id}/cancel|complete|review
 GET  /stylists/my-wardrobe-access/{booking}          (stylist, confirmed sessions only)
 POST /travel/packing-list  (Plus)   GET /travel/plans   GET|DELETE /travel/plans/{id}   GET /travel/destinations
-GET  /admin/metrics        (X-Admin-Key)   GET|POST /admin/stylists…
+GET  /brands/campaigns     GET /brands/campaigns/{id}   POST …/join | …/submit | …/click
+GET  /admin/metrics        (X-Admin-Key)   GET|POST /admin/stylists…   GET|POST|PATCH /admin/brands…  /admin/campaigns…
 GET  /media/{key}?exp&sig  (local storage backend; signed URLs)
 ```
 

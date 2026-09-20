@@ -8,6 +8,8 @@ import { NavigationContainer, type LinkingOptions } from '@react-navigation/nati
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import CampaignDetailScreen from '../screens/brands/CampaignDetailScreen';
+import CampaignsScreen from '../screens/brands/CampaignsScreen';
 import GapItemScreen from '../screens/commerce/GapItemScreen';
 import GapReportScreen from '../screens/commerce/GapReportScreen';
 import RoiScreen from '../screens/commerce/RoiScreen';
@@ -70,7 +72,7 @@ const linking: LinkingOptions<MainTabParamList> = {
   config: {
     screens: {
       Wardrobe: { screens: { WardrobeHome: 'wardrobe', GarmentDetail: 'wardrobe/:garmentId', Upload: 'wardrobe/upload', GapReport: 'commerce/gap-report', Roi: 'wardrobe/roi', ScanMode: 'commerce/scan' } },
-      Outfits: { screens: { DailyLook: 'outfits/daily', OutfitResult: 'outfits/:occasion', OutfitHistory: 'outfits/history', OOTDFeed: 'outfits/feed', StylistList: 'stylists', StylistProfile: 'stylists/:stylistId', MyBookings: 'stylists/bookings', TravelHome: 'travel', TravelPlan: 'travel/:planId' } },
+      Outfits: { screens: { DailyLook: 'outfits/daily', OutfitResult: 'outfits/:occasion', OutfitHistory: 'outfits/history', OOTDFeed: 'outfits/feed', StylistList: 'stylists', StylistProfile: 'stylists/:stylistId', MyBookings: 'stylists/bookings', TravelHome: 'travel', TravelPlan: 'travel/:planId', Campaigns: 'brands', CampaignDetail: 'brands/:campaignId' } },
       Festivals: { screens: { FestivalHome: 'festivals', FestivalDetail: 'festivals/:slug', NavratriTracker: 'festivals/navratri' } },
       Settings: { screens: { SettingsHome: 'settings', Subscription: 'settings/subscription', StylistApply: 'settings/stylist', IncomingBookings: 'settings/stylist/bookings' } },
     },
@@ -130,6 +132,8 @@ function OutfitNavigator() {
       <OutfitStack.Screen name="TravelHome" component={TravelHomeScreen} />
       <OutfitStack.Screen name="TravelPlanner" component={TravelPlannerScreen} />
       <OutfitStack.Screen name="TravelPlan" component={TravelPlanScreen} />
+      <OutfitStack.Screen name="Campaigns" component={CampaignsScreen} />
+      <OutfitStack.Screen name="CampaignDetail" component={CampaignDetailScreen} />
     </OutfitStack.Navigator>
   );
 }

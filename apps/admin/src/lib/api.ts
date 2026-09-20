@@ -23,9 +23,9 @@ export async function adminGet<T>(path: string, params?: Record<string, string |
   return (await res.json()) as T;
 }
 
-export async function adminPost<T>(path: string, body: unknown): Promise<T> {
+export async function adminPost<T>(path: string, body: unknown, method: 'POST' | 'PATCH' = 'POST'): Promise<T> {
   const res = await fetch(new URL(path, API_URL), {
-    method: 'POST',
+    method,
     headers: { 'X-Admin-Key': process.env.ADMIN_API_KEY ?? '', 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   });
@@ -75,8 +75,57 @@ export interface Brand {
   slug: string;
   status: string;
   website: string | null;
+  contact_email: string | null;
+  tagline: string | null;
+  logo_url: string | null;
+  notes: string | null;
   campaign_count: number;
   created_at: string;
+}
+
+export interface CampaignConfig {
+  description: string;
+  hero_image_url: string | null;
+  cta_url: string | null;
+  cta_label: string;
+  hashtag: string | null;
+  reward_text: string | null;
+  target: { cities: string[]; tiers: string[]; regional_styles: string[]; genders: string[] };
+  products: { name: string; url: string; price_inr: number | null; image_url: string | null; garment_type: string | null; color: string | null }[];
+  challenge: { goal: number; occasion: string | null; garment_types: string[]; fabrics: string[]; brand_match: boolean };
+}
+
+export interface Campaign {
+  id: string;
+  brand_id: string;
+  title: string;
+  kind: 'challenge' | 'collection';
+  status: 'draft' | 'live' | 'ended';
+  live: boolean;
+  starts_at: string | null;
+  ends_at: string | null;
+  config: CampaignConfig;
+  participants: number;
+  created_at: string;
+}
+
+export interface BrandDetail extends Brand {
+  campaigns: Campaign[];
+}
+
+export interface CampaignPerformance {
+  days: number;
+  views: number;
+  unique_viewers: number;
+  joins: number;
+  participants: number;
+  outfits_submitted: number;
+  completions: number;
+  saves: number;
+  clicks: number;
+  click_through_rate: number;
+  affiliate: { clicks: number; conversions: number; commission_inr: number };
+  by_day: Record<string, number | string>[];
 }
 
 export interface AdminStylist {

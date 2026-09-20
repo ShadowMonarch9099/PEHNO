@@ -65,3 +65,20 @@ export function FunnelChart({ data }: { data: Analytics['funnel'] }) {
     </ResponsiveContainer>
   );
 }
+
+export function CampaignChart({ data }: { data: Record<string, number | string>[] }) {
+  return (
+    <ResponsiveContainer width="100%" height={240}>
+      <BarChart data={data} margin={{ left: -16, right: 8 }}>
+        <CartesianGrid stroke={LINE} strokeDasharray="3 3" />
+        <XAxis dataKey="date" tickFormatter={(d: string) => day(d)} fontSize={11} />
+        <YAxis fontSize={11} allowDecimals={false} />
+        <Tooltip />
+        <Bar dataKey="view" stackId="a" fill={LINE} name="Views" />
+        <Bar dataKey="join" stackId="a" fill={ACCENT} name="Joins" />
+        <Bar dataKey="submit" stackId="a" fill={BRAND} name="Outfits" />
+        <Bar dataKey="click" stackId="a" fill="#fd8621" name="Clicks" radius={[4, 4, 0, 0]} />
+      </BarChart>
+    </ResponsiveContainer>
+  );
+}

@@ -39,6 +39,7 @@ class GarmentOut(APIModel):
     purchase_date: date | None
     condition: GarmentCondition
     notes: str | None
+    brand: str | None
     wear_count: int
     last_worn_at: UTCDateTime | None
     cost_per_wear: Money | None
@@ -75,6 +76,7 @@ class GarmentUpdate(BaseModel):
     purchase_date: date | None = None
     condition: GarmentCondition | None = None
     notes: str | None = Field(default=None, max_length=1000)
+    brand: str | None = Field(default=None, max_length=80)
 
     CLASSIFICATION_FIELDS: ClassVar[frozenset[str]] = frozenset(
         {

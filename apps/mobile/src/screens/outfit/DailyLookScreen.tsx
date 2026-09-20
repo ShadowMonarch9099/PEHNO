@@ -114,6 +114,9 @@ export default function DailyLookScreen({ navigation }: OutfitScreenProps<'Daily
           <TouchableOpacity style={styles.link} onPress={() => navigation.navigate('TravelHome')}>
             <Text style={styles.linkText}>✈️ Trip packing</Text>
           </TouchableOpacity>
+          <TouchableOpacity style={styles.link} onPress={() => navigation.navigate('Campaigns')}>
+            <Text style={styles.linkText}>🏷️ Brand challenges</Text>
+          </TouchableOpacity>
         </View>
         <TouchableOpacity style={styles.stylistBanner} onPress={() => navigation.navigate('StylistList')} accessibilityRole="button">
           <View style={styles.flex}>

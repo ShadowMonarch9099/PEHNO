@@ -127,6 +127,7 @@ export interface Garment {
   purchase_date: string | null;
   condition: GarmentCondition;
   notes: string | null;
+  brand: string | null;
   wear_count: number;
   last_worn_at: string | null;
   cost_per_wear: number | null;
@@ -187,6 +188,7 @@ export type GarmentUpdate = Partial<
     | 'purchase_date'
     | 'condition'
     | 'notes'
+    | 'brand'
   >
 >;
 
@@ -620,4 +622,61 @@ export interface TravelPlanSummary {
   look_count: number;
   gap_count: number;
   created_at: string;
+}
+
+// ── Brand partnerships (weeks 46–48) ────────────────────────────────────────
+
+export interface BrandSummary {
+  id: string;
+  name: string;
+  slug: string;
+  tagline: string | null;
+  logo_url: string | null;
+  website: string | null;
+}
+
+export interface CampaignProduct {
+  name: string;
+  url: string;
+  price_inr: number | null;
+  image_url: string | null;
+  garment_type: string | null;
+  color: string | null;
+}
+
+export interface ChallengeRules {
+  goal: number;
+  occasion: string | null;
+  garment_types: string[];
+  fabrics: string[];
+  brand_match: boolean;
+}
+
+export interface CampaignEntry {
+  joined_at: string;
+  progress: number;
+  goal: number;
+  outfit_ids: string[];
+  completed_at: string | null;
+}
+
+export interface Campaign {
+  id: string;
+  brand: BrandSummary;
+  title: string;
+  kind: 'challenge' | 'collection';
+  status: 'draft' | 'live' | 'ended';
+  starts_at: string | null;
+  ends_at: string | null;
+  description: string;
+  hero_image_url: string | null;
+  cta_url: string | null;
+  cta_label: string;
+  hashtag: string | null;
+  reward_text: string | null;
+  products: CampaignProduct[];
+  challenge: ChallengeRules | null;
+  rules_text: string | null;
+  entry: CampaignEntry | null;
+  participants: number;
 }

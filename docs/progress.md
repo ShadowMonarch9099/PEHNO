@@ -138,7 +138,7 @@ Status: ✅ done · 🔧 in progress · ⬜ not started · ⚠️ deviates from 
 | Weeks 33–37 — Stylist marketplace | ✅ | 20% commission, Razorpay Payment Links (mock locally), admin verification, scoped wardrobe access |
 | Weeks 38–41 — Travel packing planner | ✅ | Capsule solver over the user's wardrobe; 20 destinations with local notes; hill-station climate offsets; gaps → affiliate links |
 | Weeks 42–45 — Male wardrobe support | ✅ | 7 men's garment types, gender-scoped classification/gaps/links, men's occasion picks, fit layer for male + female builds |
-| Weeks 46–48 — Brand partnership layer | ⬜ | Schema scaffold exists |
+| Weeks 46–48 — Brand partnership layer | ✅ | Admin CMS, targeted challenges + collections, click-through tracking, per-campaign performance |
 | Weeks 49–52 — Tier 2 expansion | ⬜ | Tier-2 cities already in cities.json; Hindi UI pending |
 
 ### Weeks 29–32 deliverables
@@ -177,3 +177,11 @@ Status: ✅ done · 🔧 in progress · ⬜ not started · ⚠️ deviates from 
 - [x] Zero-shot prompts for the men's classes; training/eval pick the classes up from the taxonomy (data collection still needed — see `packages/ai/README.md`)
 - [x] Mobile: onboarding body-type step driven by `/meta/body-types` for the chosen gender (with fit tips); garment-type chips filtered by gender
 - [x] 9 new tests (160 total)
+
+### Weeks 46–48 deliverables
+- [x] Schema: `brand_partners` (+tagline, logo), `brand_campaigns` (`config` JSON validated by `CampaignConfig`: description, hero, CTA, hashtag, reward, target segment, products, challenge rules), `campaign_entries` (per-user progress + submitted outfits), `campaign_events` (view/join/submit/complete/click); `garments.brand` (migration `b146a692e71e`)
+- [x] Admin CMS: `GET|POST /admin/brands`, `GET|PATCH /admin/brands/{id}`, `POST /admin/brands/{id}/campaigns`, `GET|PATCH /admin/campaigns/{id}`, `GET /admin/campaigns/{id}/performance?days=`; dashboard pages **Brands → brand detail (partner fields, campaign table, new-campaign form) → campaign (KPIs, daily stacked chart, editor)**; `scripts/seed_brands.py` seeds Fabindia, W, Biba, FabAlley, Libas + a draft "Summer Linen Challenge"
+- [x] App: `GET /brands/campaigns` (live + targeted by city/tier/style/gender; daily view tracking), `GET /brands/campaigns/{id}`, `POST …/join`, `POST …/submit` (outfit must qualify: garment types × fabrics, or a piece tagged with the brand, optional occasion; goal → completion), `POST …/click` (partner-platform URLs become affiliate clicks with subid; other URLs utm-tagged)
+- [x] Performance: views, unique viewers, joins, participants, outfits submitted, completions, saves (submitted looks later saved), clicks, CTR, affiliate conversions/commission, by-day series
+- [x] Mobile: CampaignsScreen (targeted list with progress), CampaignDetailScreen (rules, join, "count a look" picker over recent outfits, products + CTA with tracked click-through); brand field on GarmentEdit; DailyLook link
+- [x] 4 new tests (164 total)

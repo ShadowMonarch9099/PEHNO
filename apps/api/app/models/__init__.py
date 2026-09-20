@@ -4,7 +4,7 @@ Base.metadata.create_all see the full schema.
 """
 from app.models.auth import OtpCode, RefreshToken
 from app.models.billing import BillingEvent, Subscription
-from app.models.brand import BrandCampaign, BrandPartner
+from app.models.brand import BrandCampaign, BrandPartner, CampaignEntry, CampaignEvent
 from app.models.commerce import AffiliateClick
 from app.models.feedback import ClassificationFeedback
 from app.models.festival import Festival
@@ -30,6 +30,8 @@ __all__ = [
     "AffiliateClick",
     "BrandPartner",
     "BrandCampaign",
+    "CampaignEntry",
+    "CampaignEvent",
     "OutfitLike",
     "StylistBooking",
     "StylistReview",
