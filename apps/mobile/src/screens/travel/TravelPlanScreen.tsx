@@ -15,6 +15,8 @@ import { borderRadius, colors, spacing, typography } from '../../theme';
 
 const fmt = (iso: string) => new Date(iso).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' });
 const pretty = (s: string) => s.replace(/_/g, ' ');
+const ROLE_LABEL = { full: 'Ethnic sets & one-pieces', top: 'Tops', bottom: 'Bottoms', layer: 'Layers & accessories' } as const;
+const ROLE_ORDER = { full: 0, top: 1, bottom: 2, layer: 3 } as const;
 
 export default function TravelPlanScreen({ route, navigation }: OutfitScreenProps<'TravelPlan'>) {
   const { planId } = route.params;
@@ -99,8 +101,16 @@ export default function TravelPlanScreen({ route, navigation }: OutfitScreenProp
             {plan.items.length ? (
               <>
                 <Text style={typography.h3}>Pack these</Text>
+                {(['full', 'top', 'bottom', 'layer'] as const).map((role) => {
+                  const group = plan.items.filter((it) => it.role === role);
+                  return group.length ? (
+                    <Text key={role} style={typography.label}>
+                      {ROLE_LABEL[role]} · {group.length}
+                    </Text>
+                  ) : null;
+                })}
                 <View style={styles.grid}>
-                  {plan.items.map((it) => (
+                  {[...plan.items].sort((a, b) => ROLE_ORDER[a.role] - ROLE_ORDER[b.role]).map((it) => (
                     <TouchableOpacity key={it.garment.id} style={{ width: tile }} onPress={() => openGarment(it.garment.id)} accessibilityRole="button">
                       <LazyImage uri={it.garment.thumbnail_url ?? it.garment.image_url} style={[styles.thumb, { width: tile, height: tile * 1.2 }]} />
                       <View style={styles.wears}>

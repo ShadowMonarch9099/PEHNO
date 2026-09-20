@@ -4,6 +4,7 @@ on:
   pull_request:
   push:
     branches: [main, "rebuild/**", "feat/**"]
+  workflow_call:
 
 jobs:
   api:
@@ -26,7 +27,7 @@ jobs:
         env: { DATABASE_URL: "sqlite+aiosqlite:///./ci.db" }
 
   mobile:
-    name: Mobile — typecheck
+    name: Mobile — typecheck + lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -34,6 +35,8 @@ jobs:
         with: { node-version: 20, cache: npm }
       - run: npm ci
       - run: npx tsc --noEmit -p apps/mobile
+      - run: npx eslint . --ext .ts,.tsx
+        working-directory: apps/mobile
 
   admin:
     name: Admin — build
@@ -43,6 +46,8 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 20, cache: npm }
       - run: npm ci
+      - run: npx eslint . --ext .ts,.tsx
+        working-directory: apps/admin
       - run: npx next build
         working-directory: apps/admin
         env: { NEXTAUTH_SECRET: ci-only, ADMIN_API_KEY: ci-only }

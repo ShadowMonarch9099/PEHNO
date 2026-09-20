@@ -34,7 +34,7 @@ export default async function UserWardrobePage({ params }: { params: { id: strin
         <div className="grid grid-cols-3 gap-4 md:grid-cols-5 lg:grid-cols-6">
           {data.garments.map((g) => (
             <div key={g.id} className="overflow-hidden rounded-xl bg-cream text-xs shadow-sm">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
+              
               <img src={g.thumbnail_url ?? g.image_url} alt={g.garment_type} className="aspect-[0.8] w-full object-cover" />
               <div className="p-2">
                 <div className="font-semibold capitalize">{g.garment_type.replace('_', ' ')}</div>

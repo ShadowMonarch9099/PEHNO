@@ -80,6 +80,9 @@ async def push_daily_outfits() -> dict:
             .all()
         )
         for user in users:
+            if not user.wants("daily_outfit"):
+                skipped += 1
+                continue
             try:
                 weather, rows, _hint = await outfit_service.daily(db, user)
                 if not rows:

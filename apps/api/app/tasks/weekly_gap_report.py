@@ -55,6 +55,9 @@ async def send_weekly_gap_reports() -> dict:
             .all()
         )
         for user in users:
+            if not user.wants("gap_reports"):
+                skipped += 1
+                continue
             try:
                 report = await gap_service.get_report(db, user, force=True)
                 if not report["gaps"] or not user.fcm_token:

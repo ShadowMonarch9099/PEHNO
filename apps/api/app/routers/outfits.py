@@ -4,12 +4,23 @@
 import uuid
 from typing import Annotated
 
-from fastapi import APIRouter, HTTPException, Query, status
+from fastapi import APIRouter, BackgroundTasks, HTTPException, Query, status
 
+from app.core.config import settings
 from app.core.security import CurrentUser, DbSession
-from app.schemas.outfit import FeedbackIn, GenerateIn, OutfitListOut, OutfitOptionsOut, OutfitOut
+from app.schemas.outfit import (
+    FeedbackIn,
+    GenerateIn,
+    OutfitListOut,
+    OutfitOptionsOut,
+    OutfitOut,
+    RatingIn,
+)
 from app.services import outfit_service as svc
+from app.services import social_service
 from app.services.festival_service import festival_context
+from app.tasks import dispatch
+from app.tasks.social_card_generator import social_card_task
 
 router = APIRouter(prefix="/outfits", tags=["outfits"])
 
@@ -39,6 +50,13 @@ async def generate(body: GenerateIn, user: CurrentUser, db: DbSession) -> Outfit
         db, user, occasion=body.occasion, festival=festival, limit=body.limit
     )
     return await _options_out(db, weather, rows, hint)
+
+
+@router.post("/{outfit_id}/rate", response_model=OutfitOut)
+async def rate(outfit_id: uuid.UUID, body: RatingIn, user: CurrentUser, db: DbSession) -> OutfitOut:
+    """Rate a look 1–5. ≥4 boosts its pieces in future picks, ≤2 demotes them."""
+    outfit = await svc.get_owned(db, user, outfit_id)
+    return await svc.to_out(db, await svc.rate(db, outfit, body.rating))
 
 
 @router.get("/history", response_model=OutfitListOut)
@@ -82,9 +100,15 @@ async def feedback(
 
 
 @router.post("/{outfit_id}/save", response_model=OutfitOut)
-async def save(outfit_id: uuid.UUID, user: CurrentUser, db: DbSession) -> OutfitOut:
+async def save(
+    outfit_id: uuid.UUID, user: CurrentUser, db: DbSession, background: BackgroundTasks
+) -> OutfitOut:
     outfit = await svc.get_owned(db, user, outfit_id)
-    return await svc.to_out(db, await svc.toggle_saved(db, outfit, True))
+    out = await svc.to_out(db, await svc.toggle_saved(db, outfit, True))
+    if settings.SOCIAL_ENABLED and user.social_sharing_enabled and not outfit.share_card_key:
+        await db.commit()  # the job runs in its own session
+        dispatch(background, social_card_task, social_service.generate_card_job, outfit.id)
+    return out
 
 
 @router.delete("/{outfit_id}/save", response_model=OutfitOut)

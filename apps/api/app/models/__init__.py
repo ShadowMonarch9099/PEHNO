@@ -7,7 +7,7 @@ from app.models.billing import BillingEvent, Subscription
 from app.models.brand import BrandCampaign, BrandPartner, CampaignEntry, CampaignEvent
 from app.models.commerce import AffiliateClick
 from app.models.feedback import ClassificationFeedback
-from app.models.festival import Festival
+from app.models.festival import Festival, FestivalDateOverride
 from app.models.garment import Garment
 from app.models.notification import NotificationLog
 from app.models.outfit import Outfit
@@ -23,6 +23,7 @@ __all__ = [
     "Garment",
     "Outfit",
     "Festival",
+    "FestivalDateOverride",
     "ClassificationFeedback",
     "NotificationLog",
     "Subscription",

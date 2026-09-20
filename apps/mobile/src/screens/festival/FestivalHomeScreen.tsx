@@ -2,44 +2,26 @@
  * FestivalHome — Navratri tracker card (when near/active) + upcoming festival countdowns.
  */
 import { useFocusEffect } from '@react-navigation/native';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import { RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { FestivalBanner } from '../../components/festival/FestivalBanner';
 import type { FestivalScreenProps } from '../../navigation/types';
-import { festivalsApi } from '../../services';
-import type { Festival, NavratriToday } from '../../services/types';
+import { useFestivalStore } from '../../store/festival';
 import { borderRadius, colors, shadows, spacing, typography } from '../../theme';
-import { hexFor } from '../../utils/colors';
 import { useT } from '../../i18n';
 
-const countdown = (f: Festival) => (f.is_active ? 'Happening now' : f.days_until === 0 ? 'Today' : f.days_until === 1 ? 'Tomorrow' : `In ${f.days_until} days`);
 const fmt = (iso: string) => new Date(iso + 'T00:00:00').toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
 
 export default function FestivalHomeScreen({ navigation }: FestivalScreenProps<'FestivalHome'>) {
   const t = useT();
-  const [festivals, setFestivals] = useState<Festival[]>([]);
-  const [navratri, setNavratri] = useState<NavratriToday | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const [f, n] = await Promise.all([festivalsApi.upcoming(6), festivalsApi.navratriToday()]);
-      setFestivals(f);
-      setNavratri(n);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Could not load festivals');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const { upcoming: festivals, navratri, loading, error, loadFestivals } = useFestivalStore();
+  const load = useCallback(() => loadFestivals(true), [loadFestivals]);
 
   useFocusEffect(
     useCallback(() => {
-      void load();
-    }, [load]),
+      void loadFestivals();
+    }, [loadFestivals]),
   );
 
   const showNavratri = navratri && (navratri.is_active || (navratri.days_until !== null && navratri.days_until <= 30));
@@ -74,25 +56,7 @@ export default function FestivalHomeScreen({ navigation }: FestivalScreenProps<'
         ) : null}
 
         {festivals.map((f) => (
-          <TouchableOpacity key={f.slug} style={[styles.card, f.is_active && styles.cardActive]} onPress={() => navigation.navigate('FestivalDetail', { slug: f.slug })} accessibilityRole="button">
-            <View style={styles.cardTop}>
-              <Text style={styles.cardTitle}>{f.name}</Text>
-              <Text style={[styles.badge, f.is_active && styles.badgeActive]}>{countdown(f)}</Text>
-            </View>
-            <Text style={typography.caption}>
-              {fmt(f.start_date)}
-              {f.end_date !== f.start_date ? ` – ${fmt(f.end_date)}` : ''}
-              {f.is_relevant ? '' : ' · other regions'}
-            </Text>
-            <View style={styles.swatches}>
-              {f.colors.slice(0, 7).map((c) => (
-                <View key={c} style={[styles.swatch, { backgroundColor: hexFor(c) }]} />
-              ))}
-            </View>
-            <Text style={typography.body2} numberOfLines={2}>
-              {f.dress_code}
-            </Text>
-          </TouchableOpacity>
+          <FestivalBanner key={f.slug} festival={f} onPress={() => navigation.navigate('FestivalDetail', { slug: f.slug })} />
         ))}
         {!loading && !festivals.length && !error ? <Text style={typography.body2}>No festivals in the next few months.</Text> : null}
       </ScrollView>

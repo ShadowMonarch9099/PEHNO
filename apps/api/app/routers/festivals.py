@@ -1,7 +1,7 @@
 """
 /festivals — upcoming calendar, festival detail with curated looks, Navratri tracker.
 """
-from fastapi import APIRouter, HTTPException, Query, status
+from fastapi import APIRouter, HTTPException, Query, Response, status
 from sqlalchemy import select
 
 from app.core.security import CurrentUser, DbSession
@@ -36,9 +36,10 @@ def _festival_out(occ: fs.Occurrence, city: str, today) -> FestivalOut:
 
 @router.get("/upcoming", response_model=list[FestivalOut])
 async def upcoming(
-    user: CurrentUser, limit: int = Query(default=5, ge=1, le=10)
+    user: CurrentUser, response: Response, limit: int = Query(default=5, ge=1, le=10)
 ) -> list[FestivalOut]:
-    """Next festivals, the user's region first."""
+    """Next festivals, the user's region first. Cacheable for 6 hours (Tier-2 rule)."""
+    response.headers["Cache-Control"] = "private, max-age=21600"
     today = fs.today_ist()
     return [
         _festival_out(o, user.city, today) for o in fs.upcoming(user.city, today=today, limit=limit)

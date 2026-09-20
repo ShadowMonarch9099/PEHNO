@@ -77,6 +77,10 @@ export default function SettingsHomeScreen({ navigation }: SettingsScreenProps<'
           <Text style={typography.h4}>{t('settings.subscription')}</Text>
           <Text style={typography.caption}>{user.subscription_tier === 'free' ? t('settings.free') : `${user.subscription_tier === 'pro' ? 'Pro' : 'Plus'} · ${t('settings.manage')}`} →</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.rowLink} onPress={() => navigation.navigate('NotificationPrefs')} accessibilityRole="button">
+          <Text style={typography.h4}>{t('settings.notifications')}</Text>
+          <Text style={typography.caption}>{t('settings.notificationsHint')} →</Text>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.rowLink} onPress={() => navigation.navigate('Outfits', { screen: 'MyBookings' })} accessibilityRole="button">
           <Text style={typography.h4}>{t('settings.stylistSessions')}</Text>
           <Text style={typography.caption}>{t('settings.yourBookings')} →</Text>
@@ -91,7 +95,6 @@ export default function SettingsHomeScreen({ navigation }: SettingsScreenProps<'
             <Text style={typography.caption}>{t('settings.manage')} →</Text>
           </TouchableOpacity>
         ) : null}
-        <Text style={typography.caption}>{t('settings.laterWeeks')}</Text>
         <SecondaryButton title={t('settings.signOut')} onPress={signOut} />
       </ScrollView>
     </SafeAreaView>

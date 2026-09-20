@@ -292,6 +292,7 @@ async def complete(db: AsyncSession, stylist: User, booking: StylistBooking) -> 
         raise HTTPException(status.HTTP_409_CONFLICT, "Only confirmed sessions can be completed")
     booking.status = BookingStatus.completed
     booking.completed_at = utcnow()
+    booking.payout_status = "due"  # rule 7: 80% is released to the stylist after completion
     await db.flush()
     return booking
 

@@ -76,3 +76,30 @@ def dominant_colors(image: Image.Image) -> tuple[str, str | None]:
     if len([1 for _, n in ranked if n / total >= 0.15]) >= 4:
         return "multicolor", primary
     return primary, accent
+
+
+#: Representative hex per PEHNO colour name (placeholder tiles, share cards, UI swatches).
+COLOR_HEX: dict[str, str] = {
+    "red": "#C0392B",
+    "maroon": "#7B1E2B",
+    "pink": "#E75480",
+    "orange": "#E67E22",
+    "yellow": "#F1C40F",
+    "golden": "#D4A017",
+    "green": "#2D7A4F",
+    "teal": "#1F8A8A",
+    "blue": "#2980B9",
+    "navy": "#1F2A44",
+    "purple": "#6C3483",
+    "white": "#F5F5F5",
+    "cream": "#F3E9D2",
+    "beige": "#D9C4A5",
+    "grey": "#8C8C8C",
+    "black": "#1E1B15",
+    "brown": "#7A4B2A",
+    "multicolor": "#9B59B6",
+}
+
+
+def color_hex(name: str) -> str:
+    return COLOR_HEX.get(name, "#8F7A69")

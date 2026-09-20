@@ -31,6 +31,7 @@ class OutfitOut(APIModel):
     score: float
     rationale: list[str]
     feedback: int | None
+    rating: int | None = None  # 1–5
     is_saved: bool
     is_daily: bool
     for_date: str | None
@@ -66,6 +67,10 @@ class GenerateIn(BaseModel):
 
 class FeedbackIn(BaseModel):
     value: Literal[1, -1]
+
+
+class RatingIn(BaseModel):
+    rating: Literal[1, 2, 3, 4, 5]
 
 
 class OutfitListOut(BaseModel):

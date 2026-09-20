@@ -1,5 +1,5 @@
 """
-Push notifications. FCM when FIREBASE_SERVICE_ACCOUNT is set; console otherwise.
+Push notifications. FCM when FIREBASE_SERVICE_ACCOUNT_JSON is set; console otherwise.
 """
 import logging
 from abc import ABC, abstractmethod
@@ -75,6 +75,6 @@ class FcmNotifier(Notifier):
 
 @lru_cache
 def get_notifier() -> Notifier:
-    if settings.FIREBASE_SERVICE_ACCOUNT:
-        return FcmNotifier(settings.FIREBASE_SERVICE_ACCOUNT)
+    if settings.FIREBASE_SERVICE_ACCOUNT_JSON:
+        return FcmNotifier(settings.FIREBASE_SERVICE_ACCOUNT_JSON)
     return ConsoleNotifier()

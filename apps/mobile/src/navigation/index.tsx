@@ -32,6 +32,7 @@ import OutfitResultScreen from '../screens/outfit/OutfitResultScreen';
 import OOTDFeedScreen from '../screens/social/OOTDFeedScreen';
 import ShareOutfitScreen from '../screens/social/ShareOutfitScreen';
 import SettingsHomeScreen from '../screens/settings/SettingsHomeScreen';
+import NotificationPrefsScreen from '../screens/settings/NotificationPrefsScreen';
 import SubscriptionScreen from '../screens/settings/SubscriptionScreen';
 import BookSessionScreen from '../screens/stylist/BookSessionScreen';
 import ClientWardrobeScreen from '../screens/stylist/ClientWardrobeScreen';
@@ -75,7 +76,7 @@ const linking: LinkingOptions<MainTabParamList> = {
       Wardrobe: { screens: { WardrobeHome: 'wardrobe', GarmentDetail: 'wardrobe/:garmentId', Upload: 'wardrobe/upload', GapReport: 'commerce/gap-report', Roi: 'wardrobe/roi', ScanMode: 'commerce/scan' } },
       Outfits: { screens: { DailyLook: 'outfits/daily', OutfitResult: 'outfits/:occasion', OutfitHistory: 'outfits/history', OOTDFeed: 'outfits/feed', StylistList: 'stylists', StylistProfile: 'stylists/:stylistId', MyBookings: 'stylists/bookings', TravelHome: 'travel', TravelPlan: 'travel/:planId', Campaigns: 'brands', CampaignDetail: 'brands/:campaignId' } },
       Festivals: { screens: { FestivalHome: 'festivals', FestivalDetail: 'festivals/:slug', NavratriTracker: 'festivals/navratri' } },
-      Settings: { screens: { SettingsHome: 'settings', Subscription: 'settings/subscription', StylistApply: 'settings/stylist', IncomingBookings: 'settings/stylist/bookings' } },
+      Settings: { screens: { SettingsHome: 'settings', Subscription: 'settings/subscription', NotificationPrefs: 'settings/notifications', StylistApply: 'settings/stylist', IncomingBookings: 'settings/stylist/bookings' } },
     },
   },
 };
@@ -154,6 +155,7 @@ function SettingsNavigator() {
     <SettingsStack.Navigator screenOptions={{ headerShown: false }}>
       <SettingsStack.Screen name="SettingsHome" component={SettingsHomeScreen} />
       <SettingsStack.Screen name="Subscription" component={SubscriptionScreen} />
+      <SettingsStack.Screen name="NotificationPrefs" component={NotificationPrefsScreen} />
       <SettingsStack.Screen name="StylistApply" component={StylistApplyScreen} />
       <SettingsStack.Screen name="IncomingBookings" component={IncomingBookingsScreen} />
       <SettingsStack.Screen name="ClientWardrobe" component={ClientWardrobeScreen} />

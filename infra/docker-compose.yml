@@ -1,4 +1,4 @@
-# Local full-stack: API + Postgres + Redis + Celery worker/beat.
+# Local full-stack: API + Postgres + Redis + Celery worker/beat + Flower + admin dashboard.
 # Usage: docker compose -f infra/docker-compose.yml up
 services:
   db:
@@ -51,6 +51,25 @@ services:
     env_file: ../apps/api/.env
     environment: *api_env
     depends_on: [redis]
+
+  flower:
+    build: { context: .., dockerfile: apps/api/Dockerfile }
+    command: celery -A app.tasks flower --port=5555
+    env_file: ../apps/api/.env
+    environment: *api_env
+    ports: ["5555:5555"]
+    depends_on: [redis, worker]
+
+  admin:
+    build:
+      context: ..
+      dockerfile: apps/admin/Dockerfile
+    environment:
+      API_URL: http://api:8000
+      NEXTAUTH_URL: http://localhost:3000
+    env_file: ../apps/admin/.env
+    ports: ["3000:3000"]
+    depends_on: [api]
 
 volumes:
   pgdata:

@@ -10,6 +10,7 @@ const LINKS = [
   { href: '/users', label: 'Users' },
   { href: '/analytics', label: 'Analytics' },
   { href: '/stylists', label: 'Stylists' },
+  { href: '/festivals', label: 'Festivals' },
   { href: '/brands', label: 'Brands' },
 ];
 

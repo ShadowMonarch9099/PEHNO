@@ -23,7 +23,13 @@ export async function adminGet<T>(path: string, params?: Record<string, string |
   return (await res.json()) as T;
 }
 
-export async function adminPost<T>(path: string, body: unknown, method: 'POST' | 'PATCH' = 'POST'): Promise<T> {
+export async function adminDelete<T>(path: string): Promise<T> {
+  const res = await fetch(new URL(path, API_URL), { method: 'DELETE', headers: { 'X-Admin-Key': process.env.ADMIN_API_KEY ?? '' } });
+  if (!res.ok) throw new AdminApiError(res.status, `${path} → ${res.status}`);
+  return (await res.json()) as T;
+}
+
+export async function adminPost<T>(path: string, body: unknown, method: 'POST' | 'PATCH' | 'PUT' = 'POST'): Promise<T> {
   const res = await fetch(new URL(path, API_URL), {
     method,
     headers: { 'X-Admin-Key': process.env.ADMIN_API_KEY ?? '', 'Content-Type': 'application/json' },
@@ -67,6 +73,10 @@ export interface Analytics {
   outfits_by_day: { date: string; outfits: number }[];
   affiliate_ctr: { platform: string; clicks: number; conversions: number; conversion_rate: number }[];
   funnel: { stage: string; users: number }[];
+  stylist_bookings_by_day: { date: string; bookings: number }[];
+  commission_by_month: { month: string; commission_inr: number }[];
+  shares_by_city: { city: string; shares: number }[];
+  users_by_city: { city: string; users: number; tier: 1 | 2 }[];
 }
 
 export interface Brand {
@@ -79,7 +89,10 @@ export interface Brand {
   tagline: string | null;
   logo_url: string | null;
   notes: string | null;
+  affiliate_id: string | null;
+  categories: string[];
   campaign_count: number;
+  total_affiliate_clicks: number;
   created_at: string;
 }
 
@@ -141,6 +154,33 @@ export interface AdminStylist {
   applied_at: string | null;
   bookings: number;
   sessions_completed: number;
+  total_earned_inr: number;
+  platform_commission_inr: number;
+}
+
+export interface Payout {
+  booking_id: string;
+  stylist_id: string;
+  stylist_name: string;
+  stylist_phone: string;
+  completed_at: string | null;
+  amount_paid_inr: number;
+  platform_commission_inr: number;
+  payout_inr: number;
+  payout_status: 'none' | 'due' | 'paid';
+  payout_paid_at: string | null;
+  payout_ref: string | null;
+}
+
+export interface FestivalAdmin {
+  slug: string;
+  name: string;
+  regions: string[];
+  approximate_month: string | null;
+  lunar_calendar: boolean;
+  duration_days: number;
+  dates: Record<string, string>;
+  overrides: { year: number; start_date: string; end_date: string; note: string | null }[];
 }
 
 export interface StylistMarketplace {

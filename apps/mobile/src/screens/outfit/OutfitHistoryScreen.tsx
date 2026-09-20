@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { OutfitCard } from '../../components/outfit/OutfitCard';
-import { ScreenHeader } from '../../components/ui';
+import { OutfitRating, ScreenHeader } from '../../components/ui';
 import type { OutfitScreenProps } from '../../navigation/types';
 import { outfitsApi } from '../../services';
 import type { Outfit } from '../../services/types';
@@ -18,7 +18,7 @@ const fmtDate = (iso: string) =>
 export default function OutfitHistoryScreen({ route, navigation }: OutfitScreenProps<'OutfitHistory'>) {
   const saved = Boolean(route.params?.saved);
   const options = useMetaStore((s) => s.options);
-  const { byId, upsert, toggleSave, feedback } = useOutfitStore();
+  const { byId, upsert, toggleSave, feedback, rate } = useOutfitStore();
   const [items, setItems] = useState<Outfit[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -67,6 +67,10 @@ export default function OutfitHistoryScreen({ route, navigation }: OutfitScreenP
               onToggleSave={() => toggleSave(item.id)}
               onGarmentPress={(garmentId) => navigation.navigate('Wardrobe', { screen: 'GarmentDetail', params: { garmentId } })}
             />
+            <View style={styles.rating}>
+              <Text style={typography.caption}>{item.rating ? 'Your rating' : 'Rate this look'}</Text>
+              <OutfitRating rating={item.rating ?? undefined} onRate={(r) => void rate(item.id, r as 1 | 2 | 3 | 4 | 5)} />
+            </View>
           </View>
         )}
         ListEmptyComponent={
@@ -85,6 +89,7 @@ export default function OutfitHistoryScreen({ route, navigation }: OutfitScreenP
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
   list: { padding: spacing.xl, gap: spacing.lg, paddingBottom: spacing.xxl },
+  rating: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: spacing.xs },
   item: { gap: spacing.sm },
   meta: { gap: 2 },
   metaTitle: { ...typography.h4 },

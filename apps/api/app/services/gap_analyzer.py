@@ -276,7 +276,13 @@ def analyze(
                 ),
             )
         )
-    gaps.sort(key=lambda g: (-g.score, -g.new_outfits, g.garment_type))
+
+    # Budget is a hard ordering: everything the user can afford outranks everything that
+    # starts above their budget (those stay visible at the bottom, never hidden).
+    def over_budget(g: Gap) -> bool:
+        return budget_inr is not None and g.typical_price_inr[0] > budget_inr
+
+    gaps.sort(key=lambda g: (over_budget(g), -g.score, -g.new_outfits, g.garment_type))
     return gaps[:limit]
 
 

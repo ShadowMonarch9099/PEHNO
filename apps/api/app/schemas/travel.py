@@ -53,6 +53,7 @@ class LookOut(BaseModel):
 
 class PackedItemOut(BaseModel):
     garment: GarmentOut
+    role: str  # full | top | bottom | layer — for grouping the list
     wears: int  # how many trip looks use it
     days: list[int]
 

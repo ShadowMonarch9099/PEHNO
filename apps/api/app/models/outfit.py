@@ -32,6 +32,9 @@ class Outfit(UUIDPrimaryKeyMixin, Base):
     is_saved: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     # Spec (wk 8-9) asks for like/dislike feedback: -1 dislike, +1 like, NULL = no feedback.
     feedback: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    rating: Mapped[int | None] = mapped_column(
+        Integer, nullable=True
+    )  # 1–5 (spec: /outfits/{id}/rate)
     worn_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
 

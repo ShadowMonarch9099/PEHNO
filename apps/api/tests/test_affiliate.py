@@ -156,7 +156,14 @@ async def test_click_logging_and_conversion_postback(client, db, monkeypatch, ca
     assert r.status_code == 200
     row = (await db.execute(select(AffiliateClick))).scalar_one()
     assert row.converted and row.commission_inr == 78 and row.converted_at is not None
-    assert any("Bought it?" in m for m in caplog.messages)  # nudge to add the purchase
+    # plan (weeks 18–19): the purchase lands in the wardrobe automatically, with a placeholder
+    # tile, the click's type/colour, seeded tags, the price paid — and a push saying so
+    added = (await client.get("/wardrobe", headers=h)).json()["items"]
+    new = [g for g in added if "purchase" in (g["notes"] or "")]
+    assert len(new) == 1 and new[0]["garment_type"] == row.gap_type
+    assert new[0]["purchase_price"] == 1299 and new[0]["user_verified"] is False
+    assert new[0]["occasion_tags"] and new[0]["image_url"] and new[0]["thumbnail_url"]
+    assert any("in your wardrobe" in m for m in caplog.messages)
 
     # idempotent + unknown subid
     assert (

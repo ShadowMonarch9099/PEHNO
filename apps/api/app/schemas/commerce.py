@@ -55,6 +55,8 @@ class AffiliateClickIn(BaseModel):
     product_url: str
     gap_type: str | None = None
     garment_id: str | None = None
+    color: str | None = None
+    fabric: str | None = None
 
 
 class AffiliateClickOut(BaseModel):

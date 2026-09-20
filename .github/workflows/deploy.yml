@@ -1,14 +1,29 @@
-name: Deploy API
+name: Deploy
 
-# Deploys apps/api to Railway on every push to main once RAILWAY_TOKEN exists in
-# repo secrets. Until then every step is skipped (secrets can't gate a job directly).
+# On push to main (spec): run tests → build Docker images → deploy api + worker to
+# Railway → deploy admin to Vercel. Every deploy step is gated on its secret so the
+# workflow is inert until RAILWAY_TOKEN / VERCEL_TOKEN exist in repo secrets.
 on:
   push:
     branches: [main]
-    paths: ["apps/api/**", ".github/workflows/deploy.yml"]
 
 jobs:
+  test:
+    uses: ./.github/workflows/test.yml
+
+  images:
+    name: Build Docker images
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -f apps/api/Dockerfile -t pehno-api .
+      - run: docker build -f infra/Dockerfile.worker -t pehno-worker .
+      - run: docker build -f apps/admin/Dockerfile -t pehno-admin .
+
   railway:
+    name: Deploy API + worker (Railway)
+    needs: images
     runs-on: ubuntu-latest
     env:
       RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
@@ -23,3 +38,26 @@ jobs:
       - if: env.RAILWAY_TOKEN != ''
         run: railway up --service pehno-api --detach
         working-directory: apps/api
+      - if: env.RAILWAY_TOKEN != ''
+        run: railway up --service pehno-worker --detach
+        working-directory: apps/api
+
+  vercel:
+    name: Deploy admin (Vercel)
+    needs: images
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    steps:
+      - if: env.VERCEL_TOKEN != ''
+        uses: actions/checkout@v4
+      - if: env.VERCEL_TOKEN != ''
+        uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - if: env.VERCEL_TOKEN != ''
+        run: npm i -g vercel
+      - if: env.VERCEL_TOKEN != ''
+        run: vercel deploy --prod --yes --token "$VERCEL_TOKEN"
+        working-directory: apps/admin

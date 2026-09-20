@@ -57,6 +57,8 @@ class BrandIn(BaseModel):
     notes: str | None = None
     tagline: str | None = Field(default=None, max_length=160)
     logo_url: HttpUrl | None = None
+    affiliate_id: str | None = Field(default=None, max_length=80)
+    categories: list[str] | None = None  # e.g. ["kurtas", "sarees", "linen"]
 
 
 class BrandPatch(BaseModel):
@@ -66,6 +68,8 @@ class BrandPatch(BaseModel):
     notes: str | None = None
     tagline: str | None = Field(default=None, max_length=160)
     logo_url: HttpUrl | None = None
+    affiliate_id: str | None = Field(default=None, max_length=80)
+    categories: list[str] | None = None
 
 
 class CampaignIn(BaseModel):

@@ -55,6 +55,7 @@ export type FestivalStackParamList = {
 export type SettingsStackParamList = {
   SettingsHome: undefined;
   Subscription: { highlight?: 'plus' | 'pro'; reason?: string } | undefined;
+  NotificationPrefs: undefined;
   StylistApply: undefined;
   IncomingBookings: undefined;
   ClientWardrobe: { bookingId: string };

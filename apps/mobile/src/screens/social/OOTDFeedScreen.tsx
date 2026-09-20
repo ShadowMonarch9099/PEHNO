@@ -47,6 +47,30 @@ export default function OOTDFeedScreen({ navigation }: OutfitScreenProps<'OOTDFe
     Alert.alert(
       `${g.color_primary} ${labelFor(options.garment_types, g.garment_type)}`,
       `${labelFor(options.fabrics, g.fabric_type)} · ${g.occasion_tags.map((o) => labelFor(options.occasions, o)).join(', ') || 'no occasions tagged'}`,
+      [
+        { text: 'Close', style: 'cancel' },
+        {
+          text: 'Shop similar',
+          onPress: () =>
+            navigation.navigate('Wardrobe', {
+              screen: 'GapItem',
+              params: {
+                gap: {
+                  rank: 1,
+                  garment_type: g.garment_type,
+                  label: labelFor(options.garment_types, g.garment_type),
+                  occasions: g.occasion_tags,
+                  new_outfits: 0,
+                  score: 0,
+                  suggested_colors: [g.color_primary],
+                  suggested_fabrics: g.fabric_type === 'unknown' ? [] : [g.fabric_type],
+                  typical_price_inr: [0, 0],
+                  rationale: `Seen in ${item.owner_first_name}'s ${labelFor(options.occasions, item.occasion)} look.`,
+                },
+              },
+            }),
+        },
+      ],
     );
   };
 

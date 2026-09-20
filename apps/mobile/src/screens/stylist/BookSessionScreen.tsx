@@ -129,6 +129,7 @@ export default function BookSessionScreen({ route, navigation }: OutfitScreenPro
           />
           {error ? <Text style={styles.error}>{error}</Text> : null}
           {s?.quote?.pro_discount_applied ? <Text style={styles.discount}>Pro discount −₹{s.quote.discount_inr} applied</Text> : null}
+          {amount ? <Text style={typography.caption}>Total ₹{amount} · platform fee included. You pay on the next screen.</Text> : null}
         </ScrollView>
         <View style={styles.footer}>
           <PrimaryButton title={amount ? `Book · ₹${amount}` : 'Book'} onPress={book} loading={busy} disabled={!s} />

@@ -191,3 +191,24 @@ Status: ✅ done · 🔧 in progress · ⬜ not started · ⚠️ deviates from 
 - [x] Slow networks: `GZipMiddleware` on JSON ≥1 KB; `Cache-Control: public, max-age=86400` on `/meta/*`; mobile `LazyImage` (expo-image, memory+disk cache, placeholder, fade) replaces every remote `<Image>`; AsyncStorage stale-while-revalidate cache for today's look, the wardrobe list and vocab — screens render instantly and keep working offline with an "offline" banner; cache cleared on sign-out
 - [x] Hindi: `label_hi` on occasions + garment types, `i18n_hi.json` for seasons/colours/fabrics/styles/conditions, `GET /meta/wardrobe-options?lang=hi`; `users.language` (`en`|`hi`, migration `0cf608310f63`) drives push copy in all four notification tasks; mobile `src/i18n` (persisted preference, `t()`/`useT()`, en/hi tables with fallback), language switch in Settings synced to the profile, translated tabs, Today's look, outfit actions, wardrobe home, occasion picker, festivals, settings, style onboarding; knowledge vocab re-fetched in the chosen language
 - [x] 6 new tests (170 total)
+
+## Spec conformance pass (after week 52)
+
+Re-read the build plan, blueprint and pitch deck line by line and closed the gaps
+([spec-verification.md](spec-verification.md) has the full matrix):
+
+- [x] `POST /outfits/{id}/rate` (1–5) + `rating` column; ratings feed personalisation and show as stars in history
+- [x] Notification preferences (`users.notification_prefs`, honoured by all four push jobs) + NotificationPrefs screen
+- [x] Festival date overrides: `festival_date_overrides` table read by `festival_service`, admin **Festivals** page
+- [x] Engine layer 4: a regional festival within 3 days biases the daily look
+- [x] Social feed quality gate (user-verified or confidence > 0.80) + card pre-rendered on save when sharing is enabled (push "Your outfit card is ready to share!")
+- [x] Affiliate conversion auto-adds the bought piece to the wardrobe (placeholder tile, seeded tags, price, "unlocks N outfits" push)
+- [x] Stylist payouts ledger (80% due on completion → admin marks paid), per-stylist earnings/commission, verification email (SMTP/console)
+- [x] Brand partner `affiliate_id` + categories + total affiliate clicks; "Brand Partner" label in the app
+- [x] Admin analytics: stylist bookings over time, commission by month, shares by city, users by city (Tier 1/2)
+- [x] Knowledge: +sharara, gharara, formal_shirt, trousers, tshirt, jeans (23 types); +beach, hill_station occasions; men's picks + notes on core occasions; +Teej, Puthandu, Vishu (28 festivals); `training/DATA_COLLECTION.md`
+- [x] Gap ranking: budget is a hard ordering (affordable first, over-budget kept visible)
+- [x] `POST /commerce/scan/base64` (spec JSON shape); `/festivals/upcoming` 6-hour cache header; images 800 px / 200 KB / 200 px thumbs; `FIREBASE_SERVICE_ACCOUNT_JSON`, `SUPABASE_ANON_KEY`
+- [x] Mobile: FabricBadge, OccasionTag, FestivalBanner, FestivalLookCard, BottomSheet (wardrobe filters), `useFestivalStore`, last-7-days daily cache, travel list grouped by role, "Shop similar" from the OOTD feed, "platform fee included" on booking
+- [x] Infra: compose adds `flower` + `admin`; `infra/Dockerfile.{api,worker}`, `apps/admin/Dockerfile`; deploy = tests → images → Railway → Vercel; ESLint configs + CI step for mobile and admin
+- [x] 13 new API tests (183 total)

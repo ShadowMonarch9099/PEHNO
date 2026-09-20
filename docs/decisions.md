@@ -21,3 +21,22 @@ Short records of choices that differ from, or aren't covered by, the build plan.
 
 ## Web prototype (`frontend/`)
 **Decision.** The Vite/React web prototype exported from Google AI Studio stays in the repo as a design reference only. It is not part of the plan (mobile-first) and is not wired to the API. Its palette was already ported into `apps/mobile/src/theme`.
+
+## Spec conformance pass (2026-09-20)
+
+After all 52 weeks were built, every requirement in the three source documents was re-checked
+against the code ([spec-verification.md](spec-verification.md)). Deliberate deviations that remain:
+
+- **Supabase** → dialect-portable SQLAlchemy + a storage seam (see "Local database"); realtime
+  classification updates are polled instead of pushed over Supabase Realtime.
+- **Fine-tuned ViT** → zero-shot CLIP until a labelled dataset exists; the training/eval path is built.
+- **Pinecone, Mixpanel, Datadog** → not wired; no feature in the plan depends on them yet.
+- **react-i18next** → a 60-line in-house `src/i18n` with the same `t()`/hook shape (no dependency, no
+  bundle cost). Swap in react-i18next if pluralisation/ICU is ever needed.
+- **`PUT /users/me/subscription`** → the subscription lifecycle lives under `/billing/*` (subscribe,
+  cancel, webhook) because it is provider-driven, not a profile field.
+- **Design tokens** → the `frontend/` prototype's palette (`#964900` / `#fff8f1`) instead of the prompt's
+  `#8B4513` / `#FDF8F0`; same family, kept consistent with the existing design reference.
+- **Free-tier scan (blueprint)** vs **Pro scan (build plan)** → build plan. **Gap report** is Plus (Phase-2
+  prompt) rather than Pro (one bullet in the week-13 plan text). Both are single-line changes in
+  `entitlements.FEATURE_TIERS`.

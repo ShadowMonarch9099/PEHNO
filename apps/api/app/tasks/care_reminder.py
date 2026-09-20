@@ -36,6 +36,9 @@ async def send_care_reminders() -> dict:
             .all()
         )
         for user in users:
+            if not user.wants("care_reminders"):
+                skipped += 1
+                continue
             for g in await care_service.due_for_user(db, user):
                 key = f"{g.id}:{g.wears_since_care}"
                 entry = NotificationLog(

@@ -200,6 +200,7 @@ async def to_out(db: AsyncSession, plan: TravelPlan) -> TravelPlanOut:
     items = [
         PackedItemOut(
             garment=wardrobe_service.to_out(by_id[g]),
+            role=engine.role_of(by_id[g]),
             wears=len(usage[g]),
             days=sorted(set(usage[g])),
         )

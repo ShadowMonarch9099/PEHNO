@@ -651,5 +651,213 @@
     ],
     "gender": "men",
     "label_hi": "पठानी सूट"
+  },
+  {
+    "slug": "sharara",
+    "label": "Sharara Set",
+    "subcategories": [
+      "classic_sharara",
+      "gharara_style_sharara",
+      "printed_sharara"
+    ],
+    "typical_fabrics": [
+      "georgette",
+      "chiffon",
+      "raw_silk",
+      "net",
+      "cotton"
+    ],
+    "occasion_suitability": [
+      "sangeet",
+      "mehendi",
+      "wedding_guest",
+      "festival",
+      "night_out"
+    ],
+    "regional_associations": [
+      "lucknowi",
+      "punjabi",
+      "pan_india"
+    ],
+    "description": "Short kurti with wide, flared, pleated trousers — the sangeet and Eid favourite that moves well on a dance floor.",
+    "role": "full",
+    "layer_ok": true,
+    "typical_price_inr": [
+      2500,
+      12000
+    ],
+    "gender": "women",
+    "label_hi": "शरारा"
+  },
+  {
+    "slug": "gharara",
+    "label": "Gharara Set",
+    "subcategories": [
+      "classic_gharara",
+      "farshi_gharara",
+      "chikankari_gharara"
+    ],
+    "typical_fabrics": [
+      "raw_silk",
+      "georgette",
+      "banarasi",
+      "cotton"
+    ],
+    "occasion_suitability": [
+      "wedding_guest",
+      "reception",
+      "sangeet",
+      "festival",
+      "formal"
+    ],
+    "regional_associations": [
+      "lucknowi",
+      "pan_india"
+    ],
+    "description": "Knee-length kurti over trousers fitted to the knee then flaring out with a joint (the 'goat') — Lucknow's wedding heirloom silhouette.",
+    "role": "full",
+    "layer_ok": true,
+    "typical_price_inr": [
+      4000,
+      20000
+    ],
+    "gender": "women",
+    "label_hi": "ग़रारा"
+  },
+  {
+    "slug": "formal_shirt",
+    "label": "Formal Shirt",
+    "subcategories": [
+      "plain_shirt",
+      "striped_shirt",
+      "linen_shirt",
+      "band_collar_shirt"
+    ],
+    "typical_fabrics": [
+      "cotton",
+      "linen",
+      "polyester",
+      "rayon"
+    ],
+    "occasion_suitability": [
+      "office",
+      "formal",
+      "casual",
+      "campus",
+      "night_out"
+    ],
+    "regional_associations": [
+      "pan_india"
+    ],
+    "description": "Collared button-down shirt. Pairs with trousers for office and with a Nehru jacket for office-festive days.",
+    "role": "top",
+    "layer_ok": true,
+    "typical_price_inr": [
+      800,
+      3500
+    ],
+    "gender": "unisex",
+    "label_hi": "फ़ॉर्मल शर्ट"
+  },
+  {
+    "slug": "trousers",
+    "label": "Trousers",
+    "subcategories": [
+      "formal_trousers",
+      "chinos",
+      "linen_trousers",
+      "wide_leg_trousers"
+    ],
+    "typical_fabrics": [
+      "cotton",
+      "linen",
+      "polyester",
+      "rayon"
+    ],
+    "occasion_suitability": [
+      "office",
+      "formal",
+      "casual",
+      "campus",
+      "night_out"
+    ],
+    "regional_associations": [
+      "pan_india"
+    ],
+    "description": "Tailored or relaxed trousers. The base of business-casual and of the kurta-with-trousers office-festive look.",
+    "role": "bottom",
+    "layer_ok": false,
+    "typical_price_inr": [
+      900,
+      4000
+    ],
+    "gender": "unisex",
+    "label_hi": "ट्राउज़र"
+  },
+  {
+    "slug": "tshirt",
+    "label": "T-shirt",
+    "subcategories": [
+      "crew_neck",
+      "polo",
+      "graphic_tee",
+      "oversized_tee"
+    ],
+    "typical_fabrics": [
+      "cotton",
+      "polyester",
+      "rayon",
+      "linen"
+    ],
+    "occasion_suitability": [
+      "casual",
+      "campus",
+      "beach",
+      "hill_station"
+    ],
+    "regional_associations": [
+      "pan_india"
+    ],
+    "description": "Knit casual top. Layers under a Nehru jacket or shrug for fusion looks; beach and travel staple.",
+    "role": "top",
+    "layer_ok": true,
+    "typical_price_inr": [
+      300,
+      1500
+    ],
+    "gender": "unisex",
+    "label_hi": "टी-शर्ट"
+  },
+  {
+    "slug": "jeans",
+    "label": "Jeans",
+    "subcategories": [
+      "straight_jeans",
+      "slim_jeans",
+      "wide_leg_jeans",
+      "cropped_jeans"
+    ],
+    "typical_fabrics": [
+      "cotton",
+      "polyester"
+    ],
+    "occasion_suitability": [
+      "casual",
+      "campus",
+      "night_out",
+      "hill_station"
+    ],
+    "regional_associations": [
+      "pan_india"
+    ],
+    "description": "Denim trousers. With a kurta or kurti they make the everyday indo-western look; too warm for peak summer.",
+    "role": "bottom",
+    "layer_ok": false,
+    "typical_price_inr": [
+      800,
+      4000
+    ],
+    "gender": "unisex",
+    "label_hi": "जींस"
   }
 ]

@@ -50,6 +50,10 @@ class StylistBooking(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     paid_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     cancelled_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    # Payout ledger: none (unpaid/cancelled) → due (session completed) → paid (released to stylist)
+    payout_status: Mapped[str] = mapped_column(String(10), nullable=False, default="none")
+    payout_paid_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    payout_ref: Mapped[str | None] = mapped_column(String(80), nullable=True)
 
 
 class StylistReview(UUIDPrimaryKeyMixin, Base):

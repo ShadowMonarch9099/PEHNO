@@ -90,6 +90,7 @@ export default function CampaignDetailScreen({ route, navigation }: OutfitScreen
         {c ? (
           <>
             {c.hero_image_url ? <LazyImage uri={c.hero_image_url} style={styles.hero} /> : null}
+            <Text style={styles.partner}>BRAND PARTNER · sponsored by {c.brand.name}</Text>
             <Text style={typography.body1}>{c.description}</Text>
             {c.hashtag ? <Text style={styles.hashtag}>{c.hashtag}</Text> : null}
             {c.ends_at ? <Text style={typography.caption}>Ends {new Date(c.ends_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'long' })} · {c.participants} taking part</Text> : null}
@@ -174,6 +175,7 @@ const styles = StyleSheet.create({
   error: { ...typography.caption, color: colors.error },
   hero: { width: '100%', height: 180, borderRadius: borderRadius.xl },
   hashtag: { ...typography.label, color: colors.accent },
+  partner: { ...typography.caption, color: colors.textMuted, fontWeight: '700', letterSpacing: 0.5 },
   rules: { backgroundColor: colors.surfaceElevated, borderRadius: borderRadius.xl, padding: spacing.md, gap: spacing.sm },
   reward: { ...typography.body2, color: colors.success },
   picker: { borderWidth: 1.5, borderColor: colors.border, borderRadius: borderRadius.xl, padding: spacing.md, gap: spacing.sm },

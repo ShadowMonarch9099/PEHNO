@@ -45,7 +45,9 @@ export default function CampaignsScreen({ navigation }: OutfitScreenProps<'Campa
             {c.hero_image_url ? <LazyImage uri={c.hero_image_url} style={styles.hero} /> : null}
             <View style={styles.body}>
               <View style={styles.row}>
-                <Text style={styles.brand}>{c.brand.name}</Text>
+                <Text style={styles.brand}>
+                  {c.brand.name} <Text style={styles.partner}>· Brand Partner</Text>
+                </Text>
                 <Text style={[styles.kind, c.kind === 'challenge' ? styles.kindChallenge : null]}>{c.kind === 'challenge' ? 'Challenge' : 'Collection'}</Text>
               </View>
               <Text style={typography.h4}>{c.title}</Text>
@@ -83,6 +85,7 @@ const styles = StyleSheet.create({
   body: { padding: spacing.md, gap: spacing.xs },
   row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   brand: { ...typography.label, color: colors.primary },
+  partner: { ...typography.caption, color: colors.textMuted, fontWeight: '700' },
   kind: { ...typography.caption, borderWidth: 1, borderColor: colors.border, borderRadius: borderRadius.pill, paddingHorizontal: spacing.sm, paddingVertical: 2 },
   kindChallenge: { borderColor: colors.primary, color: colors.primary },
   progress: { gap: 4, marginTop: spacing.xs },

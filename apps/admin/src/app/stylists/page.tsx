@@ -1,6 +1,6 @@
 import { revalidatePath } from 'next/cache';
 import { Card } from '@/components/Card';
-import { adminGet, adminPost, type AdminStylist, type StylistMarketplace } from '@/lib/api';
+import { adminGet, adminPost, type AdminStylist, type Payout, type StylistMarketplace } from '@/lib/api';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,10 +13,22 @@ async function setVerified(formData: FormData) {
   revalidatePath('/stylists');
 }
 
+async function markPaid(formData: FormData) {
+  'use server';
+  const id = String(formData.get('booking_id') ?? '');
+  if (!id) return;
+  await adminPost(`/admin/stylists/bookings/${id}/payout`, { reference: String(formData.get('reference') ?? '') || null });
+  revalidatePath('/stylists');
+}
+
 const inr = (n: number) => `₹${Math.round(n).toLocaleString('en-IN')}`;
 
 export default async function StylistsPage() {
-  const [stylists, market] = await Promise.all([adminGet<AdminStylist[]>('/admin/stylists'), adminGet<StylistMarketplace>('/admin/stylists/bookings', { days: 30 })]);
+  const [stylists, market, payouts] = await Promise.all([
+    adminGet<AdminStylist[]>('/admin/stylists'),
+    adminGet<StylistMarketplace>('/admin/stylists/bookings', { days: 30 }),
+    adminGet<Payout[]>('/admin/stylists/payouts', { status_filter: 'due' }),
+  ]);
   const pending = stylists.filter((s) => !s.verified);
   const verified = stylists.filter((s) => s.verified);
 
@@ -37,6 +49,7 @@ export default async function StylistsPage() {
       <td className="py-2 text-xs capitalize">{s.specialties.map((x) => x.replace(/_/g, ' ')).join(', ')}</td>
       <td className="py-2">{inr(s.price_per_session_inr)}</td>
       <td className="py-2">{s.bookings} / {s.sessions_completed}</td>
+      <td className="py-2 text-xs">{inr(s.total_earned_inr)} <span className="text-muted">/ {inr(s.platform_commission_inr)}</span></td>
       <td className="py-2 text-xs text-muted">{s.applied_at ? new Date(s.applied_at).toLocaleDateString('en-IN') : '—'}</td>
       <td className="py-2">
         <form action={setVerified}>
@@ -53,11 +66,11 @@ export default async function StylistsPage() {
   const Table = ({ rows, empty }: { rows: AdminStylist[]; empty: string }) => (
     <table className="w-full text-sm">
       <thead className="text-left text-xs uppercase text-muted">
-        <tr><th className="py-2">Stylist</th><th>Specialties</th><th>Price</th><th>Bookings / done</th><th>Applied</th><th /></tr>
+        <tr><th className="py-2">Stylist</th><th>Specialties</th><th>Price</th><th>Bookings / done</th><th>Earned / commission</th><th>Applied</th><th /></tr>
       </thead>
       <tbody>
         {rows.map((s) => <Row key={s.id} s={s} />)}
-        {!rows.length ? <tr><td colSpan={6} className="py-4 text-muted">{empty}</td></tr> : null}
+        {!rows.length ? <tr><td colSpan={7} className="py-4 text-muted">{empty}</td></tr> : null}
       </tbody>
     </table>
   );
@@ -76,6 +89,35 @@ export default async function StylistsPage() {
       </Card>
       <Card title={`Listed stylists (${verified.length})`}>
         <Table rows={verified} empty="No verified stylists yet." />
+      </Card>
+      <Card title={`Payouts due (${payouts.length}) — 80% of each completed session`}>
+        <table className="w-full text-sm">
+          <thead className="text-left text-xs uppercase text-muted">
+            <tr><th className="py-2">Stylist</th><th>Completed</th><th>Session</th><th>Commission</th><th>Payout</th><th /></tr>
+          </thead>
+          <tbody>
+            {payouts.map((p) => (
+              <tr key={p.booking_id} className="border-t border-line/30">
+                <td className="py-2">
+                  <div className="font-medium">{p.stylist_name}</div>
+                  <div className="text-xs text-muted">{p.stylist_phone}</div>
+                </td>
+                <td className="text-xs text-muted">{p.completed_at ? new Date(p.completed_at).toLocaleDateString('en-IN') : '—'}</td>
+                <td>{inr(p.amount_paid_inr)}</td>
+                <td>{inr(p.platform_commission_inr)}</td>
+                <td className="font-semibold">{inr(p.payout_inr)}</td>
+                <td>
+                  <form action={markPaid} className="flex gap-2">
+                    <input type="hidden" name="booking_id" value={p.booking_id} />
+                    <input name="reference" placeholder="NEFT / Route ref" className="w-36 rounded-lg border border-line bg-cream px-2 py-1 text-xs" />
+                    <button className="rounded-lg bg-brand px-3 py-1 text-xs font-semibold text-cream">Mark paid</button>
+                  </form>
+                </td>
+              </tr>
+            ))}
+            {!payouts.length ? <tr><td colSpan={6} className="py-4 text-muted">Nothing due. Payouts appear here when a stylist marks a session completed.</td></tr> : null}
+          </tbody>
+        </table>
       </Card>
     </div>
   );

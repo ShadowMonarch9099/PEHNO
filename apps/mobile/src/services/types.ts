@@ -12,6 +12,13 @@ export type RegionalStyle =
   | 'mumbai_minimal'
   | 'pan_india_fusion';
 
+export interface NotificationPrefs {
+  daily_outfit: boolean;
+  festival_alerts: boolean;
+  care_reminders: boolean;
+  gap_reports: boolean;
+}
+
 export interface User {
   id: string;
   phone: string;
@@ -26,6 +33,7 @@ export interface User {
   subscription_expires_at: string | null;
   onboarding_complete: boolean;
   language: 'en' | 'hi';
+  notification_prefs: NotificationPrefs;
   created_at: string;
   entitlements?: Entitlements | null;
 }
@@ -42,7 +50,7 @@ export type UserUpdate = Partial<
     | 'regional_style'
     | 'onboarding_complete'
     | 'language'
-  > & { fcm_token: string }
+  > & { fcm_token: string; notification_prefs: Partial<NotificationPrefs> }
 >;
 
 export interface UserStats {
@@ -268,6 +276,7 @@ export interface Outfit {
   score: number;
   rationale: string[];
   feedback: 1 | -1 | null;
+  rating: number | null; // 1–5
   is_saved: boolean;
   is_daily: boolean;
   for_date: string | null;
@@ -590,6 +599,7 @@ export interface TripLook {
 
 export interface PackedItem {
   garment: Garment;
+  role: 'full' | 'top' | 'bottom' | 'layer';
   wears: number;
   days: number[];
 }

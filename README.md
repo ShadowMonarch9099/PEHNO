@@ -9,7 +9,7 @@
 
 PEHNO digitises an Indian wardrobe (ethnic, fusion, western), classifies every garment with vision AI, and recommends outfits using live weather, Indian occasions, the festival calendar, fabric–weather rules and personal style.
 
-- **Plan:** [docs/build-plan.md](docs/build-plan.md) (52 weeks, 3 phases) · **Status:** [docs/progress.md](docs/progress.md) · **Decisions:** [docs/decisions.md](docs/decisions.md) · **Launch:** [docs/launch-checklist.md](docs/launch-checklist.md)
+- **Plan:** [docs/build-plan.md](docs/build-plan.md) (52 weeks, 3 phases) · **Status:** [docs/progress.md](docs/progress.md) · **Decisions:** [docs/decisions.md](docs/decisions.md) · **Launch:** [docs/launch-checklist.md](docs/launch-checklist.md) · **Spec check:** [docs/spec-verification.md](docs/spec-verification.md)
 
 ## Repository
 
@@ -76,7 +76,7 @@ cd apps/admin && npx next build
 | `STORAGE_BACKEND` | `local` (served at `/media`) | `supabase` (+ `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`) |
 | `OTP_PROVIDER` | `console` | `msg91` (+ `MSG91_AUTH_KEY`, `MSG91_TEMPLATE_ID`) |
 | `OPENWEATHER_API_KEY` | empty (monthly climatology per city) | live weather |
-| `FIREBASE_SERVICE_ACCOUNT` | empty (console notifier) | FCM push |
+| `FIREBASE_SERVICE_ACCOUNT_JSON` | empty (console notifier) | FCM push |
 | `CELERY_BROKER_URL` | empty (in-process jobs) | Redis; run `celery -A app.tasks worker` and `celery -A app.tasks beat` |
 | `BILLING_PROVIDER` | `mock` (dev activate / dev pay endpoints) | `razorpay` (+ key id/secret, webhook secret, plan ids; enable `subscription.*` and `payment_link.paid` webhook events) |
 | `POSTHOG_API_KEY` | empty (events logged) | PostHog analytics |
@@ -98,14 +98,14 @@ POST /wardrobe/{id}/confirm                          POST /wardrobe/{id}/reclass
 POST /wardrobe/{id}/cared  PUT  /wardrobe/{id}/care-reminders
 GET  /wardrobe/roi         GET  /wardrobe/underutilized
 GET  /outfits/daily        POST /outfits/generate    GET  /outfits/history     GET /outfits/saved
-POST /outfits/{id}/feedback  POST|DELETE /outfits/{id}/save  POST /outfits/{id}/wear
+POST /outfits/{id}/feedback  POST /outfits/{id}/rate  POST|DELETE /outfits/{id}/save  POST /outfits/{id}/wear
 GET  /festivals/upcoming   GET  /festivals/{slug}    GET  /festivals/navratri/today
 GET  /meta/wardrobe-options?lang=hi   GET /meta/cities   GET /meta/body-types?gender=
 POST /notifications/{id}/opened
 GET  /billing/plans        GET  /billing/subscription  POST /billing/subscribe  POST /billing/cancel
 POST /billing/webhook/razorpay
 GET  /commerce/gap-report  (Plus)   GET /commerce/affiliate-links   POST /commerce/affiliate-click
-POST /commerce/scan        (Pro)
+POST /commerce/scan | /commerce/scan/base64   (Pro)
 POST|DELETE /social/share-card/{id}   GET /social/feed/city   POST|DELETE /social/like/{id}   (SOCIAL_ENABLED)
 GET  /s/{slug}             public share page + /s/{slug}/card.jpg
 GET  /stylists             GET /stylists/{id}        POST /stylists/apply      GET /stylists/me
@@ -113,7 +113,7 @@ POST /stylists/book        GET /stylists/bookings/my|incoming   POST /stylists/b
 GET  /stylists/my-wardrobe-access/{booking}          (stylist, confirmed sessions only)
 POST /travel/packing-list  (Plus)   GET /travel/plans   GET|DELETE /travel/plans/{id}   GET /travel/destinations
 GET  /brands/campaigns     GET /brands/campaigns/{id}   POST …/join | …/submit | …/click
-GET  /admin/metrics        (X-Admin-Key)   GET|POST /admin/stylists…   GET|POST|PATCH /admin/brands…  /admin/campaigns…
+GET  /admin/metrics        (X-Admin-Key)   /admin/stylists… (+payouts)   /admin/brands…  /admin/campaigns…  /admin/festivals…
 GET  /media/{key}?exp&sig  (local storage backend; signed URLs)
 ```
 

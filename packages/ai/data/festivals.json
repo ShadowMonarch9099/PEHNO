@@ -946,5 +946,109 @@
     },
     "duration_days": 1,
     "lunar_calendar": true
+  },
+  {
+    "name": "Hariyali Teej",
+    "slug": "teej",
+    "approximate_month": "July–August",
+    "regions": [
+      "north",
+      "rajasthan",
+      "uttar_pradesh",
+      "bihar"
+    ],
+    "color_guidance": "Green above all — leheriya, bandhani and mehendi-green sarees and suits; red and gold accents for married women.",
+    "dress_code": "Green ethnic wear (saree, lehenga or suit), bangles, mehendi; men in kurta-pyjama for the swings and processions.",
+    "occasion_tags": [
+      "festival",
+      "pooja"
+    ],
+    "avoid_colors": [
+      "black",
+      "white"
+    ],
+    "description": "Monsoon festival of Parvati and Shiva celebrated by women with swings, songs and fasting; Jaipur's Teej procession is the most famous.",
+    "colors": [
+      "green",
+      "red",
+      "golden",
+      "pink"
+    ],
+    "navratri_colors": null,
+    "dates": {
+      "2025": "2025-07-27",
+      "2026": "2026-08-15",
+      "2027": "2027-08-04"
+    },
+    "duration_days": 1,
+    "lunar_calendar": true
+  },
+  {
+    "name": "Puthandu",
+    "slug": "puthandu",
+    "approximate_month": "April",
+    "regions": [
+      "south",
+      "tamil_nadu"
+    ],
+    "color_guidance": "Fresh, bright silks and cottons — new clothes are the point; turmeric yellow, red and green with gold.",
+    "dress_code": "New traditional attire: pattu pavadai or Kanjeevaram saree; veshti with angavastram for men.",
+    "occasion_tags": [
+      "festival",
+      "pooja",
+      "temple"
+    ],
+    "avoid_colors": [
+      "black"
+    ],
+    "description": "Tamil New Year on the first day of Chithirai — new clothes, kolam, the kanni tray and a family feast.",
+    "colors": [
+      "yellow",
+      "red",
+      "green",
+      "golden"
+    ],
+    "navratri_colors": null,
+    "dates": {
+      "2025": "2025-04-14",
+      "2026": "2026-04-14",
+      "2027": "2027-04-14"
+    },
+    "duration_days": 1,
+    "lunar_calendar": false
+  },
+  {
+    "name": "Vishu",
+    "slug": "vishu",
+    "approximate_month": "April",
+    "regions": [
+      "south",
+      "kerala"
+    ],
+    "color_guidance": "Kasavu — cream with gold — is the register; yellow (the konna flower) is the festival's colour.",
+    "dress_code": "New kasavu saree or set-mundu; cream mundu with a gold-bordered shirt or kurta for men.",
+    "occasion_tags": [
+      "festival",
+      "pooja",
+      "temple"
+    ],
+    "avoid_colors": [
+      "black"
+    ],
+    "description": "Kerala's new year: the Vishukkani viewing at dawn, kaineettam gifts of money, and new clothes (Vishukodi).",
+    "colors": [
+      "cream",
+      "golden",
+      "yellow",
+      "white"
+    ],
+    "navratri_colors": null,
+    "dates": {
+      "2025": "2025-04-14",
+      "2026": "2026-04-15",
+      "2027": "2027-04-15"
+    },
+    "duration_days": 1,
+    "lunar_calendar": false
   }
 ]

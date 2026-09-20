@@ -3,7 +3,7 @@
 the Next.js server holds; browsers never see it.
 """
 import uuid
-from datetime import timedelta
+from datetime import date, timedelta
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Query, status
@@ -11,6 +11,7 @@ from pydantic import BaseModel
 from sqlalchemy import case, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app import knowledge
 from app.core.config import settings
 from app.core.database import utcnow
 from app.core.security import DbSession
@@ -22,6 +23,7 @@ from app.models.outfit import Outfit
 from app.models.user import SubscriptionTier, User
 from app.schemas.brand import BrandIn, BrandPatch, CampaignIn, CampaignPatch
 from app.services import brand_service, stylist_service, wardrobe_service
+from app.services.email import stylist_verified_email
 from app.services.entitlements import PLANS
 
 
@@ -257,9 +259,58 @@ async def analytics_series(db: DbSession, days: Annotated[int, Query(ge=7, le=36
         running += n
         growth.append({"date": _day(d), "signups": n, "users": running})
 
+    # Phase 3: stylist bookings over time, commission by month, shares by city, city tiers
+    from app.models.stylist import BookingStatus, StylistBooking
+
+    bookings_by_day = (
+        await db.execute(
+            select(func.date(StylistBooking.created_at), func.count(StylistBooking.id))
+            .where(StylistBooking.created_at >= since)
+            .group_by(func.date(StylistBooking.created_at))
+            .order_by(func.date(StylistBooking.created_at))
+        )
+    ).all()
+    commission_rows = (
+        await db.execute(
+            select(StylistBooking.completed_at, StylistBooking.platform_commission).where(
+                StylistBooking.status == BookingStatus.completed,
+                StylistBooking.completed_at.is_not(None),
+            )
+        )
+    ).all()
+    by_month: dict[str, float] = {}
+    for done_at, commission in commission_rows:
+        key = done_at.strftime("%Y-%m")
+        by_month[key] = by_month.get(key, 0.0) + float(commission or 0)
+    shares = (
+        await db.execute(
+            select(User.city, func.count(Outfit.id))
+            .join(User, User.id == Outfit.user_id)
+            .where(Outfit.is_public.is_(True))
+            .group_by(User.city)
+            .order_by(func.count(Outfit.id).desc())
+        )
+    ).all()
+    city_rows = (
+        await db.execute(
+            select(User.city, func.count(User.id))
+            .group_by(User.city)
+            .order_by(func.count(User.id).desc())
+        )
+    ).all()
+    tier1 = {"mumbai", "delhi", "bengaluru", "chennai", "hyderabad", "pune", "kolkata", "ahmedabad"}
+
     return {
         "days": days,
         "user_growth": growth,
+        "stylist_bookings_by_day": [{"date": _day(d), "bookings": n} for d, n in bookings_by_day],
+        "commission_by_month": [
+            {"month": m, "commission_inr": round(v, 2)} for m, v in sorted(by_month.items())
+        ],
+        "shares_by_city": [{"city": c, "shares": n} for c, n in shares],
+        "users_by_city": [
+            {"city": c, "users": n, "tier": 1 if c.lower() in tier1 else 2} for c, n in city_rows
+        ],
         "outfits_by_day": [{"date": _day(d), "outfits": n} for d, n in outfits],
         "affiliate_ctr": [
             {
@@ -283,7 +334,7 @@ async def analytics_series(db: DbSession, days: Annotated[int, Query(ge=7, le=36
 # ── /brands (partner CMS) ────────────────────────────────────────────────────
 
 
-def _brand_row(b: BrandPartner, campaigns: int = 0) -> dict:
+def _brand_row(b: BrandPartner, campaigns: int = 0, clicks: int = 0) -> dict:
     return {
         "id": str(b.id),
         "name": b.name,
@@ -294,7 +345,10 @@ def _brand_row(b: BrandPartner, campaigns: int = 0) -> dict:
         "tagline": b.tagline,
         "logo_url": b.logo_url,
         "notes": b.notes,
+        "affiliate_id": b.affiliate_id,
+        "categories": b.categories or [],
         "campaign_count": campaigns,
+        "total_affiliate_clicks": clicks,
         "created_at": b.created_at.isoformat(),
     }
 
@@ -329,7 +383,20 @@ async def brands(db: DbSession) -> list[dict]:
             .order_by(BrandPartner.name)
         )
     ).all()
-    return [_brand_row(b, n) for b, n in rows]
+    # click-throughs across all of a brand's campaigns
+    from app.models.brand import CampaignEvent, CampaignEventType
+
+    clicks = dict(
+        (
+            await db.execute(
+                select(BrandCampaign.brand_id, func.count(CampaignEvent.id))
+                .join(BrandCampaign, BrandCampaign.id == CampaignEvent.campaign_id)
+                .where(CampaignEvent.event == CampaignEventType.click)
+                .group_by(BrandCampaign.brand_id)
+            )
+        ).all()
+    )
+    return [_brand_row(b, n, clicks.get(b.id, 0)) for b, n in rows]
 
 
 @router.post("/brands", status_code=status.HTTP_201_CREATED)
@@ -345,6 +412,8 @@ async def create_brand(body: BrandIn, db: DbSession) -> dict:
         notes=body.notes,
         tagline=body.tagline,
         logo_url=str(body.logo_url) if body.logo_url else None,
+        affiliate_id=body.affiliate_id,
+        categories=body.categories,
     )
     db.add(b)
     await db.flush()
@@ -461,7 +530,9 @@ class VerifyIn(BaseModel):
     verified: bool
 
 
-def _stylist_row(u: User, bookings: int, completed: int) -> dict:
+def _stylist_row(
+    u: User, bookings: int, completed: int, earned: float = 0.0, commission: float = 0.0
+) -> dict:
     return {
         "id": str(u.id),
         "name": u.name,
@@ -475,6 +546,8 @@ def _stylist_row(u: User, bookings: int, completed: int) -> dict:
         "applied_at": u.stylist_applied_at.isoformat() if u.stylist_applied_at else None,
         "bookings": bookings,
         "sessions_completed": completed,
+        "total_earned_inr": round(earned, 2),  # stylist's 80% on completed sessions
+        "platform_commission_inr": round(commission, 2),
     }
 
 
@@ -495,16 +568,20 @@ async def stylists(db: DbSession, pending: bool = False) -> list[dict]:
             )
         ).all()
     )
-    done = dict(
-        (
-            await db.execute(
-                select(StylistBooking.stylist_id, func.count(StylistBooking.id))
-                .where(StylistBooking.status == BookingStatus.completed)
-                .group_by(StylistBooking.stylist_id)
+    done_rows = (
+        await db.execute(
+            select(
+                StylistBooking.stylist_id,
+                func.count(StylistBooking.id),
+                func.coalesce(func.sum(StylistBooking.amount_paid), 0),
+                func.coalesce(func.sum(StylistBooking.platform_commission), 0),
             )
-        ).all()
-    )
-    return [_stylist_row(u, counts.get(u.id, 0), done.get(u.id, 0)) for u in users]
+            .where(StylistBooking.status == BookingStatus.completed)
+            .group_by(StylistBooking.stylist_id)
+        )
+    ).all()
+    done = {sid: (n, float(a) - float(c), float(c)) for sid, n, a, c in done_rows}
+    return [_stylist_row(u, counts.get(u.id, 0), *done.get(u.id, (0, 0.0, 0.0))) for u in users]
 
 
 @router.post("/stylists/{user_id}/verify")
@@ -513,7 +590,57 @@ async def verify_stylist(user_id: uuid.UUID, body: VerifyIn, db: DbSession) -> d
     if user is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "User not found")
     await stylist_service.verify(db, user, body.verified)
+    await stylist_verified_email(user.email, user.name or "there", body.verified)
     return _stylist_row(user, 0, 0)
+
+
+@router.get("/stylists/payouts")
+async def stylist_payouts(db: DbSession, status_filter: str = "due") -> list[dict]:
+    """Ledger (rule 7): 80% of a completed session is due to the stylist; mark paid once released."""
+    from app.models.stylist import StylistBooking
+
+    stmt = select(StylistBooking, User.name, User.phone).join(
+        User, User.id == StylistBooking.stylist_id
+    )
+    if status_filter != "all":
+        stmt = stmt.where(StylistBooking.payout_status == status_filter)
+    rows = (await db.execute(stmt.order_by(StylistBooking.completed_at.desc()))).all()
+    return [
+        {
+            "booking_id": str(b.id),
+            "stylist_id": str(b.stylist_id),
+            "stylist_name": name,
+            "stylist_phone": phone,
+            "completed_at": b.completed_at.isoformat() if b.completed_at else None,
+            "amount_paid_inr": float(b.amount_paid),
+            "platform_commission_inr": float(b.platform_commission),
+            "payout_inr": round(float(b.amount_paid) - float(b.platform_commission), 2),
+            "payout_status": b.payout_status,
+            "payout_paid_at": b.payout_paid_at.isoformat() if b.payout_paid_at else None,
+            "payout_ref": b.payout_ref,
+        }
+        for b, name, phone in rows
+    ]
+
+
+class PayoutIn(BaseModel):
+    reference: str | None = None  # bank transfer / Razorpay Route id
+
+
+@router.post("/stylists/bookings/{booking_id}/payout")
+async def mark_payout(booking_id: uuid.UUID, body: PayoutIn, db: DbSession) -> dict:
+    from app.models.stylist import StylistBooking
+
+    b = await db.get(StylistBooking, booking_id)
+    if b is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Booking not found")
+    if b.payout_status != "due":
+        raise HTTPException(status.HTTP_409_CONFLICT, f"Payout is {b.payout_status}, not due")
+    b.payout_status = "paid"
+    b.payout_paid_at = utcnow()
+    b.payout_ref = body.reference
+    await db.flush()
+    return {"booking_id": str(b.id), "payout_status": b.payout_status, "payout_ref": b.payout_ref}
 
 
 @router.get("/stylists/bookings")
@@ -541,3 +668,98 @@ async def stylist_bookings(db: DbSession, days: Annotated[int, Query(ge=1, le=36
         "gmv_inr": float(sum(a for s, _, a, _ in rows if s in paid)),
         "commission_inr": float(sum(c for s, _, _, c in rows if s in paid)),
     }
+
+
+# ── /festivals (calendar management: per-year date corrections) ──────────────
+
+
+class FestivalDatesIn(BaseModel):
+    year: int
+    start_date: date
+    end_date: date | None = None
+    note: str | None = None
+
+
+@router.get("/festivals")
+async def festivals_admin(db: DbSession) -> list[dict]:
+    """Every festival from the knowledge base with its JSON dates and any admin overrides."""
+    from app.models.festival import FestivalDateOverride
+
+    rows = (await db.execute(select(FestivalDateOverride))).scalars().all()
+    overrides: dict[str, list[dict]] = {}
+    for r in rows:
+        overrides.setdefault(r.slug, []).append(
+            {
+                "year": r.year,
+                "start_date": r.start_date.isoformat(),
+                "end_date": r.end_date.isoformat(),
+                "note": r.note,
+            }
+        )
+    return [
+        {
+            "slug": f["slug"],
+            "name": f["name"],
+            "regions": f["regions"],
+            "approximate_month": f.get("approximate_month"),
+            "lunar_calendar": f.get("lunar_calendar", False),
+            "duration_days": f.get("duration_days", 1),
+            "dates": f.get("dates", {}),
+            "overrides": sorted(overrides.get(f["slug"], []), key=lambda o: o["year"]),
+        }
+        for f in knowledge.festivals()
+    ]
+
+
+@router.put("/festivals/{slug}/dates")
+async def set_festival_dates(slug: str, body: FestivalDatesIn, db: DbSession) -> dict:
+    """Correct a festival's dates for one year (lunar drift) without editing festivals.json."""
+    from app.models.festival import FestivalDateOverride
+    from app.services import festival_service
+
+    f = festival_service.by_slug(slug)
+    if f is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Unknown festival")
+    end = body.end_date or body.start_date + timedelta(days=int(f.get("duration_days", 1)) - 1)
+    if end < body.start_date:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, "end_date before start_date")
+    row = (
+        await db.execute(
+            select(FestivalDateOverride).where(
+                FestivalDateOverride.slug == slug, FestivalDateOverride.year == body.year
+            )
+        )
+    ).scalar_one_or_none()
+    if row is None:
+        row = FestivalDateOverride(slug=slug, year=body.year)
+        db.add(row)
+    row.start_date, row.end_date, row.note = body.start_date, end, body.note
+    await db.flush()
+    await db.commit()
+    await festival_service.load_overrides(db)
+    return {
+        "slug": slug,
+        "year": body.year,
+        "start_date": row.start_date.isoformat(),
+        "end_date": end.isoformat(),
+    }
+
+
+@router.delete("/festivals/{slug}/dates/{year}")
+async def clear_festival_dates(slug: str, year: int, db: DbSession) -> dict:
+    from app.models.festival import FestivalDateOverride
+    from app.services import festival_service
+
+    row = (
+        await db.execute(
+            select(FestivalDateOverride).where(
+                FestivalDateOverride.slug == slug, FestivalDateOverride.year == year
+            )
+        )
+    ).scalar_one_or_none()
+    if row is not None:
+        await db.delete(row)
+        await db.flush()
+        await db.commit()
+    await festival_service.load_overrides(db)
+    return {"slug": slug, "year": year, "override": False}

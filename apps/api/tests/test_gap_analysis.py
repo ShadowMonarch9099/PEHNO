@@ -80,14 +80,14 @@ def test_new_outfit_counts_are_distinct():
 
 
 def test_festive_palette_for_full_garments():
-    gaps = {x.garment_type: x for x in ga.analyze(PLAN_EXAMPLE)}
+    gaps = {x.garment_type: x for x in ga.analyze(PLAN_EXAMPLE, limit=20)}
     assert gaps["saree"].suggested_colors[0] in ("maroon", "red", "golden", "green", "pink")
     assert "Wedding Guest" in gaps["saree"].rationale or "Festival" in gaps["saree"].rationale
 
 
 def test_budget_demotes_expensive_types():
-    without = [x.garment_type for x in ga.analyze(PLAN_EXAMPLE, limit=10)]
-    with_budget = [x.garment_type for x in ga.analyze(PLAN_EXAMPLE, budget_inr=800, limit=10)]
+    without = [x.garment_type for x in ga.analyze(PLAN_EXAMPLE, limit=20)]
+    with_budget = [x.garment_type for x in ga.analyze(PLAN_EXAMPLE, budget_inr=800, limit=20)]
     assert without.index("saree") < with_budget.index("saree")
     # everything affordable outranks everything over budget
     tax = {g["slug"]: g for g in ga.knowledge.garment_types()}

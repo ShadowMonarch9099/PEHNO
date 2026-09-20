@@ -29,6 +29,8 @@ class AffiliateClick(UUIDPrimaryKeyMixin, Base):
         GUID, ForeignKey("garments.id", ondelete="SET NULL"), nullable=True
     )
     gap_type: Mapped[str | None] = mapped_column(String(50), nullable=True)  # the gap being filled
+    color: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    fabric: Mapped[str | None] = mapped_column(String(30), nullable=True)
     platform: Mapped[AffiliatePlatform] = mapped_column(
         str_enum(AffiliatePlatform, "affiliate_platform"), nullable=False, index=True
     )

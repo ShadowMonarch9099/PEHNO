@@ -41,6 +41,12 @@ _TYPE_HINTS: dict[str, str] = {
     "dhoti": "dhoti or veshti, a white unstitched cloth wrapped around the legs, men's Indian wear",
     "pyjama": "men's straight cotton pyjama trousers with a drawstring, worn under a kurta",
     "pathani_suit": "pathani suit, a men's loose collared kurta with cuffs and salwar",
+    "sharara": "sharara set, a short kurti with wide flared pleated trousers",
+    "gharara": "gharara set, kurti with trousers fitted to the knee then flaring out",
+    "formal_shirt": "collared button-down formal shirt",
+    "trousers": "tailored trousers or chinos",
+    "tshirt": "casual t-shirt",
+    "jeans": "denim jeans",
 }
 _FABRIC_TEMPLATES = (
     "a close-up photo of {label} fabric clothing",

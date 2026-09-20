@@ -59,7 +59,10 @@ MAN = engine.UserContext(body_type="slim", gender="male")
 
 def test_taxonomy_has_mens_garments_with_roles_and_gender():
     tax = {x["slug"]: x for x in knowledge.garment_types()}
-    assert len(tax) == 17 and all("gender" in x for x in tax.values())
+    assert len(tax) == 23 and all(
+        "gender" in x for x in tax.values()
+    )  # 10 women/unisex + 7 men + 6 spec additions
+    assert {"sharara", "gharara", "formal_shirt", "trousers", "tshirt", "jeans"} <= set(tax)
     assert tax["sherwani"]["role"] == "full" and tax["sherwani"]["gender"] == "men"
     assert tax["kurta_pyjama"]["role"] == "full" and tax["kurta_pyjama"]["layer_ok"]
     assert tax["nehru_jacket"]["role"] == "layer"

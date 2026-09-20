@@ -7,7 +7,7 @@ services. Production overrides come from environment variables / .env.
 from functools import lru_cache
 from typing import Literal
 
-from pydantic import Field, field_validator
+from pydantic import AliasChoices, Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -43,6 +43,7 @@ class Settings(BaseSettings):
     LOCAL_MEDIA_DIR: str = "./media"
     PUBLIC_BASE_URL: str = "http://localhost:8000"
     SUPABASE_URL: str = ""
+    SUPABASE_ANON_KEY: str = ""  # only needed if a client talks to Supabase directly
     SUPABASE_SERVICE_KEY: str = ""
     GARMENT_IMAGES_BUCKET: str = "garment-images"
     SIGNED_URL_EXPIRY_SECONDS: int = 3600
@@ -54,9 +55,9 @@ class Settings(BaseSettings):
     # ── Uploads ──────────────────────────────────────────────────────────────
     MAX_UPLOAD_BYTES: int = 12 * 1024 * 1024
     MAX_BULK_UPLOAD: int = 10
-    IMAGE_MAX_SIDE: int = 1024
-    THUMBNAIL_SIDE: int = 320
-    IMAGE_TARGET_BYTES: int = 300 * 1024
+    IMAGE_MAX_SIDE: int = 800  # spec: max 800×800, ≤200 KB, 200 px thumbnail
+    THUMBNAIL_SIDE: int = 200
+    IMAGE_TARGET_BYTES: int = 200 * 1024
 
     # ── Garment AI ───────────────────────────────────────────────────────────
     # rules     → colour extraction + knowledge-base rules only (no model; CI/tests)
@@ -79,7 +80,10 @@ class Settings(BaseSettings):
 
     # ── Push notifications ───────────────────────────────────────────────────
     # Empty → console notifier (logs). Set to a service-account JSON string/path for FCM.
-    FIREBASE_SERVICE_ACCOUNT: str = ""
+    FIREBASE_SERVICE_ACCOUNT_JSON: str = Field(
+        default="",
+        validation_alias=AliasChoices("FIREBASE_SERVICE_ACCOUNT_JSON", "FIREBASE_SERVICE_ACCOUNT"),
+    )
     DAILY_PUSH_HOUR_IST: int = 7
     DAILY_PUSH_MINUTE_IST: int = 30
 
@@ -119,6 +123,14 @@ class Settings(BaseSettings):
     PRO_STYLIST_DISCOUNT_RATE: float = 0.10
     STYLIST_SESSION_MINUTES: int = 60
     SHARE_BASE_URL: str = ""  # public origin for share pages; defaults to PUBLIC_BASE_URL
+
+    # ── Email (stylist verification outcome) ─────────────────────────────────
+    # Empty SMTP_HOST → console provider (logs).
+    SMTP_HOST: str = ""
+    SMTP_PORT: int = 587
+    SMTP_USER: str = ""
+    SMTP_PASSWORD: str = ""
+    EMAIL_FROM: str = "PEHNO <hello@pehno.in>"
 
     # ── Observability ────────────────────────────────────────────────────────
     SENTRY_DSN: str = ""

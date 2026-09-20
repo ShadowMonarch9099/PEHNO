@@ -33,6 +33,8 @@ async def update_me(body: UserUpdate, user: CurrentUser, db: DbSession) -> UserO
     changes = body.model_dump(exclude_unset=True)
     newly_onboarded = changes.get("onboarding_complete") and not user.onboarding_complete
     for field, value in changes.items():
+        if field == "notification_prefs":
+            value = {**(user.notification_prefs or {}), **value}  # partial update, missing = on
         setattr(user, field, value)
     await db.flush()
     if newly_onboarded:

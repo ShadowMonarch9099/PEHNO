@@ -1,11 +1,18 @@
 import uuid
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, field_validator
 
 from app.models.user import BodyType, Gender, SkinTone, SubscriptionTier
 from app.schemas.common import APIModel, UTCDateTime
 
 REGIONAL_STYLES = ("rajasthani", "south_indian", "punjabi", "mumbai_minimal", "pan_india_fusion")
+
+
+class NotificationPrefs(BaseModel):
+    daily_outfit: bool = True
+    festival_alerts: bool = True
+    care_reminders: bool = True
+    gap_reports: bool = True
 
 
 class UserOut(APIModel):
@@ -22,7 +29,14 @@ class UserOut(APIModel):
     subscription_expires_at: UTCDateTime | None
     onboarding_complete: bool
     language: str = "en"
+    notification_prefs: NotificationPrefs = NotificationPrefs()
     created_at: UTCDateTime
+
+    @field_validator("notification_prefs", mode="before")
+    @classmethod
+    def _prefs_default(cls, v):
+        return NotificationPrefs.model_validate(v or {})  # ORM column is NULL until first edit
+
     entitlements: dict | None = None
 
 
@@ -40,6 +54,7 @@ class UserUpdate(BaseModel):
     )
     fcm_token: str | None = Field(default=None, max_length=512)
     language: str | None = Field(default=None, pattern="^(en|hi)$")
+    notification_prefs: NotificationPrefs | None = None
     onboarding_complete: bool | None = None
 
 

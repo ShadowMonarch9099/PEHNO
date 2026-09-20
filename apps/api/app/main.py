@@ -38,6 +38,14 @@ async def lifespan(app: FastAPI):
     setup_sentry()
     if settings.STORAGE_BACKEND == "local":
         Path(settings.LOCAL_MEDIA_DIR).mkdir(parents=True, exist_ok=True)
+    try:  # festival date corrections entered in the admin dashboard
+        from app.core.database import SessionLocal
+        from app.services import festival_service
+
+        async with SessionLocal() as db:
+            await festival_service.load_overrides(db)
+    except Exception:  # pragma: no cover - a missing table must not block boot
+        pass
     yield
 
 

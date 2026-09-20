@@ -2,10 +2,13 @@
 /commerce — gap analysis (Plus), affiliate links and click tracking.
 ROI and scan mode follow in weeks 20–24.
 """
+import base64
+import binascii
 import uuid
 from typing import Annotated
 
 from fastapi import APIRouter, File, Header, HTTPException, Query, UploadFile, status
+from pydantic import BaseModel, Field
 
 from app import knowledge
 from app.core.config import settings
@@ -23,7 +26,14 @@ from app.schemas.commerce import (
     ScanOut,
 )
 from app.schemas.common import Message
-from app.services import affiliate_service, analytics, gap_service, scan_service, wardrobe_service
+from app.services import (
+    affiliate_service,
+    analytics,
+    gap_service,
+    purchase_service,
+    scan_service,
+    wardrobe_service,
+)
 from app.services.entitlements import require_feature
 from app.services.image_service import InvalidImageError
 from app.services.notifications import Push, get_notifier
@@ -140,6 +150,8 @@ async def affiliate_click(
         user_id=user.id,
         garment_id=uuid.UUID(body.garment_id) if body.garment_id else None,
         gap_type=body.gap_type,
+        color=body.color,
+        fabric=body.fabric,
         platform=platform,
         product_url=body.product_url,
         affiliate_url="",
@@ -184,40 +196,26 @@ async def affiliate_conversion(
                 platform=click.platform.value,
                 value=body.order_value_inr,
             )
-            # Plan: "auto-add purchased item after click-through" — without the partner's
-            # product feed we can't fabricate the garment, so prompt the user to snap it.
+            # Plan (weeks 18–19): the purchased piece joins the wardrobe automatically
             user = await db.get(User, click.user_id)
-            if user and user.fcm_token:
-                label = (click.gap_type or "new piece").replace("_", " ")
-                await get_notifier().send(
-                    user.fcm_token,
-                    Push(
-                        title="Bought it? Add it to your wardrobe",
-                        body=f"Snap a photo of your new {label} so today's looks can use it.",
-                        data={"url": "pehno://wardrobe/upload", "gap_type": click.gap_type or ""},
-                    ),
-                )
+            if user:
+                garment = await purchase_service.add_purchased_garment(db, user, click)
+                if garment is not None:
+                    unlocked = await purchase_service.outfits_unlocked(db, user, garment)
+                    await purchase_service.notify_added(user, garment, unlocked)
+                elif user.fcm_token:
+                    await get_notifier().send(
+                        user.fcm_token,
+                        Push(
+                            title="Bought it? Add it to your wardrobe",
+                            body="Snap a photo of your new piece so today's looks can use it.",
+                            data={"url": "pehno://wardrobe/upload"},
+                        ),
+                    )
     return Message(message="ok")
 
 
-@router.post("/scan", response_model=ScanOut)
-async def scan(
-    user: CurrentUser,
-    db: DbSession,
-    file: Annotated[UploadFile, File(description="Photo or screenshot of the item")],
-) -> ScanOut:
-    """
-    Shopping scan mode (Pro): does this item work with what I own? Reuses the
-    garment classifier, then scores compatibility against the user's wardrobe.
-    """
-    require_feature(user, "scan_mode")
-    data = await file.read()
-    if len(data) > settings.MAX_UPLOAD_BYTES:
-        raise HTTPException(status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, "Image too large")
-    try:
-        r = await scan_service.scan(db, user, data)
-    except InvalidImageError as e:
-        raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, str(e)) from e
+def _scan_out(r) -> ScanOut:
     return ScanOut(
         garment_type=r.garment_type,
         fabric_type=r.fabric_type,
@@ -236,3 +234,41 @@ async def scan(
         verdict=r.verdict,
         rationale=r.rationale,
     )
+
+
+class ScanBase64In(BaseModel):
+    image_base64: str = Field(min_length=64)
+
+
+async def _scan(db, user, data: bytes) -> ScanOut:
+    require_feature(user, "scan_mode")
+    if len(data) > settings.MAX_UPLOAD_BYTES:
+        raise HTTPException(status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, "Image too large")
+    try:
+        r = await scan_service.scan(db, user, data)
+    except InvalidImageError as e:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, str(e)) from e
+    return _scan_out(r)
+
+
+@router.post("/scan/base64", response_model=ScanOut)
+async def scan_base64(body: ScanBase64In, user: CurrentUser, db: DbSession) -> ScanOut:
+    """Scan mode with the spec's JSON shape: `{image_base64}` (data-URL prefix tolerated)."""
+    try:
+        data = base64.b64decode(body.image_base64.split(",")[-1], validate=True)
+    except (binascii.Error, ValueError) as e:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, "Bad base64 image") from e
+    return await _scan(db, user, data)
+
+
+@router.post("/scan", response_model=ScanOut)
+async def scan(
+    user: CurrentUser,
+    db: DbSession,
+    file: Annotated[UploadFile, File(description="Photo or screenshot of the item")],
+) -> ScanOut:
+    """
+    Shopping scan mode (Pro): does this item work with what I own? Reuses the
+    garment classifier, then scores compatibility against the user's wardrobe.
+    """
+    return await _scan(db, user, await file.read())

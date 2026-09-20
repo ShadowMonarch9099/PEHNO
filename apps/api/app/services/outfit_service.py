@@ -6,7 +6,7 @@ import uuid
 from datetime import date, datetime, timedelta, timezone
 
 from fastapi import HTTPException, status
-from sqlalchemy import func, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import utcnow
@@ -73,6 +73,7 @@ async def to_out_many(db: AsyncSession, outfits: list[Outfit]) -> list[OutfitOut
             score=o.score,
             rationale=o.rationale,
             feedback=o.feedback,
+            rating=o.rating,
             is_saved=o.is_saved,
             is_daily=o.is_daily,
             for_date=o.for_date,
@@ -110,14 +111,21 @@ async def _history(db: AsyncSession, user: User) -> engine.History:
     since = utcnow() - timedelta(days=90)
     rows = (
         await db.execute(
-            select(Outfit.garment_ids, Outfit.feedback).where(
-                Outfit.user_id == user.id, Outfit.feedback.is_not(None), Outfit.created_at >= since
+            select(Outfit.garment_ids, Outfit.feedback, Outfit.rating).where(
+                Outfit.user_id == user.id,
+                or_(Outfit.feedback.is_not(None), Outfit.rating.is_not(None)),
+                Outfit.created_at >= since,
             )
         )
     ).all()
     h = engine.History()
-    for ids, fb in rows:
-        (h.liked_garment_ids if fb == 1 else h.disliked_garment_ids).update(ids)
+    for ids, fb, rating in rows:
+        # explicit like/dislike wins; otherwise a 1–5 star rating maps to the same signal
+        signal = fb if fb is not None else (1 if rating >= 4 else -1 if rating <= 2 else 0)
+        if signal == 1:
+            h.liked_garment_ids.update(ids)
+        elif signal == -1:
+            h.disliked_garment_ids.update(ids)
     return h
 
 
@@ -255,9 +263,22 @@ async def daily(
         return await get_weather(user.city), [shown[0]], None
     # Default daily occasion: office on weekdays, casual on weekends.
     occasion = "casual" if today.weekday() >= 5 else "office"
+    # Engine layer 4 (festival override): a regional festival within 3 days biases the look
+    # toward its colours and tags without changing the day's occasion.
+    from app.services import festival_service as fs
+
+    near = fs.imminent(user.city, today)
+    festival = fs.context_for(near.festival) if near else None
     exclude = {frozenset(o.garment_ids) for o in shown}
     weather, rows, hint = await generate(
-        db, user, occasion=occasion, limit=1, is_daily=True, for_date=today, exclude=exclude
+        db,
+        user,
+        occasion=occasion,
+        festival=festival,
+        limit=1,
+        is_daily=True,
+        for_date=today,
+        exclude=exclude,
     )
     if not rows and shown:  # nothing new to show — repeat the best of today rather than nothing
         return weather, [shown[0]], "That's every combination for today's weather."
@@ -288,6 +309,13 @@ async def toggle_saved(db: AsyncSession, outfit: Outfit, saved: bool) -> Outfit:
     return outfit
 
 
+async def rate(db: AsyncSession, outfit: Outfit, rating: int) -> Outfit:
+    outfit.rating = rating
+    await db.flush()
+    analytics.track(outfit.user_id, "outfit_rated", occasion=outfit.occasion, rating=rating)
+    return outfit
+
+
 async def wear(db: AsyncSession, outfit: Outfit) -> Outfit:
     """Mark as worn: logs a wear on every garment in the outfit (idempotent per outfit)."""
     if outfit.worn_at is not None:
@@ -313,7 +341,10 @@ async def list_outfits(
         q.where(Outfit.is_saved.is_(True))
         if saved_only
         else q.where(
-            Outfit.feedback.is_not(None) | Outfit.worn_at.is_not(None) | Outfit.is_daily.is_(True)
+            Outfit.feedback.is_not(None)
+            | Outfit.rating.is_not(None)
+            | Outfit.worn_at.is_not(None)
+            | Outfit.is_daily.is_(True)
         )
     )
     total = (await db.execute(select(func.count()).select_from(q.subquery()))).scalar_one()

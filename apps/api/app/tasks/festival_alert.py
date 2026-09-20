@@ -54,6 +54,9 @@ async def send_festival_alerts() -> dict:
             .all()
         )
         for user in users:
+            if not user.wants("festival_alerts"):
+                skipped += 1
+                continue
             for occ, days in fs.alerts_due(user, today):
                 key = f"{occ.slug}:{occ.start.year}:{days}"
                 entry = NotificationLog(

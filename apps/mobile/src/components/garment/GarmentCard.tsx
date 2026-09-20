@@ -3,6 +3,8 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import type { Garment } from '../../services/types';
 import { borderRadius, colors, shadows, spacing, typography } from '../../theme';
 import { LazyImage } from '../ui';
+import { FabricBadge } from './FabricBadge';
+import { OccasionTags } from './OccasionTag';
 
 interface Props {
   garment: Garment;
@@ -39,10 +41,14 @@ export const GarmentCard: React.FC<Props> = ({ garment, onPress, width }) => {
         <Text style={styles.title} numberOfLines={1}>
           {title}
         </Text>
-        <Text style={styles.sub} numberOfLines={1}>
-          {sub ?? ' '}
-          {garment.wear_count > 0 ? ` · worn ${garment.wear_count}×` : ''}
-        </Text>
+        <View style={styles.row}>
+          <FabricBadge fabric={garment.fabric_type} compact />
+          <Text style={styles.sub} numberOfLines={1}>
+            {sub && garment.fabric_type === 'unknown' ? sub : ''}
+            {garment.wear_count > 0 ? `worn ${garment.wear_count}×` : ''}
+          </Text>
+        </View>
+        {garment.occasion_tags.length ? <OccasionTags labels={garment.occasion_tags.map(pretty)} max={2} /> : null}
       </View>
     </TouchableOpacity>
   );
@@ -63,6 +69,7 @@ const styles = StyleSheet.create({
   badgeWarn: { backgroundColor: colors.warning },
   badgeVerified: { left: undefined, right: spacing.sm, backgroundColor: colors.success },
   badgeText: { ...typography.caption, color: colors.white, fontWeight: '600' },
+  row: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   meta: { padding: spacing.sm, gap: 2 },
   title: { ...typography.label, color: colors.textPrimary, textTransform: 'capitalize' },
   sub: { ...typography.caption, textTransform: 'capitalize' },

@@ -229,7 +229,7 @@ def test_calendar_has_25_festivals_with_dates_and_colours():
     from app import knowledge
 
     fs_all = knowledge.festivals()
-    assert len(fs_all) == 25
+    assert len(fs_all) == 28  # 25 from the plan + Teej, Puthandu, Vishu (Tier-2 regional)
     for f in fs_all:
         assert set(f["dates"]) >= {"2025", "2026", "2027"}, f["slug"]
         assert f["colors"] and f["dress_code"] and f["regions"], f["slug"]

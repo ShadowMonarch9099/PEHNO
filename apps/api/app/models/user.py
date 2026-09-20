@@ -86,6 +86,12 @@ class User(UUIDPrimaryKeyMixin, TimestampMixin, Base):
 
     # Stylist marketplace (weeks 33–37)
     language: Mapped[str] = mapped_column(String(5), nullable=False, default="en")  # en | hi
+    # {daily_outfit, festival_alerts, care_reminders, gap_reports}: bool — missing key = on
+    notification_prefs: Mapped[dict | None] = mapped_column(JSONColumn, nullable=True)
+
+    def wants(self, kind: str) -> bool:
+        """Notification opt-in: daily_outfit | festival_alerts | care_reminders | gap_reports."""
+        return bool((self.notification_prefs or {}).get(kind, True))
 
     is_stylist: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     stylist_verified: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)

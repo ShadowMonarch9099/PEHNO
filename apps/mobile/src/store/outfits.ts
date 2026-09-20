@@ -13,6 +13,7 @@ interface OutfitState {
   loadDaily: (regenerate?: boolean) => Promise<void>;
   generate: (occasion: string, festival?: string) => Promise<OutfitOptions>;
   feedback: (id: string, value: 1 | -1) => Promise<void>;
+  rate: (id: string, rating: 1 | 2 | 3 | 4 | 5) => Promise<void>;
   toggleSave: (id: string) => Promise<void>;
   wear: (id: string) => Promise<void>;
   upsert: (o: Outfit) => void;
@@ -40,6 +41,7 @@ export const useOutfitStore = create<OutfitState>((set, get) => ({
       if (outfit) get().upsert(outfit);
       set({ daily: { outfit, weather: res.weather, hint: res.hint, loadedFor: today, offline: false } });
       void cache.set('daily', { outfit, weather: res.weather, hint: res.hint, day: today });
+      void rememberDaily({ outfit, weather: res.weather, hint: res.hint, day: today });
     } catch (e) {
       if (isNetworkError(e) && get().daily.outfit) {
         set((s) => ({ daily: { ...s.daily, loadedFor: today, offline: true } }));
@@ -59,6 +61,10 @@ export const useOutfitStore = create<OutfitState>((set, get) => ({
     get().upsert(await outfitsApi.feedback(id, value));
   },
 
+  rate: async (id, rating) => {
+    get().upsert(await outfitsApi.rate(id, rating));
+  },
+
   toggleSave: async (id) => {
     const cur = get().byId[id];
     get().upsert(cur?.is_saved ? await outfitsApi.unsave(id) : await outfitsApi.save(id));
@@ -68,3 +74,16 @@ export const useOutfitStore = create<OutfitState>((set, get) => ({
     get().upsert(await outfitsApi.wear(id));
   },
 }));
+
+// ── last 7 daily looks (offline history) ────────────────────────────────────
+type DailyEntry = { outfit: Outfit | null; weather: WeatherInfo | null; hint: string | null; day: string };
+
+async function rememberDaily(entry: DailyEntry): Promise<void> {
+  if (!entry.outfit) return;
+  const hit = await cache.get<DailyEntry[]>('daily.recent');
+  const rest = (hit?.data ?? []).filter((e) => e.day !== entry.day);
+  await cache.set('daily.recent', [entry, ...rest].slice(0, 7));
+}
+
+/** The last 7 days' looks from the offline cache, newest first. */
+export const recentDailyLooks = async (): Promise<DailyEntry[]> => (await cache.get<DailyEntry[]>('daily.recent'))?.data ?? [];

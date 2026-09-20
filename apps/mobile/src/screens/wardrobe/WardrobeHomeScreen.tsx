@@ -7,7 +7,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { GarmentCard } from '../../components/garment/GarmentCard';
-import { ChipGroup, ProgressBar } from '../../components/ui';
+import { BottomSheet, ChipGroup, ProgressBar } from '../../components/ui';
 import { usePendingPoll } from '../../hooks/usePendingPoll';
 import type { WardrobeScreenProps } from '../../navigation/types';
 import type { Season } from '../../services/types';
@@ -30,6 +30,7 @@ export default function WardrobeHomeScreen({ navigation }: WardrobeScreenProps<'
   const t = useT();
   const { options, load } = useMetaStore();
   const [tab, setTab] = useState<FilterTab>('occasion');
+  const [sheet, setSheet] = useState(false);
   usePendingPoll();
 
   useEffect(() => {
@@ -108,16 +109,33 @@ export default function WardrobeHomeScreen({ navigation }: WardrobeScreenProps<'
       ) : null}
 
       <View style={styles.filters}>
+        <TouchableOpacity style={[styles.filterBtn, hasFilter && styles.filterBtnActive]} onPress={() => setSheet(true)} accessibilityRole="button">
+          <Text style={[styles.filterText, hasFilter && styles.filterTextActive]}>
+            {hasFilter ? `Filters · ${[filters.occasion, filters.fabric, filters.season].filter(Boolean).length}` : 'Filter'}
+          </Text>
+        </TouchableOpacity>
+        {hasFilter ? (
+          <TouchableOpacity onPress={clearFilters} accessibilityRole="button">
+            <Text style={styles.clear}>Clear</Text>
+          </TouchableOpacity>
+        ) : null}
+      </View>
+      <BottomSheet visible={sheet} onClose={() => setSheet(false)} title="Filter wardrobe">
         <ChipGroup options={TABS} value={tab} onChange={setTab} scroll />
         <ChipGroup
           options={tabOptions}
           value={tabValue ?? null}
-          onChange={onTabChange}
-          scroll
+          onChange={(v) => {
+            onTabChange(v);
+            setSheet(false);
+          }}
           allLabel="All"
-          onAll={clearFilters}
+          onAll={() => {
+            clearFilters();
+            setSheet(false);
+          }}
         />
-      </View>
+      </BottomSheet>
 
       <FlatList
         data={garments}
@@ -163,7 +181,12 @@ const styles = StyleSheet.create({
   nudge: { marginHorizontal: spacing.md, marginTop: spacing.md, padding: spacing.md, borderRadius: borderRadius.lg, backgroundColor: colors.primary, gap: 2 },
   nudgeTitle: { ...typography.h4, color: colors.textInverse },
   nudgeText: { ...typography.caption, color: colors.textInverse },
-  filters: { paddingHorizontal: spacing.md, paddingTop: spacing.md, gap: spacing.sm },
+  filters: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingHorizontal: spacing.md, paddingTop: spacing.sm },
+  filterBtn: { borderWidth: 1.5, borderColor: colors.border, borderRadius: borderRadius.pill, paddingHorizontal: spacing.md, paddingVertical: 6 },
+  filterBtnActive: { backgroundColor: colors.primary, borderColor: colors.primary },
+  filterText: { ...typography.label, color: colors.textPrimary },
+  filterTextActive: { color: colors.textInverse },
+  clear: { ...typography.label, color: colors.accent },
   grid: { padding: spacing.md, gap: spacing.md, paddingBottom: 100 },
   row: { gap: spacing.md },
   empty: { alignItems: 'center', paddingTop: spacing.xxl, gap: spacing.sm, paddingHorizontal: spacing.xl },

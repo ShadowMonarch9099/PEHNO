@@ -1,6 +1,6 @@
 'use client';
 
-import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Bar, BarChart, CartesianGrid, Cell, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import type { Analytics } from '@/lib/api';
 
 const BRAND = '#964900';
@@ -78,6 +78,66 @@ export function CampaignChart({ data }: { data: Record<string, number | string>[
         <Bar dataKey="join" stackId="a" fill={ACCENT} name="Joins" />
         <Bar dataKey="submit" stackId="a" fill={BRAND} name="Outfits" />
         <Bar dataKey="click" stackId="a" fill="#fd8621" name="Clicks" radius={[4, 4, 0, 0]} />
+      </BarChart>
+    </ResponsiveContainer>
+  );
+}
+
+export function StylistBookingsChart({ data }: { data: Analytics['stylist_bookings_by_day'] }) {
+  return (
+    <ResponsiveContainer width="100%" height={240}>
+      <LineChart data={data} margin={{ left: -16, right: 8 }}>
+        <CartesianGrid stroke={LINE} strokeDasharray="3 3" />
+        <XAxis dataKey="date" tickFormatter={day} fontSize={11} />
+        <YAxis fontSize={11} allowDecimals={false} />
+        <Tooltip />
+        <Line type="monotone" dataKey="bookings" stroke={BRAND} strokeWidth={2} dot={false} name="Bookings" />
+      </LineChart>
+    </ResponsiveContainer>
+  );
+}
+
+export function CommissionChart({ data }: { data: Analytics['commission_by_month'] }) {
+  return (
+    <ResponsiveContainer width="100%" height={240}>
+      <BarChart data={data} margin={{ left: -8, right: 8 }}>
+        <CartesianGrid stroke={LINE} strokeDasharray="3 3" />
+        <XAxis dataKey="month" fontSize={11} />
+        <YAxis fontSize={11} />
+        <Tooltip formatter={(v: number) => `₹${v.toLocaleString('en-IN')}`} />
+        <Bar dataKey="commission_inr" fill={ACCENT} radius={[4, 4, 0, 0]} name="Commission (₹)" />
+      </BarChart>
+    </ResponsiveContainer>
+  );
+}
+
+export function SharesByCityChart({ data }: { data: Analytics['shares_by_city'] }) {
+  return (
+    <ResponsiveContainer width="100%" height={240}>
+      <BarChart data={data.slice(0, 10)} margin={{ left: -16, right: 8 }}>
+        <CartesianGrid stroke={LINE} strokeDasharray="3 3" />
+        <XAxis dataKey="city" fontSize={11} />
+        <YAxis fontSize={11} allowDecimals={false} />
+        <Tooltip />
+        <Bar dataKey="shares" fill={BRAND} radius={[4, 4, 0, 0]} name="Shared looks" />
+      </BarChart>
+    </ResponsiveContainer>
+  );
+}
+
+export function UsersByCityChart({ data }: { data: Analytics['users_by_city'] }) {
+  return (
+    <ResponsiveContainer width="100%" height={240}>
+      <BarChart data={data.slice(0, 12)} margin={{ left: -16, right: 8 }}>
+        <CartesianGrid stroke={LINE} strokeDasharray="3 3" />
+        <XAxis dataKey="city" fontSize={11} />
+        <YAxis fontSize={11} allowDecimals={false} />
+        <Tooltip />
+        <Bar dataKey="users" name="Users" radius={[4, 4, 0, 0]}>
+          {data.slice(0, 12).map((d) => (
+            <Cell key={d.city} fill={d.tier === 1 ? BRAND : ACCENT} />
+          ))}
+        </Bar>
       </BarChart>
     </ResponsiveContainer>
   );

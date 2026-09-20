@@ -2,7 +2,7 @@
   "name": "pehno",
   "version": "1.0.0",
   "private": true,
-  "description": "PEHNO \u00e2\u20ac\u201d AI Wardrobe Intelligence Platform for India",
+  "description": "PEHNO â€” AI Wardrobe Intelligence Platform for India",
   "workspaces": [
     "apps/*",
     "packages/*"
@@ -18,6 +18,12 @@
   },
   "devDependencies": {
     "@pehno/config": "*",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "eslint": "^8.57.1",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-native": "^4.1.0",
     "typescript": "^5.3.3"
   },
   "engines": {

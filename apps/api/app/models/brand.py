@@ -48,6 +48,10 @@ class BrandPartner(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     tagline: Mapped[str | None] = mapped_column(String(160), nullable=True)
     logo_url: Mapped[str | None] = mapped_column(Text, nullable=True)
+    affiliate_id: Mapped[str | None] = mapped_column(String(80), nullable=True)
+    categories: Mapped[list[str] | None] = mapped_column(
+        JSONColumn, nullable=True
+    )  # e.g. kurtas, sarees
 
 
 class BrandCampaign(UUIDPrimaryKeyMixin, TimestampMixin, Base):

@@ -5,6 +5,7 @@ The knowledge base (festivals.json) is the source of truth.
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta, timezone
 
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app import knowledge
@@ -64,7 +65,28 @@ class Occurrence:
         return self.start <= today <= self.end
 
 
+#: (slug, year) → (start, end) corrections from the admin dashboard (festival_date_overrides)
+_overrides: dict[tuple[str, int], tuple[date, date]] = {}
+
+
+def set_overrides(rows: dict[tuple[str, int], tuple[date, date]]) -> None:
+    _overrides.clear()
+    _overrides.update(rows)
+
+
+async def load_overrides(db: AsyncSession) -> int:
+    """Refresh the in-process override table from the DB (startup and after admin edits)."""
+    from app.models.festival import FestivalDateOverride
+
+    rows = (await db.execute(select(FestivalDateOverride))).scalars().all()
+    set_overrides({(r.slug, r.year): (r.start_date, r.end_date) for r in rows})
+    return len(rows)
+
+
 def _occurrence(f: dict, year: int) -> Occurrence | None:
+    override = _overrides.get((f["slug"], year))
+    if override:
+        return Occurrence(f, override[0], override[1])
     iso = f.get("dates", {}).get(str(year))
     if not iso:
         return None
@@ -118,6 +140,20 @@ def upcoming(
     others = [o for o in occs if not is_relevant(o.festival, city)]
     ranked = sorted(relevant, key=lambda o: o.start) + sorted(others, key=lambda o: o.start)
     return ranked[:limit]
+
+
+FESTIVAL_OVERRIDE_DAYS = 3  # engine layer 4: a festival this close biases the daily look
+
+
+def imminent(city: str, today: date | None = None) -> Occurrence | None:
+    """The active or next festival for the user's region if it starts within 3 days."""
+    today = today or today_ist()
+    for occ in upcoming(city, today=today, horizon_days=FESTIVAL_OVERRIDE_DAYS, limit=3):
+        if is_relevant(occ.festival, city) and (
+            occ.is_active(today) or 0 <= occ.days_until(today) <= FESTIVAL_OVERRIDE_DAYS
+        ):
+            return occ
+    return None
 
 
 # ── engine context ───────────────────────────────────────────────────────────

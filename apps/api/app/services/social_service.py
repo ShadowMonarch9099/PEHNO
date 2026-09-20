@@ -26,6 +26,7 @@ from app.services.share_card import CardItem, render_card
 from app.services.storage import get_storage
 
 FEED_LIMIT = 50
+FEED_MIN_CONFIDENCE = 0.80  # rule: feed shows only user-verified or high-confidence pieces
 
 
 def share_base_url() -> str:
@@ -198,6 +199,13 @@ class FeedEntry:
     liked: bool
 
 
+def feed_quality_ok(garments: list[Garment]) -> bool:
+    """Plan rule 3: every piece must be user-verified or classified with confidence > 0.80."""
+    return bool(garments) and all(
+        g.user_verified or (g.ai_confidence or 0) > FEED_MIN_CONFIDENCE for g in garments
+    )
+
+
 async def city_feed(
     db: AsyncSession, viewer: User, city: str | None = None, limit: int = FEED_LIMIT
 ) -> list[FeedEntry]:
@@ -208,11 +216,46 @@ async def city_feed(
             .join(User, User.id == Outfit.user_id)
             .where(Outfit.is_public.is_(True), func.lower(User.city) == city.lower())
             .order_by(Outfit.shared_at.desc())
-            .limit(limit)
+            .limit(limit * 2)  # some drop out at the quality gate
         )
     ).all()
     liked = await liked_ids(db, viewer, [o.id for o, _ in rows])
     out = []
     for outfit, owner in rows:
-        out.append(FeedEntry(outfit, owner, await _garments(db, outfit), str(outfit.id) in liked))
+        garments = await _garments(db, outfit)
+        if not feed_quality_ok(garments):
+            continue
+        out.append(FeedEntry(outfit, owner, garments, str(outfit.id) in liked))
+        if len(out) == limit:
+            break
     return out
+
+
+async def generate_card_job(outfit_id: uuid.UUID | str) -> None:
+    """Background (plan: social_card_generator): pre-render the card when a look is saved
+    by a user who opted into sharing, then tell them it's ready."""
+    from app.core import database
+    from app.services.notifications import Push, get_notifier
+
+    async with database.SessionLocal() as db:
+        outfit = await db.get(Outfit, uuid.UUID(str(outfit_id)))
+        if outfit is None or outfit.share_card_key:
+            return
+        user = await db.get(User, outfit.user_id)
+        if user is None or not user.social_sharing_enabled:
+            return
+        try:
+            await generate_card(db, user, outfit)
+            await db.commit()
+        except Exception:  # never let a card failure surface to the user
+            await db.rollback()
+            return
+        if user.fcm_token:
+            await get_notifier().send(
+                user.fcm_token,
+                Push(
+                    title="Your outfit card is ready to share!",
+                    body="Tap to preview it and share to Instagram or WhatsApp.",
+                    data={"url": f"pehno://outfits/share/{outfit.id}", "outfit_id": str(outfit.id)},
+                ),
+            )
