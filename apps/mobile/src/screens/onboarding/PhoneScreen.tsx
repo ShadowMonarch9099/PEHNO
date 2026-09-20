@@ -1,11 +1,12 @@
 /**
  * PhoneScreen — enter Indian mobile number, request OTP.
  */
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   StyleSheet,
   Text,
   TextInput,
@@ -23,6 +24,14 @@ export default function PhoneScreen({ navigation }: AuthScreenProps<'Phone'>) {
   const [phone, setPhone] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const inputRef = useRef<TextInput>(null);
+
+  // Focus after the screen transition settles (autoFocus during the push animation is
+  // unreliable on web), and let a tap anywhere on the row focus the field.
+  useEffect(() => {
+    const t = setTimeout(() => inputRef.current?.focus(), Platform.OS === 'web' ? 250 : 400);
+    return () => clearTimeout(t);
+  }, []);
 
   const valid = isValidIndianMobile(phone);
 
@@ -59,9 +68,14 @@ export default function PhoneScreen({ navigation }: AuthScreenProps<'Phone'>) {
           <Text style={typography.h1}>Your mobile number</Text>
           <Text style={styles.subtitle}>We'll send a 6-digit code to verify it's you.</Text>
 
-          <View style={[styles.inputRow, error ? styles.inputError : null]}>
+          <Pressable
+            style={[styles.inputRow, error ? styles.inputError : null]}
+            onPress={() => inputRef.current?.focus()}
+            accessibilityRole="none"
+          >
             <Text style={styles.prefix}>🇮🇳 +91</Text>
             <TextInput
+              ref={inputRef}
               style={styles.input}
               value={formatIndianMobile(phone)}
               onChangeText={(t) => {
@@ -74,12 +88,12 @@ export default function PhoneScreen({ navigation }: AuthScreenProps<'Phone'>) {
               placeholder="98765 43210"
               placeholderTextColor={colors.textMuted}
               maxLength={11}
-              autoFocus
               returnKeyType="done"
               onSubmitEditing={submit}
               accessibilityLabel="Mobile number"
+              testID="phone-input"
             />
-          </View>
+          </Pressable>
           {error ? <Text style={styles.error}>{error}</Text> : null}
 
           <PrimaryButton title="Send OTP" onPress={submit} disabled={!valid} loading={loading} />
