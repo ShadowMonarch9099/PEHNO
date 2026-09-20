@@ -1,0 +1,43 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "api",
+      "runtimeExecutable": "venv/Scripts/python.exe",
+      "runtimeArgs": [
+        "-m",
+        "uvicorn",
+        "app.main:app",
+        "--port",
+        "8000"
+      ],
+      "cwd": "apps/api",
+      "port": 8000
+    },
+    {
+      "name": "admin",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "next",
+        "dev",
+        "-p",
+        "3000"
+      ],
+      "cwd": "apps/admin",
+      "port": 3000
+    },
+    {
+      "name": "mobile-web",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "expo",
+        "start",
+        "--web",
+        "--port",
+        "8081"
+      ],
+      "cwd": "apps/mobile",
+      "port": 8081
+    }
+  ]
+}

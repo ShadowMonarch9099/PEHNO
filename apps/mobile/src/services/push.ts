@@ -9,15 +9,18 @@ import { Linking, Platform } from 'react-native';
 import { api } from './api';
 import { usersApi } from './users';
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
-});
+if (Platform.OS !== 'web') {
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: false,
+      shouldSetBadge: false,
+    }),
+  });
+}
 
 export async function registerForPush(): Promise<string | null> {
+  if (Platform.OS === 'web') return null; // no push in the browser build
   try {
     const { status: existing } = await Notifications.getPermissionsAsync();
     const status = existing === 'granted' ? existing : (await Notifications.requestPermissionsAsync()).status;
@@ -50,6 +53,7 @@ async function handleResponse(response: Notifications.NotificationResponse) {
 
 /** Call once at app start. Returns an unsubscribe function. */
 export function listenForPushOpens(): () => void {
+  if (Platform.OS === 'web') return () => undefined;
   // App launched by tapping a notification
   Notifications.getLastNotificationResponseAsync()
     .then((r) => r && handleResponse(r))

@@ -68,6 +68,19 @@ npx tsc --noEmit -p apps/mobile
 cd apps/admin && npx next build
 ```
 
+## Running the app on a laptop
+
+The mobile app has a web build for development (Expo + react-native-web):
+
+```bash
+cd apps/mobile && npx expo start --web
+```
+
+Open http://localhost:8081 and pick a phone size in your browser's device toolbar. Sign-in works
+with any Indian number — the OTP is shown on screen (console OTP provider). Native-only features
+(push notifications, Keychain) are stubbed on web; everything else calls the local API.
+In the Claude desktop app, `.claude/launch.json` defines `api`, `admin` and `mobile-web` previews.
+
 ## Switching to hosted services
 
 | Setting | Local default | Hosted |
