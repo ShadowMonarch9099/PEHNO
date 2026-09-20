@@ -534,3 +534,74 @@ export interface ClientWardrobe {
   notes: string | null;
   garments: Garment[];
 }
+
+// ── Travel packing planner (weeks 38–41) ────────────────────────────────────
+
+export interface Destination {
+  slug: string;
+  name: string;
+  vibe: string;
+  context: string;
+  default_activities: string[];
+}
+
+export interface PackingRequest {
+  destination: string;
+  start_date: string; // YYYY-MM-DD
+  end_date: string;
+  activities: string[];
+  max_items?: number;
+}
+
+export interface TripLook {
+  day: number;
+  date: string;
+  part: 'day' | 'evening';
+  occasion: string;
+  occasion_label: string;
+  garment_ids: string[];
+  score: number;
+  rationale: string[];
+}
+
+export interface PackedItem {
+  garment: Garment;
+  wears: number;
+  days: number[];
+}
+
+export interface TravelPlan {
+  id: string;
+  destination: string;
+  destination_slug: string;
+  vibe: string;
+  context: string;
+  tips: string[];
+  palette: string[];
+  start_date: string;
+  end_date: string;
+  days: number;
+  activities: string[];
+  weather_summary: string;
+  weather: { day: number; date: string; weather: WeatherInfo }[];
+  items: PackedItem[];
+  item_count: number;
+  look_count: number;
+  looks: TripLook[];
+  unfilled: TripLook[];
+  gaps: Gap[];
+  hint: string | null;
+  created_at: string;
+}
+
+export interface TravelPlanSummary {
+  id: string;
+  destination: string;
+  start_date: string;
+  end_date: string;
+  days: number;
+  item_count: number;
+  look_count: number;
+  gap_count: number;
+  created_at: string;
+}

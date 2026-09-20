@@ -136,7 +136,7 @@ Status: ✅ done · 🔧 in progress · ⬜ not started · ⚠️ deviates from 
 |---|---|---|
 | Weeks 29–32 — Social OOTD layer | ✅ (flag off) | `SOCIAL_ENABLED=false` by default per the plan's warning; flip when wardrobe data quality is high. |
 | Weeks 33–37 — Stylist marketplace | ✅ | 20% commission, Razorpay Payment Links (mock locally), admin verification, scoped wardrobe access |
-| Weeks 38–41 — Travel packing planner | ⬜ | |
+| Weeks 38–41 — Travel packing planner | ✅ | Capsule solver over the user's wardrobe; 20 destinations with local notes; hill-station climate offsets; gaps → affiliate links |
 | Weeks 42–45 — Male wardrobe support | ⬜ | |
 | Weeks 46–48 — Brand partnership layer | ⬜ | Schema scaffold exists |
 | Weeks 49–52 — Tier 2 expansion | ⬜ | Tier-2 cities already in cities.json; Hindi UI pending |
@@ -159,3 +159,11 @@ Status: ✅ done · 🔧 in progress · ⬜ not started · ⚠️ deviates from 
 - [x] Scoped wardrobe access `GET /stylists/my-wardrobe-access/{booking}`: stylist only, **only while confirmed**, returns first name + city + classified garments — never phone/email
 - [x] Mobile: StylistList (specialty filter, Pro price), StylistProfile, BookSession (type/day/slot/notes → payment page or dev simulate), MyBookings (pay/cancel/review), Settings → StylistApply, IncomingBookings (payout, open client wardrobe, mark complete), ClientWardrobe (grid + brief); "Book a stylist" banner on DailyLook
 - [x] 4 new tests (144 total); verified live
+
+### Weeks 38–41 deliverables
+- [x] `packages/ai/data/destinations.json`: 20 destination clusters (Jaipur/Udaipur/Jodhpur, Goa, Bengaluru, Kochi/Kerala, Manali/Shimla, Leh, Darjeeling/Sikkim, Ooty/Munnar/Coorg, Varanasi, Agra, Rishikesh, Amritsar, Hyderabad, Kolkata, Chennai/Pondicherry, Andaman, Ahmedabad/Kutch, Lucknow, Delhi, Mumbai) with vibe, cultural notes, modesty/packing tips, local palette, default activities and a `temp_offset_c` for hill stations; any other city still plans on regional climatology
+- [x] `travel_planner.py`: slots = one per day (day-type activities cycled) + one evening per event activity; candidates via the outfit engine per slot with a destination-palette nudge; **cover** (greedy weighted set cover, hardest slot first) → **expand** (spend leftover budget only on pieces that unlock ≥2 new looks) → **assign** (variety across days); reports distinct looks the capsule makes (26-piece test wardrobe: Jaipur wedding trip 15 → 29 looks, Bengaluru offsite 12 → 46)
+- [x] Gaps: for each undressed slot, the taxonomy piece that unlocks the most looks (tie → cheaper), palette-aware colour, reuses the gap-report `GapOut` shape so the mobile GapItem screen + affiliate links work unchanged; cold-destination layer nudge
+- [x] `POST /travel/packing-list` (Plus, saved as `travel_plans`), `GET /travel/plans`, `GET|DELETE /travel/plans/{id}`, `GET /travel/destinations` (migration `c055480640d6`)
+- [x] Mobile: TravelHome (saved trips, locked state), TravelPlanner (destination chips + free text, dates, activities, item budget), TravelPlan (pieces → looks hero, destination notes, day-by-day weather, capsule grid with wear counts, per-slot looks, gaps → GapItem); "Trip packing" link on DailyLook
+- [x] 7 new tests (151 total); verified live

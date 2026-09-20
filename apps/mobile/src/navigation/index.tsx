@@ -38,6 +38,9 @@ import MyBookingsScreen from '../screens/stylist/MyBookingsScreen';
 import StylistApplyScreen from '../screens/stylist/StylistApplyScreen';
 import StylistListScreen from '../screens/stylist/StylistListScreen';
 import StylistProfileScreen from '../screens/stylist/StylistProfileScreen';
+import TravelHomeScreen from '../screens/travel/TravelHomeScreen';
+import TravelPlanScreen from '../screens/travel/TravelPlanScreen';
+import TravelPlannerScreen from '../screens/travel/TravelPlannerScreen';
 import GarmentDetailScreen from '../screens/wardrobe/GarmentDetailScreen';
 import GarmentEditScreen from '../screens/wardrobe/GarmentEditScreen';
 import UploadScreen from '../screens/wardrobe/UploadScreen';
@@ -67,7 +70,7 @@ const linking: LinkingOptions<MainTabParamList> = {
   config: {
     screens: {
       Wardrobe: { screens: { WardrobeHome: 'wardrobe', GarmentDetail: 'wardrobe/:garmentId', Upload: 'wardrobe/upload', GapReport: 'commerce/gap-report', Roi: 'wardrobe/roi', ScanMode: 'commerce/scan' } },
-      Outfits: { screens: { DailyLook: 'outfits/daily', OutfitResult: 'outfits/:occasion', OutfitHistory: 'outfits/history', OOTDFeed: 'outfits/feed', StylistList: 'stylists', StylistProfile: 'stylists/:stylistId', MyBookings: 'stylists/bookings' } },
+      Outfits: { screens: { DailyLook: 'outfits/daily', OutfitResult: 'outfits/:occasion', OutfitHistory: 'outfits/history', OOTDFeed: 'outfits/feed', StylistList: 'stylists', StylistProfile: 'stylists/:stylistId', MyBookings: 'stylists/bookings', TravelHome: 'travel', TravelPlan: 'travel/:planId' } },
       Festivals: { screens: { FestivalHome: 'festivals', FestivalDetail: 'festivals/:slug', NavratriTracker: 'festivals/navratri' } },
       Settings: { screens: { SettingsHome: 'settings', Subscription: 'settings/subscription', StylistApply: 'settings/stylist', IncomingBookings: 'settings/stylist/bookings' } },
     },
@@ -124,6 +127,9 @@ function OutfitNavigator() {
       <OutfitStack.Screen name="StylistProfile" component={StylistProfileScreen} />
       <OutfitStack.Screen name="BookSession" component={BookSessionScreen} />
       <OutfitStack.Screen name="MyBookings" component={MyBookingsScreen} />
+      <OutfitStack.Screen name="TravelHome" component={TravelHomeScreen} />
+      <OutfitStack.Screen name="TravelPlanner" component={TravelPlannerScreen} />
+      <OutfitStack.Screen name="TravelPlan" component={TravelPlanScreen} />
     </OutfitStack.Navigator>
   );
 }

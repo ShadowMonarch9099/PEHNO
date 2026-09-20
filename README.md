@@ -111,6 +111,7 @@ GET  /s/{slug}             public share page + /s/{slug}/card.jpg
 GET  /stylists             GET /stylists/{id}        POST /stylists/apply      GET /stylists/me
 POST /stylists/book        GET /stylists/bookings/my|incoming   POST /stylists/bookings/{id}/cancel|complete|review
 GET  /stylists/my-wardrobe-access/{booking}          (stylist, confirmed sessions only)
+POST /travel/packing-list  (Plus)   GET /travel/plans   GET|DELETE /travel/plans/{id}   GET /travel/destinations
 GET  /admin/metrics        (X-Admin-Key)   GET|POST /admin/stylists…
 GET  /media/{key}?exp&sig  (local storage backend; signed URLs)
 ```

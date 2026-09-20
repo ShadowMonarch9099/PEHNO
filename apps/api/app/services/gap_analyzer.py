@@ -121,9 +121,10 @@ def _best_color(garments: list[Garment], garment_type: str, occasion: str) -> tu
         "full": {"layer"},
     }.get(role, set())
     partners = [g for g in garments if suits(g, occasion) and role_of(g) in partner_roles]
-    palette = (
-        _FESTIVE if (occasion in _FESTIVE_OCCASIONS and role in ("full", "layer")) else _VERSATILE
+    festive = (
+        occasion in _FESTIVE_OCCASIONS or knowledge.occasion_parent(occasion) in _FESTIVE_OCCASIONS
     )
+    palette = _FESTIVE if (festive and role in ("full", "layer")) else _VERSATILE
     ranked = sorted(
         palette,
         key=lambda c: -sum(1 for p in partners if _harmonises(c, p.color_primary)),

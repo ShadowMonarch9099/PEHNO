@@ -1,0 +1,342 @@
+[
+  {
+    "slug": "jaipur",
+    "name": "Jaipur",
+    "aliases": ["udaipur", "jodhpur", "jaisalmer", "pushkar", "rajasthan"],
+    "region": "north",
+    "temp_offset_c": 0,
+    "vibe": "Rajasthan royal",
+    "context": "Bright block prints and bandhani feel at home here; heritage hotels dress up in the evening. Days are hot and dry, evenings cool down fast in winter.",
+    "tips": [
+      "Cover shoulders and knees for forts, temples and havelis.",
+      "Desert evenings drop 10°C+ from the afternoon — carry a light layer even in summer.",
+      "Dust and sun: cottons and light dupattas over heavy silks by day."
+    ],
+    "default_activities": ["casual", "night_out"],
+    "palette": ["pink", "orange", "yellow", "golden", "maroon"],
+    "avoid": []
+  },
+  {
+    "slug": "goa",
+    "name": "Goa",
+    "aliases": ["north goa", "south goa", "panaji", "gokarna"],
+    "region": "west",
+    "temp_offset_c": 0,
+    "vibe": "Beach easy",
+    "context": "Beach casual — linen, light cottons, breezy silhouettes. Shacks by day, dressed-up dinners by the water at night.",
+    "tips": [
+      "Humidity is constant: skip polyester and heavy silks entirely.",
+      "One dressy evening look goes a long way; everything else can be relaxed.",
+      "Churches and temples still expect shoulders covered — a scarf or shirt does it."
+    ],
+    "default_activities": ["casual", "night_out"],
+    "palette": ["white", "cream", "teal", "blue", "yellow"],
+    "avoid": ["black"]
+  },
+  {
+    "slug": "bengaluru",
+    "name": "Bengaluru",
+    "aliases": ["bangalore"],
+    "region": "south",
+    "temp_offset_c": -3,
+    "vibe": "Smart-casual offsite",
+    "context": "Mild all year, cool mornings and evenings. Offices run smart-casual; ethnic-fusion is common on Fridays and at team dinners.",
+    "tips": [
+      "Carry a light jacket or shrug — AC and evenings both bite.",
+      "Sudden showers from June to October: quick-dry fabrics, avoid crisp cottons that crease.",
+      "Breweries and rooftop dinners are relaxed; one polished look covers the closing dinner."
+    ],
+    "default_activities": ["office", "casual"],
+    "palette": ["navy", "white", "beige", "grey", "green"],
+    "avoid": []
+  },
+  {
+    "slug": "mumbai",
+    "name": "Mumbai",
+    "aliases": ["bombay"],
+    "region": "west",
+    "temp_offset_c": 0,
+    "vibe": "Mumbai minimal",
+    "context": "Humid and fast-moving; clean lines and breathable fabrics. Monsoon (June–September) means real rain, not drizzle.",
+    "tips": [
+      "Linen and cotton only in monsoon; carry a change if you have an evening plan.",
+      "Locals and cabs are hot — sleeveless under a light layer works best.",
+      "Evening in Bandra or Colaba: one sharp look, minimal jewellery."
+    ],
+    "default_activities": ["casual", "office"],
+    "palette": ["white", "black", "beige", "navy"],
+    "avoid": []
+  },
+  {
+    "slug": "delhi",
+    "name": "Delhi",
+    "aliases": ["new delhi", "gurugram", "gurgaon", "noida"],
+    "region": "north",
+    "temp_offset_c": 0,
+    "vibe": "Delhi maximalist",
+    "context": "Extreme seasons — 45°C in May, 5°C in January. Weddings and dinners lean dressy; more embroidery and colour than the west coast.",
+    "tips": [
+      "Winter trips need real layers: shawls, jackets, a warm dupatta for outdoor events.",
+      "Summer: loose cottons, cover up against sun and dust.",
+      "Delhi dresses up — err on the fancier side for evening plans."
+    ],
+    "default_activities": ["casual", "night_out"],
+    "palette": ["maroon", "golden", "green", "navy", "cream"],
+    "avoid": []
+  },
+  {
+    "slug": "kochi",
+    "name": "Kochi",
+    "aliases": ["kerala", "alleppey", "alappuzha", "kumarakom", "kovalam", "varkala", "thekkady"],
+    "region": "south",
+    "temp_offset_c": 0,
+    "vibe": "Backwater ease",
+    "context": "Warm, wet and green. Backwaters and beaches by day; temples and churches ask for modest dress. Kasavu (cream and gold) is the local aesthetic.",
+    "tips": [
+      "Cream and white cottons look right here and stay cool.",
+      "Temples: sarees or long kurtas with dupattas; some restrict entry otherwise.",
+      "Pack for rain any month — a light cotton dupatta doubles as cover."
+    ],
+    "default_activities": ["casual", "temple"],
+    "palette": ["cream", "white", "golden", "green"],
+    "avoid": []
+  },
+  {
+    "slug": "manali",
+    "name": "Manali",
+    "aliases": ["shimla", "kasol", "dharamshala", "mcleodganj", "kullu", "himachal"],
+    "region": "north",
+    "temp_offset_c": -14,
+    "vibe": "Hill station",
+    "context": "Cold year-round by Indian standards; nights near freezing outside summer. Layering matters more than any single piece.",
+    "tips": [
+      "Base + warm layer + jacket. Woollen shawls and kurtas with jackets work well.",
+      "Skip sheer fabrics and chiffon — wind cuts through them.",
+      "One warm ethnic layer covers temple visits and dinners."
+    ],
+    "default_activities": ["casual"],
+    "palette": ["maroon", "green", "navy", "brown", "cream"],
+    "avoid": []
+  },
+  {
+    "slug": "leh",
+    "name": "Leh",
+    "aliases": ["ladakh", "nubra", "pangong"],
+    "region": "north",
+    "temp_offset_c": -20,
+    "vibe": "High altitude",
+    "context": "Dry, cold, intense sun. Only worth planning from May to September; layers on and off through the day.",
+    "tips": [
+      "Wool and thick cotton over everything else; carry a windproof layer.",
+      "Monasteries: shoulders and knees covered.",
+      "Sun is fierce at altitude — full sleeves and a scarf."
+    ],
+    "default_activities": ["casual"],
+    "palette": ["maroon", "navy", "brown", "cream"],
+    "avoid": []
+  },
+  {
+    "slug": "darjeeling",
+    "name": "Darjeeling",
+    "aliases": ["gangtok", "sikkim", "kalimpong"],
+    "region": "east",
+    "temp_offset_c": -12,
+    "vibe": "Tea-garden cool",
+    "context": "Cool, misty, often drizzly. Layers and closed shoes; nothing needs to be formal.",
+    "tips": [
+      "A warm shawl or jacket every day; mornings are the coldest.",
+      "Monastery visits: modest, shoulders covered.",
+      "Quick-dry layers beat heavy wool when it drizzles."
+    ],
+    "default_activities": ["casual"],
+    "palette": ["green", "maroon", "navy", "cream"],
+    "avoid": []
+  },
+  {
+    "slug": "ooty",
+    "name": "Ooty",
+    "aliases": ["munnar", "kodaikanal", "coorg", "kodagu", "wayanad"],
+    "region": "south",
+    "temp_offset_c": -11,
+    "vibe": "Southern hills",
+    "context": "Cool and damp, much colder than the plains below. Casual throughout; a warm layer for evenings.",
+    "tips": [
+      "Light woollens or a jacket over cottons; nights dip to single digits in winter.",
+      "Mist and drizzle most months — nothing that stains or clings when wet.",
+      "Estate walks: full-length bottoms and closed shoes."
+    ],
+    "default_activities": ["casual"],
+    "palette": ["green", "brown", "cream", "maroon"],
+    "avoid": []
+  },
+  {
+    "slug": "varanasi",
+    "name": "Varanasi",
+    "aliases": ["banaras", "kashi", "ayodhya", "prayagraj", "allahabad"],
+    "region": "north",
+    "temp_offset_c": 0,
+    "vibe": "Ghat modest",
+    "context": "Temple town — modest dress everywhere, sarees and long kurtas fit right in. Ghats at dawn are cool; afternoons hot.",
+    "tips": [
+      "Cover shoulders and knees at all times in the old city.",
+      "Cotton and handloom; Banarasi silk only for an evening you plan for.",
+      "A large dupatta does temple, ghat and sun duty."
+    ],
+    "default_activities": ["temple", "casual"],
+    "palette": ["maroon", "cream", "golden", "orange"],
+    "avoid": []
+  },
+  {
+    "slug": "agra",
+    "name": "Agra",
+    "aliases": ["mathura", "vrindavan", "fatehpur sikri"],
+    "region": "north",
+    "temp_offset_c": 0,
+    "vibe": "Heritage day trip",
+    "context": "Monuments mean hours in the sun; comfortable, covered cottons photograph well against marble and sandstone.",
+    "tips": [
+      "Solid colours photograph best at the Taj — avoid busy prints for that morning.",
+      "Cover shoulders for mosques within the monument complexes.",
+      "Winter mornings are foggy and cold; carry a shawl."
+    ],
+    "default_activities": ["casual"],
+    "palette": ["red", "maroon", "yellow", "teal", "white"],
+    "avoid": []
+  },
+  {
+    "slug": "rishikesh",
+    "name": "Rishikesh",
+    "aliases": ["haridwar", "mussoorie", "nainital", "uttarakhand"],
+    "region": "north",
+    "temp_offset_c": -6,
+    "vibe": "River town",
+    "context": "Ashram and river culture — modest, easy cottons; evenings by the Ganga are cool.",
+    "tips": [
+      "Ashrams and ghats: shoulders and knees covered, no sheer fabrics.",
+      "Cotton kurtas with pyjamas or palazzos do everything here.",
+      "Rafting or trekking days need separate activewear — pack outside the wardrobe plan."
+    ],
+    "default_activities": ["casual", "temple"],
+    "palette": ["white", "cream", "orange", "green"],
+    "avoid": []
+  },
+  {
+    "slug": "amritsar",
+    "name": "Amritsar",
+    "aliases": ["punjab", "chandigarh"],
+    "region": "north",
+    "temp_offset_c": 0,
+    "vibe": "Punjabi bold",
+    "context": "Golden Temple requires head cover and modest dress; bold phulkari colour is the local language.",
+    "tips": [
+      "Head cover for the Golden Temple — a dupatta or stole per day.",
+      "Winter fog and cold: heavy shawls and full sleeves from November to February.",
+      "Food-heavy trip: relaxed waistlines are a kindness."
+    ],
+    "default_activities": ["temple", "casual"],
+    "palette": ["orange", "pink", "yellow", "green", "red"],
+    "avoid": []
+  },
+  {
+    "slug": "hyderabad",
+    "name": "Hyderabad",
+    "aliases": [],
+    "region": "south",
+    "temp_offset_c": 0,
+    "vibe": "Nizami elegance",
+    "context": "Dry heat; old-city elegance in pearls and chikankari. Corporate parks in the west run business casual.",
+    "tips": [
+      "Charminar and Chowmahalla: modest cottons, comfortable footwear.",
+      "Evenings are dressier than Bengaluru — one embellished layer earns its place.",
+      "Summer afternoons hit 40°C: sleeves for sun, not warmth."
+    ],
+    "default_activities": ["office", "casual"],
+    "palette": ["white", "cream", "golden", "teal"],
+    "avoid": []
+  },
+  {
+    "slug": "kolkata",
+    "name": "Kolkata",
+    "aliases": ["calcutta", "santiniketan"],
+    "region": "east",
+    "temp_offset_c": 0,
+    "vibe": "Bengali intellectual",
+    "context": "Handloom and cotton sarees, red-and-white palettes during Durga Puja, humid most of the year.",
+    "tips": [
+      "Tant and khadi over anything synthetic — humidity is relentless.",
+      "Durga Puja trips: red, white and cream; pandal-hopping means walking shoes.",
+      "Winter (Dec–Jan) is pleasant: light shawls in the evening."
+    ],
+    "default_activities": ["casual", "festival"],
+    "palette": ["red", "white", "cream", "golden"],
+    "avoid": []
+  },
+  {
+    "slug": "chennai",
+    "name": "Chennai",
+    "aliases": ["pondicherry", "puducherry", "mahabalipuram", "madurai", "thanjavur"],
+    "region": "south",
+    "temp_offset_c": 0,
+    "vibe": "South Indian classic",
+    "context": "Hot and humid with strict temple etiquette; Kanjeevaram and cotton sarees are the local register.",
+    "tips": [
+      "Temples often require sarees, half-sarees or long kurtas with dupattas; shorts and sleeveless are refused.",
+      "Cotton only by day; silk for a temple or family evening.",
+      "Pondicherry's French Quarter is relaxed — linen and light dresses work."
+    ],
+    "default_activities": ["temple", "casual"],
+    "palette": ["golden", "maroon", "green", "cream"],
+    "avoid": []
+  },
+  {
+    "slug": "andaman",
+    "name": "Andaman",
+    "aliases": ["port blair", "havelock", "neil island", "lakshadweep"],
+    "region": "south",
+    "temp_offset_c": 0,
+    "vibe": "Island light",
+    "context": "Beach and boat days; humid and bright. Nothing formal, one dinner look at most.",
+    "tips": [
+      "Quick-dry cottons and linen; salt and sun ruin silk.",
+      "Cover-ups over swimwear for ferries and markets.",
+      "Evenings are relaxed — a breezy kurta or dress is the dressiest you'll need."
+    ],
+    "default_activities": ["casual"],
+    "palette": ["white", "teal", "blue", "yellow", "cream"],
+    "avoid": ["black"]
+  },
+  {
+    "slug": "ahmedabad",
+    "name": "Ahmedabad",
+    "aliases": ["kutch", "bhuj", "rann of kutch", "vadodara", "gujarat"],
+    "region": "west",
+    "temp_offset_c": 0,
+    "vibe": "Gujarati craft",
+    "context": "Dry heat, craft-heavy aesthetic — bandhani, ajrakh, mirror work. Navratri season is a nine-night wardrobe event.",
+    "tips": [
+      "Kutch days are hot and nights cold in winter — pack a proper shawl.",
+      "Navratri trips: lehenga-cholis or chaniya with dupatta for garba nights.",
+      "Dry climate is kind to silks; heavy fabrics are fine in the evening."
+    ],
+    "default_activities": ["casual", "festival"],
+    "palette": ["pink", "orange", "green", "yellow", "maroon"],
+    "avoid": []
+  },
+  {
+    "slug": "lucknow",
+    "name": "Lucknow",
+    "aliases": ["kanpur"],
+    "region": "north",
+    "temp_offset_c": 0,
+    "vibe": "Nawabi grace",
+    "context": "Chikankari's home — light, elegant, understated. Hot summers, cold foggy winters.",
+    "tips": [
+      "White and pastel chikankari kurtas fit both heritage walks and dinners.",
+      "Winter needs full layers; fog lingers till noon.",
+      "Imambaras: modest dress, heads covered inside."
+    ],
+    "default_activities": ["casual", "night_out"],
+    "palette": ["white", "cream", "pink", "beige"],
+    "avoid": []
+  }
+]

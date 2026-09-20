@@ -111,6 +111,9 @@ export default function DailyLookScreen({ navigation }: OutfitScreenProps<'Daily
               <Text style={styles.linkText}>🏙️ City looks</Text>
             </TouchableOpacity>
           ) : null}
+          <TouchableOpacity style={styles.link} onPress={() => navigation.navigate('TravelHome')}>
+            <Text style={styles.linkText}>✈️ Trip packing</Text>
+          </TouchableOpacity>
         </View>
         <TouchableOpacity style={styles.stylistBanner} onPress={() => navigation.navigate('StylistList')} accessibilityRole="button">
           <View style={styles.flex}>
@@ -133,8 +136,8 @@ const styles = StyleSheet.create({
   emptyEmoji: { fontSize: 40 },
   emptyText: { ...typography.body2, textAlign: 'center' },
   buttons: { gap: spacing.sm },
-  links: { flexDirection: 'row', gap: spacing.sm },
-  link: { flex: 1, padding: spacing.md, borderRadius: borderRadius.lg, backgroundColor: colors.surfaceElevated, alignItems: 'center' },
+  links: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+  link: { flexGrow: 1, flexBasis: '45%', padding: spacing.md, borderRadius: borderRadius.lg, backgroundColor: colors.surfaceElevated, alignItems: 'center' },
   linkText: { ...typography.label, color: colors.textPrimary },
   stylistBanner: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, padding: spacing.md, borderRadius: borderRadius.xl, borderWidth: 1.5, borderColor: colors.border, backgroundColor: colors.surfaceElevated },
   flex: { flex: 1, gap: 2 },

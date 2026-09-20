@@ -11,4 +11,5 @@ export { billingApi } from './billing';
 export { commerceApi } from './commerce';
 export { socialApi } from './social';
 export { stylistsApi } from './stylists';
+export { travelApi } from './travel';
 export { tokenStorage } from './tokens';

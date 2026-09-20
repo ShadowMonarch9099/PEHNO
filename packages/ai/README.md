@@ -12,7 +12,8 @@ data/
   color_harmony.json    colour pairs / clashes / skin-tone flattering colours for the outfit engine
   climatology.json      typical monthly weather per region (weather fallback)
   care_profiles.json    per-fabric wash / iron / storage / monsoon advice
-  cities.json           launch cities with region + lat/lon
+  cities.json           launch cities with region + lat/lon + aesthetic
+  destinations.json     travel destinations: cultural/modesty notes, palette, default activities, hill-station temp offset
   exports/              (git-ignored) training exports from the API
 models/                 (git-ignored) fine-tuned checkpoints
 training/train_vit.py   fine-tune ViT on an export

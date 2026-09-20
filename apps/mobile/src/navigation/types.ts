@@ -39,6 +39,9 @@ export type OutfitStackParamList = {
   StylistProfile: { stylistId: string };
   BookSession: { stylistId: string };
   MyBookings: undefined;
+  TravelHome: undefined;
+  TravelPlanner: undefined;
+  TravelPlan: { planId: string };
 };
 
 export type FestivalStackParamList = {
