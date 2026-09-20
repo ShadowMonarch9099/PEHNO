@@ -5,7 +5,7 @@ from fastapi import APIRouter
 
 from app import knowledge
 from app.models.garment import GarmentCondition
-from app.schemas.meta import CityOut, Option, WardrobeOptionsOut
+from app.schemas.meta import BodyTypeOut, CityOut, GarmentTypeOption, Option, WardrobeOptionsOut
 
 router = APIRouter(prefix="/meta", tags=["meta"])
 
@@ -31,8 +31,11 @@ def _title(slug: str) -> str:
 @router.get("/wardrobe-options", response_model=WardrobeOptionsOut)
 async def wardrobe_options() -> WardrobeOptionsOut:
     return WardrobeOptionsOut(
-        garment_types=[Option(slug=g["slug"], label=g["label"]) for g in knowledge.garment_types()]
-        + [Option(slug="other", label="Other")],
+        garment_types=[
+            GarmentTypeOption(slug=g["slug"], label=g["label"], gender=g.get("gender", "unisex"))
+            for g in knowledge.garment_types()
+        ]
+        + [GarmentTypeOption(slug="other", label="Other", gender="unisex")],
         fabrics=[Option(slug=s, label=_title(s)) for s in knowledge.fabric_slugs()]
         + [Option(slug="other", label="Other")],
         occasions=[Option(slug=o["slug"], label=o["label"]) for o in knowledge.occasions()],
@@ -46,3 +49,9 @@ async def wardrobe_options() -> WardrobeOptionsOut:
 @router.get("/cities", response_model=list[CityOut])
 async def cities() -> list[CityOut]:
     return [CityOut(**c) for c in knowledge.cities()]
+
+
+@router.get("/body-types", response_model=list[BodyTypeOut])
+async def body_types(gender: str | None = None) -> list[BodyTypeOut]:
+    """Body types (with fit guidance) for onboarding; men and women differ."""
+    return [BodyTypeOut(**b) for b in knowledge.body_types_for(gender)]

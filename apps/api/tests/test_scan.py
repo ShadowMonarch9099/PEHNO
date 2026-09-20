@@ -128,7 +128,9 @@ async def test_scan_end_to_end(client, monkeypatch):
     monkeypatch.setattr(
         ss,
         "classify_image",
-        lambda data, style=None: fake_result("churidar", "cotton", "black", ["office", "casual"]),
+        lambda data, style=None, allowed=None: fake_result(
+            "churidar", "cotton", "black", ["office", "casual"]
+        ),
     )
     files = [("file", ("scan.jpg", make_image(size=(32, 32)), "image/jpeg"))]
     r = await client.post("/commerce/scan", files=files, headers=h)
@@ -146,7 +148,7 @@ async def test_scan_end_to_end(client, monkeypatch):
     monkeypatch.setattr(
         ss,
         "classify_image",
-        lambda data, style=None: fake_result("palazzo", "cotton", "navy", ["office"]),
+        lambda data, style=None, allowed=None: fake_result("palazzo", "cotton", "navy", ["office"]),
     )
     d = (await client.post("/commerce/scan", files=files, headers=h)).json()
     assert d["duplicate"]["garment_type"] == "palazzo" and d["verdict"] == "skip"
@@ -154,7 +156,9 @@ async def test_scan_end_to_end(client, monkeypatch):
 
     # unknown → gentle retry advice, never a crash
     monkeypatch.setattr(
-        ss, "classify_image", lambda data, style=None: fake_result("unknown", "unknown", "grey", [])
+        ss,
+        "classify_image",
+        lambda data, style=None, allowed=None: fake_result("unknown", "unknown", "grey", []),
     )
     d = (await client.post("/commerce/scan", files=files, headers=h)).json()
     assert (

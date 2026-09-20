@@ -10,6 +10,7 @@ import uuid
 from fastapi.concurrency import run_in_threadpool
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app import knowledge
 from app.core import database
 from app.core.database import utcnow
 from app.models.feedback import ClassificationFeedback
@@ -27,7 +28,12 @@ async def classify_garment(db: AsyncSession, garment: Garment) -> Garment:
     """Classify in place. A user-verified garment keeps the user's labels; only the snapshot is refreshed."""
     user = await db.get(User, garment.user_id)
     data = await get_storage().get(garment.image_key)
-    result = await run_in_threadpool(classify_image, data, user.regional_style if user else None)
+    result = await run_in_threadpool(
+        classify_image,
+        data,
+        user.regional_style if user else None,
+        knowledge.garment_type_slugs_for(user.gender.value) if user else None,
+    )
 
     snapshot = {
         "garment_type": result.garment_type,

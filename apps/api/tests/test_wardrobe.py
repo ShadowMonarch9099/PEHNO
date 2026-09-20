@@ -206,7 +206,7 @@ async def test_meta_options_and_cities(client):
     r = await client.get("/meta/wardrobe-options")
     assert r.status_code == 200
     o = r.json()
-    assert {"slug": "saree", "label": "Saree"} in o["garment_types"]
+    assert {"slug": "saree", "label": "Saree", "gender": "women"} in o["garment_types"]
     assert any(f["slug"] == "banarasi" for f in o["fabrics"])
     assert [s["slug"] for s in o["seasons"]] == ["summer", "monsoon", "winter", "all_season"]
     assert len(o["regional_styles"]) == 5

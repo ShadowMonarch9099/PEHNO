@@ -30,7 +30,7 @@ W_PALETTE = 0.4  # destination palette nudge
 
 #: activities that fill daytime slots (one per day, cycled) vs one-off event evenings
 DAY_OCCASIONS = ("casual", "office", "campus", "temple", "pooja")
-LAYER_TYPES = ("dupatta",)  # taxonomy 'layer' roles suggested for cold destinations
+LAYER_TYPES = ("dupatta", "nehru_jacket")  # taxonomy 'layer' roles suggested for cold trips
 
 
 @dataclass
@@ -221,6 +221,7 @@ def plan(
     history: engine.History | None = None,
     max_items: int = DEFAULT_MAX_ITEMS,
 ) -> PlanResult:
+    """Capsule for the trip. `user.gender` limits gap suggestions to that taxonomy."""
     history = history or engine.History()
     usable = [g for g in garments if g.garment_type not in ("unknown", "other")]
     cands = {s.index: _candidates(usable, s, user, history, dest) for s in slots}
@@ -280,7 +281,7 @@ def plan(
         used_sets.add(frozenset(o.garment_ids))
         looks.append(Look(slot, o.garment_ids, round(o.score, 2), o.rationale))
 
-    gaps = _gaps(usable, dest, unfilled, slots)
+    gaps = _gaps(usable, dest, unfilled, slots, gender=user.gender)
     return PlanResult(dest, slots, looks, packed, len(have), gaps, unfilled)
 
 
@@ -288,10 +289,16 @@ def plan(
 
 
 def _gaps(
-    garments: list[Garment], dest: Destination, unfilled: list[Slot], slots: list[Slot]
+    garments: list[Garment],
+    dest: Destination,
+    unfilled: list[Slot],
+    slots: list[Slot],
+    *,
+    gender: str | None = None,
 ) -> list[gap_analyzer.Gap]:
     """One suggestion per uncovered occasion: the piece that would unlock the most looks."""
-    tax = {g["slug"]: g for g in knowledge.garment_types()}
+    suggest_for = knowledge.gender_for_wardrobe(gender, [g.garment_type for g in garments])
+    tax = {g["slug"]: g for g in knowledge.garment_types_for(suggest_for)}
     gaps: list[gap_analyzer.Gap] = []
     seen: set[str] = set()
     occasions = [s.occasion for s in unfilled]

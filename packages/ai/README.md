@@ -5,7 +5,8 @@ The knowledge base in `data/` is PEHNO's core IP. Everything in the API that
 
 ```
 data/
-  garment_labels.json   Indian garment taxonomy: type → typical fabrics, occasions, regions
+  garment_labels.json   Indian garment taxonomy (17 types, `gender` women|men|unisex): fabrics, occasions, regions, role
+  fit_guidance.json     body type × gender → silhouette advice, preferred/avoided types, tips (engine fit layer)
   fabric_weather.json   fabric × season suitability (excellent / good / caution / avoid)
   festivals.json        25 festivals with 2025–2027 dates (lunar dates: re-verify yearly), colours, dress codes
   occasions.json        14 occasions incl. wedding sub-events (parent, palette, avoid_colors, garment_preference)
@@ -54,6 +55,10 @@ python train_vit.py --data ../data/exports/<date> --out ../models/garment_classi
 ```
 
 Set `CLASSIFIER_BACKEND=vit` in the API to serve the fine-tuned model.
+
+### Men's garments (weeks 42–45)
+
+The taxonomy carries seven men's classes (sherwani, kurta_pyjama, bandhgala, nehru_jacket, dhoti, pyjama, pathani_suit) and marks kurta / churidar / indo_western as unisex. Classification is **scoped by the user's gender** (`classify_image(..., allowed_types=…)` drops the other gender's classes and renormalises), so a man's photo can never come back as a saree even with zero men's training data. Export, eval and training all read classes from the taxonomy, so men's images flow through the same flywheel — the corrections table is the collection mechanism. Zero-shot prompts for the men's classes are in `zero_shot.py:_TYPE_HINTS`; they have not been measured against real photos yet (same caveat as the women's baseline below).
 
 ## Current baseline (zero-shot, 5 random Wikimedia photos, 2026-09-19)
 

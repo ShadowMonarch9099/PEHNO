@@ -184,7 +184,11 @@
       "salwar_suit",
       "anarkali",
       "kurti",
-      "palazzo"
+      "palazzo",
+      "kurta_pyjama",
+      "kurta",
+      "nehru_jacket",
+      "pyjama"
     ],
     "notes": "Daytime, outdoors, sitting for hours with wet henna: light fabrics, sleeves you can push up, yellow-green-orange palette. Avoid white (henna stains) and black."
   },
@@ -217,7 +221,10 @@
       "lehenga",
       "anarkali",
       "indo_western",
-      "saree"
+      "saree",
+      "bandhgala",
+      "nehru_jacket",
+      "sherwani"
     ],
     "notes": "Evening, dancing: festive and glamorous — sequins, mirror work, bold colours. Lehenga or sharara you can move in; skip stiff silks."
   },
@@ -254,7 +261,10 @@
       "kurta",
       "palazzo",
       "salwar_suit",
-      "saree"
+      "saree",
+      "kurta_pyjama",
+      "pyjama",
+      "dhoti"
     ],
     "notes": "Turmeric everywhere: old or inexpensive cottons in yellow/white; nothing precious, nothing that stains badly."
   },
@@ -290,7 +300,11 @@
       "anarkali",
       "saree",
       "salwar_suit",
-      "indo_western"
+      "indo_western",
+      "sherwani",
+      "bandhgala",
+      "kurta_pyjama",
+      "nehru_jacket"
     ],
     "notes": "Groom's-side procession: ethnic festive with sparkle; comfortable enough to dance in the street. Sherwani or bandhgala for men."
   },
@@ -325,7 +339,10 @@
       "saree",
       "lehenga",
       "anarkali",
-      "indo_western"
+      "indo_western",
+      "sherwani",
+      "bandhgala",
+      "nehru_jacket"
     ],
     "notes": "The most formal sub-event: designer or occasion wear, rich silks, statement jewellery. Saree or lehenga preferred; darker jewel tones photograph well at night."
   }

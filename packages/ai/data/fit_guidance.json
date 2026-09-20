@@ -1,0 +1,126 @@
+{
+  "women": {
+    "petite": {
+      "label": "Petite",
+      "description": "Under ~5'3\" — proportion matters more than size",
+      "silhouette": "Keep lines vertical and unbroken; avoid anything that cuts you at the widest point.",
+      "prefer": ["anarkali", "churidar", "kurti", "saree"],
+      "avoid": ["palazzo"],
+      "tips": [
+        "Knee-length kurtis and A-line anarkalis lengthen the frame; floor-sweeping flares swallow it.",
+        "Churidars or straight pants over wide palazzos; if you love palazzos, keep the kurta short.",
+        "Lighter, smaller prints and a single-colour saree drape read taller than big borders."
+      ]
+    },
+    "regular": {
+      "label": "Regular",
+      "description": "Average height and build — most cuts work",
+      "silhouette": "Balanced proportions; use fit to add shape and fabric to add drama.",
+      "prefer": [],
+      "avoid": [],
+      "tips": [
+        "Straight kurtas with palazzos or churidars both work — choose by occasion.",
+        "Structured fabrics (raw silk, chanderi) hold a silhouette; georgette and chiffon flow.",
+        "Belt a saree or an anarkali at the waist for a sharper evening line."
+      ]
+    },
+    "tall": {
+      "label": "Tall",
+      "description": "Over ~5'7\" — length is your advantage",
+      "silhouette": "Horizontal interest and layers break up height gracefully.",
+      "prefer": ["palazzo", "lehenga", "saree", "dupatta"],
+      "avoid": [],
+      "tips": [
+        "Wide palazzos and sharara sets look intentional on a long frame.",
+        "Bold borders, wide dupattas and contrast hems add horizontal balance.",
+        "Long kurtas need enough length — check they clear the knee or go full-length."
+      ]
+    },
+    "plus": {
+      "label": "Plus",
+      "description": "Curvier build — drape and structure over cling",
+      "silhouette": "Skim, don't cling; define the narrowest point; keep hemlines long and clean.",
+      "prefer": ["anarkali", "kurta", "saree", "salwar_suit"],
+      "avoid": ["kurti"],
+      "tips": [
+        "Empire or under-bust anarkalis and long straight kurtas skim comfortably.",
+        "Medium-weight fabrics (cotton silk, chanderi, georgette) drape better than stiff brocade or clingy jersey.",
+        "V or deep-U necklines and three-quarter sleeves lengthen; avoid short kurtis that end at the hip."
+      ]
+    }
+  },
+  "men": {
+    "slim": {
+      "label": "Slim",
+      "description": "Lean frame — add structure and breadth",
+      "silhouette": "Structured shoulders and layers add presence; avoid anything oversized or shapeless.",
+      "prefer": ["bandhgala", "nehru_jacket", "sherwani", "kurta_pyjama"],
+      "avoid": ["pathani_suit"],
+      "tips": [
+        "A Nehru jacket over a kurta instantly adds shoulder and chest.",
+        "Bandhgalas and sherwanis should be tailored close — a boxy fit reads as borrowed.",
+        "Heavier fabrics (raw silk, velvet, brocade) add visual weight; skip flimsy rayon."
+      ]
+    },
+    "athletic": {
+      "label": "Athletic",
+      "description": "Broad shoulders, narrow waist — tapered cuts",
+      "silhouette": "Show the taper; avoid straight boxy cuts that hide it.",
+      "prefer": ["bandhgala", "kurta", "sherwani", "indo_western"],
+      "avoid": [],
+      "tips": [
+        "Fitted kurtas with a side slit and churidar or straight pyjama show the frame.",
+        "Bandhgalas with a nipped waist are your best formal option.",
+        "Keep Nehru jackets slim — a wide waistcoat undoes the taper."
+      ]
+    },
+    "regular": {
+      "label": "Regular",
+      "description": "Average build — most cuts work",
+      "silhouette": "Balanced; use fabric weight and layering to dress up or down.",
+      "prefer": [],
+      "avoid": [],
+      "tips": [
+        "Cotton kurta-pyjama for day, silk kurta with a Nehru jacket for evenings.",
+        "A single well-fitted bandhgala covers receptions, sangeets and formal dinners.",
+        "Dhoti or veshti with a silk kurta for temple and South Indian weddings."
+      ]
+    },
+    "tall": {
+      "label": "Tall",
+      "description": "Over ~6' — length and proportion",
+      "silhouette": "Break up the vertical with layers and contrast; mind kurta and sleeve lengths.",
+      "prefer": ["sherwani", "nehru_jacket", "kurta_pyjama", "bandhgala"],
+      "avoid": [],
+      "tips": [
+        "Long sherwanis and knee-length kurtas suit height; short kurtas look cropped.",
+        "A contrast Nehru jacket or stole breaks the length nicely.",
+        "Check pyjama and churidar length — off-the-rack often runs short."
+      ]
+    },
+    "broad": {
+      "label": "Broad",
+      "description": "Wider chest and midsection — clean vertical lines",
+      "silhouette": "Vertical lines, darker solids and open layers; avoid tight or heavily embellished pieces.",
+      "prefer": ["kurta_pyjama", "nehru_jacket", "sherwani", "kurta"],
+      "avoid": ["pathani_suit", "indo_western"],
+      "tips": [
+        "Straight-cut kurtas in matte fabrics (cotton, linen, khadi) drape without clinging.",
+        "An open Nehru jacket creates a slimming vertical panel.",
+        "Choose fine embroidery over all-over brocade; keep the shine for accessories."
+      ]
+    },
+    "plus": {
+      "label": "Plus",
+      "description": "Larger build — comfort and drape first",
+      "silhouette": "Skimming fits, breathable mid-weight fabrics, long unbroken lines.",
+      "prefer": ["kurta_pyjama", "kurta", "nehru_jacket", "sherwani"],
+      "avoid": ["pathani_suit", "bandhgala"],
+      "tips": [
+        "Long kurtas with straight pyjamas; avoid churidars that bunch.",
+        "Darker solids and pinstripes; a Nehru jacket left open lengthens the torso.",
+        "A well-cut sherwani in a matte silk is more flattering than a fitted bandhgala."
+      ]
+    }
+  }
+}

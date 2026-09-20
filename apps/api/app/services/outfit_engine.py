@@ -45,6 +45,8 @@ W_NEVER_WORN = 0.3
 W_VERIFIED = 0.2
 W_STYLE_MATCH = 0.3
 W_DISLIKE = -0.8
+W_FIT_PREFER = 0.35  # silhouette guidance for the user's body type (fit_guidance.json)
+W_FIT_AVOID = -0.45
 W_LIKE = 0.4
 W_LAYER_BONUS = 0.3
 RECENT_DAYS = 7
@@ -57,6 +59,7 @@ class UserContext:
     body_type: str = "regular"
     skin_tone: str = "medium"
     regional_style: str = "pan_india_fusion"
+    gender: str = "female"
 
 
 @dataclass
@@ -216,6 +219,15 @@ def score_garment(
         score += W_DISLIKE
     if gid in history.liked_garment_ids:
         score += W_LIKE
+
+    # 6. Fit — silhouette guidance for the user's body type
+    fit = knowledge.fit_guidance(user.gender, user.body_type)
+    if fit:
+        if g.garment_type in fit.get("prefer", []):
+            score += W_FIT_PREFER
+            reasons.append(f"Flattering cut for a {fit['label'].lower()} frame")
+        elif g.garment_type in fit.get("avoid", []):
+            score += W_FIT_AVOID
 
     return ScoredGarment(g, round(score, 3), reasons)
 

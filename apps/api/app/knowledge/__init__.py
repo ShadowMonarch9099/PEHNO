@@ -50,6 +50,48 @@ def garment_types() -> list[dict]:
     return load("garment_labels")
 
 
+#: user gender → taxonomy `gender` values they see. "other" sees everything.
+_GENDER_SETS = {"female": {"women", "unisex"}, "male": {"men", "unisex"}}
+
+
+def garment_types_for(gender: str | None) -> list[dict]:
+    """Taxonomy filtered for a user: women's + unisex, men's + unisex, or all."""
+    allowed = _GENDER_SETS.get(gender or "")
+    if allowed is None:
+        return garment_types()
+    return [g for g in garment_types() if g.get("gender", "unisex") in allowed]
+
+
+def garment_type_slugs_for(gender: str | None) -> set[str]:
+    return {g["slug"] for g in garment_types_for(gender)}
+
+
+def gender_for_wardrobe(gender: str | None, owned_types: list[str]) -> str:
+    """
+    Which taxonomy to *suggest* from. Known genders map directly; for "other"
+    or unknown, a wardrobe with men's-only pieces and no women's-only pieces
+    reads as men's, otherwise women's (the product's primary audience).
+    """
+    if gender in ("male", "female"):
+        return gender
+    by_slug = {g["slug"]: g.get("gender", "unisex") for g in garment_types()}
+    owned = {by_slug.get(t) for t in owned_types}
+    return "male" if "men" in owned and "women" not in owned else "female"
+
+
+def fit_guidance(gender: str | None, body_type: str) -> dict | None:
+    """Silhouette advice for a body type; men and women have separate tables."""
+    table = load("fit_guidance")
+    group = table["men"] if gender == "male" else table["women"]
+    return group.get(body_type) or table["women"].get(body_type) or table["men"].get(body_type)
+
+
+def body_types_for(gender: str | None) -> list[dict]:
+    table = load("fit_guidance")
+    group = table["men"] if gender == "male" else table["women"]
+    return [{"slug": k, **v} for k, v in group.items()]
+
+
 def fabrics() -> dict[str, dict]:
     return load("fabric_weather")
 

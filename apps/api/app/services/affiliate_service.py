@@ -79,6 +79,7 @@ class ProductSource(ABC):
         fabric: str | None,
         budget_inr: int | None,
         platforms: list[AffiliatePlatform],
+        gender: str | None = None,
     ) -> list[ProductCard]:
         ...
 
@@ -86,7 +87,7 @@ class ProductSource(ABC):
 class SearchLinkSource(ProductSource):
     """Default: one curated search per platform."""
 
-    def cards(self, *, gap_type, color, fabric, budget_inr, platforms):
+    def cards(self, *, gap_type, color, fabric, budget_inr, platforms, gender=None):
         tax = {g["slug"]: g for g in knowledge.garment_types()}
         entry = tax.get(
             gap_type,
@@ -98,7 +99,12 @@ class SearchLinkSource(ProductSource):
             for w in (color, fabric.replace("_", " ") if fabric else None, entry["label"].lower())
             if w
         ]
-        query = " ".join(words) + " women"
+        audience = {"male": "men", "female": "women"}.get(gender or "", "")
+        if tax.get(gap_type, {}).get("gender") == "men":
+            audience = "men"
+        elif tax.get(gap_type, {}).get("gender") == "women":
+            audience = "women"
+        query = (" ".join(words) + f" {audience}").strip()
         name = " ".join(w.capitalize() for w in words)
         out = []
         for p in platforms:

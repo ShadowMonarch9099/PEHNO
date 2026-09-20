@@ -17,6 +17,7 @@ from app.models.user import User
 from app.schemas.garment import GarmentOut, GarmentUpdate
 from app.services import analytics, care_service, gap_service
 from app.services.classification_service import record_feedback
+from app.services.classifier import rules
 from app.services.image_service import InvalidImageError, process_garment_image
 from app.services.storage import get_storage
 
@@ -147,6 +148,15 @@ async def update_garment(db: AsyncSession, garment: Garment, patch: GarmentUpdat
         setattr(garment, field, value)
     if changes.keys() & GarmentUpdate.CLASSIFICATION_FIELDS:
         garment.user_verified = True
+        # Relabelling the type/fabric with no tags set → seed occasions/seasons from
+        # the knowledge base so the piece is usable immediately (the user can edit).
+        if {"garment_type", "fabric_type"} & changes.keys():
+            if not garment.occasion_tags and "occasion_tags" not in changes:
+                garment.occasion_tags = rules.occasions_for(
+                    garment.garment_type, garment.fabric_type
+                )
+            if not garment.season_tags and "season_tags" not in changes:
+                garment.season_tags = rules.seasons_for_fabric(garment.fabric_type)
         # A user-labelled garment counts as classified even if the model never ran.
         if garment.classification_status != ClassificationStatus.complete:
             garment.classification_status = ClassificationStatus.complete

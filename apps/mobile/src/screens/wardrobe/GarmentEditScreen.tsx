@@ -9,7 +9,7 @@ import { ChipGroup, PrimaryButton, ScreenHeader } from '../../components/ui';
 import type { WardrobeScreenProps } from '../../navigation/types';
 import { ApiError } from '../../services';
 import type { Garment, GarmentCondition, GarmentUpdate, RegionalStyle, Season } from '../../services/types';
-import { useMetaStore, useWardrobeStore } from '../../store';
+import { garmentTypesFor, useAuthStore, useMetaStore, useWardrobeStore } from '../../store';
 import { borderRadius, colors, spacing, typography } from '../../theme';
 
 const orUndef = (v: string) => (v === 'unknown' ? undefined : v);
@@ -30,6 +30,7 @@ function diff(form: GarmentUpdate, g: Garment): GarmentUpdate {
 }
 
 export default function GarmentEditScreen({ route, navigation }: WardrobeScreenProps<'GarmentEdit'>) {
+  const gender = useAuthStore((st) => st.user?.gender);
   const g = useWardrobeStore((s) => s.garments.find((x) => x.id === route.params.garmentId));
   const update = useWardrobeStore((s) => s.update);
   const options = useMetaStore((s) => s.options);
@@ -85,7 +86,7 @@ export default function GarmentEditScreen({ route, navigation }: WardrobeScreenP
         <ScreenHeader title="Edit details" subtitle="Your corrections train the AI." onBack={navigation.goBack} />
         <ScrollView contentContainerStyle={styles.body} keyboardShouldPersistTaps="handled">
           <Field label="Type">
-            <ChipGroup options={options.garment_types} value={form.garment_type ?? null} onChange={(v) => setForm((f) => ({ ...f, garment_type: v }))} />
+            <ChipGroup options={garmentTypesFor(options.garment_types, gender)} value={form.garment_type ?? null} onChange={(v) => setForm((f) => ({ ...f, garment_type: v }))} />
           </Field>
           <Field label="Fabric">
             <ChipGroup options={options.fabrics} value={form.fabric_type ?? null} onChange={(v) => setForm((f) => ({ ...f, fabric_type: v }))} />

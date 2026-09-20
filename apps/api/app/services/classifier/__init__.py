@@ -57,13 +57,27 @@ def _pick_fabric(vision: VisionOutput, garment_type: str) -> Prediction:
     return Prediction(p.label, min(p.confidence * 0.9, 0.95))
 
 
-def classify_image(data: bytes, user_style: str | None = None) -> ClassificationResult:
+def _restrict(preds: list[Prediction], allowed: set[str] | None) -> list[Prediction]:
+    """Drop types outside the user's taxonomy (a man's photo is never a saree) and renormalise."""
+    if not allowed:
+        return preds
+    kept = [p for p in preds if p.label in allowed]
+    total = sum(p.confidence for p in kept)
+    if not kept or total <= 0:
+        return kept
+    return [Prediction(p.label, p.confidence / total) for p in kept]
+
+
+def classify_image(
+    data: bytes, user_style: str | None = None, allowed_types: set[str] | None = None
+) -> ClassificationResult:
     image = Image.open(io.BytesIO(data))
     image.load()
     color_primary, color_accent = dominant_colors(image)
 
     backend = get_backend()
     vision = backend.predict(image)
+    vision = VisionOutput(_restrict(vision.garment_types, allowed_types), vision.fabrics)
 
     if (
         vision.garment_types

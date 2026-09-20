@@ -137,7 +137,7 @@ Status: ✅ done · 🔧 in progress · ⬜ not started · ⚠️ deviates from 
 | Weeks 29–32 — Social OOTD layer | ✅ (flag off) | `SOCIAL_ENABLED=false` by default per the plan's warning; flip when wardrobe data quality is high. |
 | Weeks 33–37 — Stylist marketplace | ✅ | 20% commission, Razorpay Payment Links (mock locally), admin verification, scoped wardrobe access |
 | Weeks 38–41 — Travel packing planner | ✅ | Capsule solver over the user's wardrobe; 20 destinations with local notes; hill-station climate offsets; gaps → affiliate links |
-| Weeks 42–45 — Male wardrobe support | ⬜ | |
+| Weeks 42–45 — Male wardrobe support | ✅ | 7 men's garment types, gender-scoped classification/gaps/links, men's occasion picks, fit layer for male + female builds |
 | Weeks 46–48 — Brand partnership layer | ⬜ | Schema scaffold exists |
 | Weeks 49–52 — Tier 2 expansion | ⬜ | Tier-2 cities already in cities.json; Hindi UI pending |
 
@@ -167,3 +167,13 @@ Status: ✅ done · 🔧 in progress · ⬜ not started · ⚠️ deviates from 
 - [x] `POST /travel/packing-list` (Plus, saved as `travel_plans`), `GET /travel/plans`, `GET|DELETE /travel/plans/{id}`, `GET /travel/destinations` (migration `c055480640d6`)
 - [x] Mobile: TravelHome (saved trips, locked state), TravelPlanner (destination chips + free text, dates, activities, item budget), TravelPlan (pieces → looks hero, destination notes, day-by-day weather, capsule grid with wear counts, per-slot looks, gaps → GapItem); "Trip packing" link on DailyLook
 - [x] 7 new tests (151 total); verified live
+
+### Weeks 42–45 deliverables
+- [x] Taxonomy: +sherwani, kurta_pyjama, bandhgala, nehru_jacket, dhoti, pyjama, pathani_suit (roles, fabrics, occasions, prices); `gender` on every type (kurta/churidar/indo_western unisex); men's picks added to mehendi/sangeet/haldi/baraat/reception `garment_preference`
+- [x] Gender scoping: `knowledge.garment_types_for(gender)`; classifier restricts + renormalises type predictions to the user's taxonomy (both photo upload and scan mode); gap report, travel gaps and affiliate search queries ("… men"/"… women") follow the user's gender, inferred from the wardrobe for "other"
+- [x] Occasion logic for men: engine composes kurta + pyjama/churidar/dhoti + Nehru jacket, sherwani/bandhgala as full looks; baraat → sherwani via tags + preference bonus
+- [x] Fit guidance: `fit_guidance.json` (women: petite/regular/tall/plus; men: slim/athletic/regular/tall/broad/plus) with silhouette, prefer/avoid types and tips; new engine layer (`W_FIT_PREFER/AVOID`) + rationale; `BodyType` enum extended; `GET /meta/body-types?gender=`; garment-type options carry `gender`
+- [x] Relabelling a garment's type/fabric with no tags now seeds occasions/seasons from the knowledge base
+- [x] Zero-shot prompts for the men's classes; training/eval pick the classes up from the taxonomy (data collection still needed — see `packages/ai/README.md`)
+- [x] Mobile: onboarding body-type step driven by `/meta/body-types` for the chosen gender (with fit tips); garment-type chips filtered by gender
+- [x] 9 new tests (160 total)

@@ -2,7 +2,7 @@
  * API response/request shapes. Mirrors apps/api/app/schemas.
  */
 export type Gender = 'female' | 'male' | 'other';
-export type BodyType = 'petite' | 'regular' | 'tall' | 'plus';
+export type BodyType = 'petite' | 'regular' | 'tall' | 'plus' | 'slim' | 'athletic' | 'broad';
 export type SkinTone = 'fair' | 'wheatish' | 'medium' | 'dark';
 export type SubscriptionTier = 'free' | 'plus' | 'pro';
 export type RegionalStyle =
@@ -202,8 +202,24 @@ export interface Option {
   label: string;
 }
 
+export type GarmentGender = 'women' | 'men' | 'unisex';
+
+export interface GarmentTypeOption extends Option {
+  gender: GarmentGender;
+}
+
+export interface BodyTypeInfo {
+  slug: BodyType;
+  label: string;
+  description: string;
+  silhouette: string;
+  prefer: string[];
+  avoid: string[];
+  tips: string[];
+}
+
 export interface WardrobeOptions {
-  garment_types: Option[];
+  garment_types: GarmentTypeOption[];
   fabrics: Option[];
   occasions: Option[];
   seasons: Option[];

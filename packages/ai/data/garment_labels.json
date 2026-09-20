@@ -38,7 +38,8 @@
     "typical_price_inr": [
       1200,
       8000
-    ]
+    ],
+    "gender": "women"
   },
   {
     "slug": "salwar_suit",
@@ -77,7 +78,8 @@
     "typical_price_inr": [
       1200,
       5000
-    ]
+    ],
+    "gender": "women"
   },
   {
     "slug": "kurta",
@@ -112,7 +114,8 @@
     "typical_price_inr": [
       700,
       2500
-    ]
+    ],
+    "gender": "unisex"
   },
   {
     "slug": "dupatta",
@@ -150,7 +153,8 @@
     "typical_price_inr": [
       400,
       2000
-    ]
+    ],
+    "gender": "women"
   },
   {
     "slug": "lehenga",
@@ -187,7 +191,8 @@
     "typical_price_inr": [
       3000,
       15000
-    ]
+    ],
+    "gender": "women"
   },
   {
     "slug": "palazzo",
@@ -221,7 +226,8 @@
     "typical_price_inr": [
       500,
       1500
-    ]
+    ],
+    "gender": "women"
   },
   {
     "slug": "anarkali",
@@ -257,7 +263,8 @@
     "typical_price_inr": [
       1500,
       6000
-    ]
+    ],
+    "gender": "women"
   },
   {
     "slug": "kurti",
@@ -291,7 +298,8 @@
     "typical_price_inr": [
       500,
       1800
-    ]
+    ],
+    "gender": "women"
   },
   {
     "slug": "indo_western",
@@ -327,7 +335,8 @@
     "typical_price_inr": [
       1500,
       6000
-    ]
+    ],
+    "gender": "unisex"
   },
   {
     "slug": "churidar",
@@ -361,6 +370,269 @@
     "typical_price_inr": [
       400,
       1200
-    ]
+    ],
+    "gender": "unisex"
+  },
+  {
+    "slug": "sherwani",
+    "label": "Sherwani",
+    "subcategories": [
+      "classic_sherwani",
+      "achkan",
+      "indo_western_sherwani",
+      "jodhpuri_sherwani"
+    ],
+    "typical_fabrics": [
+      "raw_silk",
+      "banarasi",
+      "velvet",
+      "silk",
+      "brocade"
+    ],
+    "occasion_suitability": [
+      "wedding_guest",
+      "baraat",
+      "reception",
+      "sangeet",
+      "formal",
+      "festival"
+    ],
+    "regional_associations": [
+      "punjabi",
+      "rajasthani",
+      "pan_india"
+    ],
+    "description": "Long, fitted coat-style garment worn over a kurta and churidar, richly embroidered or in brocade. The groom's and wedding-guest staple across North India; achkan is the more restrained Lucknow cousin.",
+    "role": "full",
+    "layer_ok": false,
+    "typical_price_inr": [
+      8000,
+      40000
+    ],
+    "gender": "men"
+  },
+  {
+    "slug": "kurta_pyjama",
+    "label": "Kurta Pyjama",
+    "subcategories": [
+      "cotton_kurta_pyjama",
+      "silk_kurta_pyjama",
+      "pathani_style",
+      "chikankari_kurta_pyjama"
+    ],
+    "typical_fabrics": [
+      "cotton",
+      "linen",
+      "khadi",
+      "silk",
+      "raw_silk"
+    ],
+    "occasion_suitability": [
+      "casual",
+      "pooja",
+      "temple",
+      "festival",
+      "office",
+      "mehendi",
+      "haldi",
+      "wedding_guest"
+    ],
+    "regional_associations": [
+      "pan_india",
+      "punjabi",
+      "lucknowi"
+    ],
+    "description": "The everyday men's set: a straight kurta with matching or contrast pyjama. Cotton for daily wear and pooja, silk with a Nehru jacket for festivals and daytime wedding functions.",
+    "role": "full",
+    "layer_ok": true,
+    "typical_price_inr": [
+      1200,
+      5000
+    ],
+    "gender": "men"
+  },
+  {
+    "slug": "bandhgala",
+    "label": "Bandhgala",
+    "subcategories": [
+      "classic_bandhgala",
+      "jodhpuri_suit",
+      "velvet_bandhgala",
+      "printed_bandhgala"
+    ],
+    "typical_fabrics": [
+      "raw_silk",
+      "wool",
+      "velvet",
+      "cotton",
+      "silk"
+    ],
+    "occasion_suitability": [
+      "formal",
+      "wedding_guest",
+      "reception",
+      "sangeet",
+      "office",
+      "night_out"
+    ],
+    "regional_associations": [
+      "rajasthani",
+      "pan_india"
+    ],
+    "description": "The Jodhpuri suit: a closed-neck, structured jacket with matching trousers. Sharpest option for receptions, cocktail sangeets and formal evenings; works with a pocket square rather than jewellery.",
+    "role": "full",
+    "layer_ok": false,
+    "typical_price_inr": [
+      6000,
+      30000
+    ],
+    "gender": "men"
+  },
+  {
+    "slug": "nehru_jacket",
+    "label": "Nehru Jacket",
+    "subcategories": [
+      "plain_nehru_jacket",
+      "brocade_nehru_jacket",
+      "printed_nehru_jacket",
+      "velvet_nehru_jacket"
+    ],
+    "typical_fabrics": [
+      "raw_silk",
+      "cotton",
+      "linen",
+      "banarasi",
+      "velvet",
+      "khadi"
+    ],
+    "occasion_suitability": [
+      "festival",
+      "wedding_guest",
+      "office",
+      "formal",
+      "pooja",
+      "mehendi",
+      "sangeet",
+      "casual"
+    ],
+    "regional_associations": [
+      "pan_india"
+    ],
+    "description": "Sleeveless, mandarin-collar waistcoat worn over a kurta or kurta-pyjama. The single most useful men's ethnic layer: turns a plain kurta into festive or office-festive wear.",
+    "role": "layer",
+    "layer_ok": false,
+    "typical_price_inr": [
+      1500,
+      8000
+    ],
+    "gender": "men"
+  },
+  {
+    "slug": "dhoti",
+    "label": "Dhoti",
+    "subcategories": [
+      "cotton_dhoti",
+      "silk_dhoti",
+      "veshti",
+      "mundu",
+      "pre_stitched_dhoti"
+    ],
+    "typical_fabrics": [
+      "cotton",
+      "silk",
+      "kanjeevaram",
+      "khadi"
+    ],
+    "occasion_suitability": [
+      "pooja",
+      "temple",
+      "festival",
+      "wedding_guest",
+      "baraat"
+    ],
+    "regional_associations": [
+      "south_indian",
+      "bengali",
+      "maharashtrian",
+      "pan_india"
+    ],
+    "description": "Unstitched cloth wrapped around the waist and legs; veshti in Tamil Nadu, mundu in Kerala, dhuti in Bengal. Silk dhotis with a kurta or angavastram are the South Indian wedding and temple standard.",
+    "role": "bottom",
+    "layer_ok": false,
+    "typical_price_inr": [
+      500,
+      3000
+    ],
+    "gender": "men"
+  },
+  {
+    "slug": "pyjama",
+    "label": "Pyjama",
+    "subcategories": [
+      "straight_pyjama",
+      "churidar_pyjama",
+      "aligarh_pyjama",
+      "salwar_pyjama"
+    ],
+    "typical_fabrics": [
+      "cotton",
+      "linen",
+      "silk",
+      "khadi"
+    ],
+    "occasion_suitability": [
+      "casual",
+      "office",
+      "pooja",
+      "temple",
+      "festival",
+      "mehendi",
+      "haldi"
+    ],
+    "regional_associations": [
+      "pan_india",
+      "lucknowi"
+    ],
+    "description": "Loose or straight-cut drawstring trousers worn under a kurta. Aligarh pyjamas are wide and formal; straight cotton pyjamas are daily wear.",
+    "role": "bottom",
+    "layer_ok": false,
+    "typical_price_inr": [
+      400,
+      1500
+    ],
+    "gender": "men"
+  },
+  {
+    "slug": "pathani_suit",
+    "label": "Pathani Suit",
+    "subcategories": [
+      "classic_pathani",
+      "printed_pathani",
+      "linen_pathani"
+    ],
+    "typical_fabrics": [
+      "cotton",
+      "linen",
+      "khadi",
+      "rayon"
+    ],
+    "occasion_suitability": [
+      "casual",
+      "night_out",
+      "festival",
+      "campus"
+    ],
+    "regional_associations": [
+      "punjabi",
+      "pan_india"
+    ],
+    "description": "Loose kurta with a collar and cuffs over a salwar — the relaxed, slightly rugged men's ethnic set. Casual evenings, Eid, campus.",
+    "role": "full",
+    "layer_ok": false,
+    "typical_price_inr": [
+      1200,
+      4000
+    ],
+    "gender": "men"
   }
 ]

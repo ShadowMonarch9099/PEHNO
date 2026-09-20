@@ -15,10 +15,16 @@ class Gender(str, enum.Enum):
 
 
 class BodyType(str, enum.Enum):
-    petite = "petite"
+    # shared
     regular = "regular"
     tall = "tall"
     plus = "plus"
+    # women
+    petite = "petite"
+    # men
+    slim = "slim"
+    athletic = "athletic"
+    broad = "broad"
 
 
 class SkinTone(str, enum.Enum):

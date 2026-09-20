@@ -34,6 +34,13 @@ _TYPE_HINTS: dict[str, str] = {
     "anarkali": "anarkali, a long flared frock-style Indian dress",
     "indo_western": "indo-western fusion outfit, an Indian ethnic garment with western cut",
     "churidar": "churidar, tight Indian trousers gathered at the ankle",
+    "sherwani": "sherwani, a long embroidered coat worn by Indian grooms and wedding guests",
+    "kurta_pyjama": "men's kurta pyjama set, a long tunic with matching loose trousers",
+    "bandhgala": "bandhgala jodhpuri suit, a closed-collar men's jacket with trousers",
+    "nehru_jacket": "nehru jacket, a sleeveless mandarin-collar waistcoat worn over a kurta",
+    "dhoti": "dhoti or veshti, a white unstitched cloth wrapped around the legs, men's Indian wear",
+    "pyjama": "men's straight cotton pyjama trousers with a drawstring, worn under a kurta",
+    "pathani_suit": "pathani suit, a men's loose collared kurta with cuffs and salwar",
 }
 _FABRIC_TEMPLATES = (
     "a close-up photo of {label} fabric clothing",

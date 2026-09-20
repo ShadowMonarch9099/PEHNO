@@ -100,7 +100,7 @@ GET  /wardrobe/roi         GET  /wardrobe/underutilized
 GET  /outfits/daily        POST /outfits/generate    GET  /outfits/history     GET /outfits/saved
 POST /outfits/{id}/feedback  POST|DELETE /outfits/{id}/save  POST /outfits/{id}/wear
 GET  /festivals/upcoming   GET  /festivals/{slug}    GET  /festivals/navratri/today
-GET  /meta/wardrobe-options                          GET  /meta/cities
+GET  /meta/wardrobe-options   GET /meta/cities   GET /meta/body-types?gender=
 POST /notifications/{id}/opened
 GET  /billing/plans        GET  /billing/subscription  POST /billing/subscribe  POST /billing/cancel
 POST /billing/webhook/razorpay

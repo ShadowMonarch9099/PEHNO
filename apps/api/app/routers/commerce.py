@@ -77,7 +77,12 @@ async def affiliate_links(
                 status.HTTP_422_UNPROCESSABLE_ENTITY, f"Unknown platform '{platform}'"
             ) from e
     cards = affiliate_service.get_product_source().cards(
-        gap_type=gap_type, color=color, fabric=fabric, budget_inr=budget, platforms=platforms
+        gap_type=gap_type,
+        color=color,
+        fabric=fabric,
+        budget_inr=budget,
+        platforms=platforms,
+        gender=user.gender.value,
     )
     untracked = not (
         settings.AFFILIATE_NETWORK_TEMPLATE

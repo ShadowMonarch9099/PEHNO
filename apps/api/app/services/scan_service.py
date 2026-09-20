@@ -146,7 +146,12 @@ def _verdict(compat: int, new_outfits: int, duplicate: Garment | None) -> str:
 async def scan(db: AsyncSession, user: User, data: bytes) -> ScanResult:
     # Same validate → orient → resize pipeline as uploads (raises InvalidImageError on junk).
     processed = await run_in_threadpool(process_garment_image, data)
-    result = await run_in_threadpool(classify_image, processed.full, user.regional_style)
+    result = await run_in_threadpool(
+        classify_image,
+        processed.full,
+        user.regional_style,
+        knowledge.garment_type_slugs_for(user.gender.value),
+    )
     item = _hypothetical(result)
     rows = (
         await db.execute(

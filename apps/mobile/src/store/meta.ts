@@ -55,3 +55,9 @@ export const useMetaStore = create<MetaState>((set, get) => ({
 
 export const labelFor = (opts: { slug: string; label: string }[], slug: string | null | undefined) =>
   opts.find((o) => o.slug === slug)?.label ?? (slug ? slug.replace(/_/g, ' ') : '—');
+
+/** Garment-type chips for a user: their gender's pieces + unisex; 'other' sees everything. */
+export const garmentTypesFor = (opts: { slug: string; label: string; gender?: string }[], gender: string | undefined) => {
+  const allowed = gender === 'female' ? ['women', 'unisex'] : gender === 'male' ? ['men', 'unisex'] : null;
+  return allowed ? opts.filter((o) => !o.gender || allowed.includes(o.gender)) : opts;
+};

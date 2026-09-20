@@ -190,6 +190,7 @@ def analyze(
     occasion_weights: dict[str, float] | None = None,
     budget_inr: int | None = None,
     regional_style: str | None = None,
+    gender: str | None = None,
     limit: int = 5,
 ) -> list[Gap]:
     """Top gaps, most valuable first. Deterministic given inputs."""
@@ -197,7 +198,9 @@ def analyze(
     occasions = [o["slug"] for o in knowledge.occasions()]
     weights = {o: (occasion_weights or {}).get(o, 1.0) for o in occasions}
     labels = {o["slug"]: o["label"] for o in knowledge.occasions()}
-    tax = _taxonomy()
+    # suggest from the user's taxonomy — never a saree to a man, never a sherwani to a woman
+    suggest_for = knowledge.gender_for_wardrobe(gender, [g.garment_type for g in usable])
+    tax = {g["slug"]: g for g in knowledge.garment_types_for(suggest_for)}
 
     baseline = {o: outfit_sets(usable, o) for o in occasions}
     baseline_all: set[frozenset[str]] = set().union(*baseline.values()) if baseline else set()

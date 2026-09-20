@@ -106,6 +106,7 @@ async def compute_report(db: AsyncSession, user: User, *, budget_inr: int | None
         occasion_weights=weights,
         budget_inr=budget_inr,
         regional_style=user.regional_style,
+        gender=user.gender.value,
     )
     combos = gap_analyzer.combos_per_garment(garments)
     all_outfits: set[frozenset[str]] = set()
