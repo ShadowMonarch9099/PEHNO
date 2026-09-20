@@ -3,9 +3,9 @@
  */
 import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback, useState } from 'react';
-import { FlatList, Image, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ProgressBar, ScreenHeader } from '../../components/ui';
+import { LazyImage, ProgressBar, ScreenHeader } from '../../components/ui';
 import type { OutfitScreenProps } from '../../navigation/types';
 import { brandsApi } from '../../services';
 import type { Campaign } from '../../services/types';
@@ -42,7 +42,7 @@ export default function CampaignsScreen({ navigation }: OutfitScreenProps<'Campa
         refreshControl={<RefreshControl refreshing={loading} onRefresh={load} tintColor={colors.primary} />}
         renderItem={({ item: c }) => (
           <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('CampaignDetail', { campaignId: c.id })} accessibilityRole="button">
-            {c.hero_image_url ? <Image source={{ uri: c.hero_image_url }} style={styles.hero} resizeMode="cover" /> : null}
+            {c.hero_image_url ? <LazyImage uri={c.hero_image_url} style={styles.hero} /> : null}
             <View style={styles.body}>
               <View style={styles.row}>
                 <Text style={styles.brand}>{c.brand.name}</Text>

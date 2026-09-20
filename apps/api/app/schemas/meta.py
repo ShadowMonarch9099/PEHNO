@@ -35,3 +35,7 @@ class CityOut(BaseModel):
     name: str
     state: str
     region: str
+    regional_style: str = "pan_india_fusion"  # onboarding default for this city
+    aesthetic: str | None = None
+    style_note: str | None = None
+    crafts: list[str] = []

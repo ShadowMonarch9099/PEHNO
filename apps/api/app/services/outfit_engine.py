@@ -47,6 +47,8 @@ W_STYLE_MATCH = 0.3
 W_DISLIKE = -0.8
 W_FIT_PREFER = 0.35  # silhouette guidance for the user's body type (fit_guidance.json)
 W_FIT_AVOID = -0.45
+W_CITY_FABRIC = 0.2  # fabrics/colours that read as local (cities.json style_profile)
+W_CITY_COLOR = 0.15
 W_LIKE = 0.4
 W_LAYER_BONUS = 0.3
 RECENT_DAYS = 7
@@ -60,6 +62,7 @@ class UserContext:
     skin_tone: str = "medium"
     regional_style: str = "pan_india_fusion"
     gender: str = "female"
+    city: str = ""
 
 
 @dataclass
@@ -220,7 +223,20 @@ def score_garment(
     if gid in history.liked_garment_ids:
         score += W_LIKE
 
-    # 6. Fit — silhouette guidance for the user's body type
+    # 6. City — Tier-2 style tuning: what reads as local where the user lives
+    profile = knowledge.city_style_profile(user.city) if user.city else None
+    if profile:
+        local = False
+        if g.fabric_type in profile.get("fabrics", []):
+            score += W_CITY_FABRIC
+            local = True
+        if g.color_primary in profile.get("colors", []):
+            score += W_CITY_COLOR
+            local = True
+        if local:
+            reasons.append(f"Reads local in {user.city.title()}")
+
+    # 7. Fit — silhouette guidance for the user's body type
     fit = knowledge.fit_guidance(user.gender, user.body_type)
     if fit:
         if g.garment_type in fit.get("prefer", []):

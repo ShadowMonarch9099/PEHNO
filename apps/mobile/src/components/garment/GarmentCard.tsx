@@ -1,7 +1,8 @@
 import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import type { Garment } from '../../services/types';
 import { borderRadius, colors, shadows, spacing, typography } from '../../theme';
+import { LazyImage } from '../ui';
 
 interface Props {
   garment: Garment;
@@ -23,7 +24,7 @@ export const GarmentCard: React.FC<Props> = ({ garment, onPress, width }) => {
   const sub = garment.fabric_type === 'unknown' ? null : pretty(garment.fabric_type);
   return (
     <TouchableOpacity onPress={onPress} style={[styles.card, { width }]} accessibilityRole="button" accessibilityLabel={title}>
-      <Image source={{ uri: garment.thumbnail_url ?? garment.image_url }} style={[styles.image, { height: width * 1.2 }]} />
+      <LazyImage uri={garment.thumbnail_url ?? garment.image_url} style={[styles.image, { height: width * 1.2 }]} />
       {status ? (
         <View style={[styles.badge, garment.classification_status === 'failed' && styles.badgeWarn]}>
           <Text style={styles.badgeText}>{status}</Text>

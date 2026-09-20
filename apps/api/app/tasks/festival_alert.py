@@ -18,12 +18,18 @@ from app.tasks import celery_app, run_async
 log = logging.getLogger(__name__)
 
 
-def _copy(occ: fs.Occurrence, days: int, notification_id: str) -> Push:
+def _copy(occ: fs.Occurrence, days: int, notification_id: str, lang: str = "en") -> Push:
     f = occ.festival
-    when = "tomorrow" if days == 1 else f"in {days} days"
-    body = f"{f['name']} is {when}. See looks from your own wardrobe — {f.get('color_guidance', '')[:80].rstrip('. ')}."
+    if lang == "hi":
+        when = "कल" if days == 1 else f"{days} दिन में"
+        title = f"🪔 {f['name']} {when}"
+        body = f"{f['name']} {when} है। अपनी अलमारी से लुक देखें।"
+    else:
+        when = "tomorrow" if days == 1 else f"in {days} days"
+        title = f"🪔 {f['name']} {when}"
+        body = f"{f['name']} is {when}. See looks from your own wardrobe — {f.get('color_guidance', '')[:80].rstrip('. ')}."
     return Push(
-        title=f"🪔 {f['name']} {when}",
+        title=title,
         body=body,
         data={
             "url": f"pehno://festivals/{f['slug']}",
@@ -60,7 +66,9 @@ async def send_festival_alerts() -> dict:
                     await db.rollback()
                     skipped += 1  # already sent
                     continue
-                ok = await notifier.send(user.fcm_token, _copy(occ, days, str(entry.id)))
+                ok = await notifier.send(
+                    user.fcm_token, _copy(occ, days, str(entry.id), user.language)
+                )
                 if ok:
                     sent += 1
                     await db.commit()

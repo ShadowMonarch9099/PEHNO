@@ -11,6 +11,7 @@ import { ChipGroup, ProgressBar } from '../../components/ui';
 import { usePendingPoll } from '../../hooks/usePendingPoll';
 import type { WardrobeScreenProps } from '../../navigation/types';
 import type { Season } from '../../services/types';
+import { useT } from '../../i18n';
 import { useAuthStore, useMetaStore, useWardrobeStore, WARDROBE_GOAL } from '../../store';
 import { borderRadius, colors, shadows, spacing, typography } from '../../theme';
 
@@ -25,7 +26,8 @@ export default function WardrobeHomeScreen({ navigation }: WardrobeScreenProps<'
   const { width } = useWindowDimensions();
   const user = useAuthStore((s) => s.user);
   const refreshUser = useAuthStore((s) => s.refreshUser);
-  const { garments, total, filters, loading, error, refresh, setFilters, clearFilters } = useWardrobeStore();
+  const { garments, total, filters, loading, error, offline, refresh, setFilters, clearFilters } = useWardrobeStore();
+  const t = useT();
   const { options, load } = useMetaStore();
   const [tab, setTab] = useState<FilterTab>('occasion');
   usePendingPoll();
@@ -63,10 +65,11 @@ export default function WardrobeHomeScreen({ navigation }: WardrobeScreenProps<'
       <View style={styles.header}>
         <View>
           <Text style={typography.caption}>Namaste{user?.name ? `, ${user.name.split(' ')[0]}` : ''}</Text>
-          <Text style={typography.h1}>Your wardrobe</Text>
+          <Text style={typography.h1}>{t('wardrobe.title')}</Text>
         </View>
-        <Text style={styles.count}>{total} items</Text>
+        <Text style={styles.count}>{total} {t('wardrobe.items')}</Text>
       </View>
+      {offline ? <Text style={styles.offline}>{t('common.offline')}</Text> : null}
 
       {showNudge || atLimit ? (
         <TouchableOpacity
@@ -150,6 +153,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', paddingHorizontal: spacing.md, paddingTop: spacing.sm },
   count: { ...typography.label, marginBottom: spacing.xs },
+  offline: { ...typography.caption, color: colors.warning, paddingHorizontal: spacing.md, paddingBottom: spacing.xs },
   goal: { paddingHorizontal: spacing.md, paddingTop: spacing.md },
   toolRow: { flexDirection: 'row', gap: spacing.sm, marginHorizontal: spacing.md, marginTop: spacing.md },
   scanCard: { marginHorizontal: spacing.md, marginTop: spacing.sm },

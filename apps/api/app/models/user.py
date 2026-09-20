@@ -85,6 +85,8 @@ class User(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     social_sharing_enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
 
     # Stylist marketplace (weeks 33–37)
+    language: Mapped[str] = mapped_column(String(5), nullable=False, default="en")  # en | hi
+
     is_stylist: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     stylist_verified: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     stylist_bio: Mapped[str | None] = mapped_column(Text, nullable=True)

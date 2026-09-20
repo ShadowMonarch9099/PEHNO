@@ -2,9 +2,9 @@
  * ROI — cost-per-wear leaderboard (worst value first) + underutilised pieces with pairings.
  */
 import React, { useCallback, useEffect, useState } from 'react';
-import { Image, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ChipGroup, ScreenHeader } from '../../components/ui';
+import { ChipGroup, LazyImage, ScreenHeader } from '../../components/ui';
 import type { WardrobeScreenProps } from '../../navigation/types';
 import { wardrobeApi } from '../../services';
 import type { RoiReport, RoiRow, Underutilised } from '../../services/types';
@@ -76,7 +76,7 @@ export default function RoiScreen({ navigation }: WardrobeScreenProps<'Roi'>) {
               const v = VERDICT[row.verdict];
               return (
                 <TouchableOpacity key={g.id} style={styles.row} onPress={() => open(g.id)} accessibilityRole="button">
-                  <Image source={{ uri: g.thumbnail_url ?? g.image_url }} style={styles.thumb} />
+                  <LazyImage uri={g.thumbnail_url ?? g.image_url} style={styles.thumb} />
                   <View style={styles.flex}>
                     <Text style={styles.rowTitle}>{g.garment_type === 'unknown' ? 'New item' : labelFor(options.garment_types, g.garment_type)}</Text>
                     <Text style={typography.caption}>
@@ -98,7 +98,7 @@ export default function RoiScreen({ navigation }: WardrobeScreenProps<'Roi'>) {
             ? idle.map((item) => (
                 <View key={item.garment.id} style={styles.idleCard}>
                   <TouchableOpacity style={styles.row} onPress={() => open(item.garment.id)}>
-                    <Image source={{ uri: item.garment.thumbnail_url ?? item.garment.image_url }} style={styles.thumb} />
+                    <LazyImage uri={item.garment.thumbnail_url ?? item.garment.image_url} style={styles.thumb} />
                     <View style={styles.flex}>
                       <Text style={styles.rowTitle}>{labelFor(options.garment_types, item.garment.garment_type)}</Text>
                       <Text style={typography.caption}>{item.days_idle != null ? `Not worn for ${item.days_idle} days` : 'Never worn'}</Text>
@@ -109,7 +109,7 @@ export default function RoiScreen({ navigation }: WardrobeScreenProps<'Roi'>) {
                       <Text style={styles.pairTitle}>Try it with</Text>
                       {item.pairings.map((p) => (
                         <TouchableOpacity key={p.garment.id} style={styles.pair} onPress={() => open(p.garment.id)}>
-                          <Image source={{ uri: p.garment.thumbnail_url ?? p.garment.image_url }} style={styles.pairThumb} />
+                          <LazyImage uri={p.garment.thumbnail_url ?? p.garment.image_url} style={styles.pairThumb} />
                           <Text style={typography.body2}>
                             your {p.garment.color_primary} {labelFor(options.garment_types, p.garment.garment_type).toLowerCase()} · {labelFor(options.occasions, p.occasion)}
                           </Text>

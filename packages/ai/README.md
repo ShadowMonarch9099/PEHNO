@@ -13,7 +13,8 @@ data/
   color_harmony.json    colour pairs / clashes / skin-tone flattering colours for the outfit engine
   climatology.json      typical monthly weather per region (weather fallback)
   care_profiles.json    per-fabric wash / iron / storage / monsoon advice
-  cities.json           launch cities with region + lat/lon + aesthetic
+  cities.json           launch cities: region, lat/lon, aesthetic, default regional_style, style_profile (crafts/fabrics/colours)
+  i18n_hi.json          Hindi labels for vocab that lives in code (seasons, colours, fabrics, styles); occasions/garments carry label_hi inline
   destinations.json     travel destinations: cultural/modesty notes, palette, default activities, hill-station temp offset
   exports/              (git-ignored) training exports from the API
 models/                 (git-ignored) fine-tuned checkpoints

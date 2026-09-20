@@ -3,10 +3,10 @@
  * destination notes, and gaps worth buying (→ affiliate links).
  */
 import React, { useEffect, useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { WeatherCard } from '../../components/outfit/WeatherCard';
-import { ScreenHeader, SecondaryButton } from '../../components/ui';
+import { LazyImage, ScreenHeader, SecondaryButton } from '../../components/ui';
 import type { OutfitScreenProps } from '../../navigation/types';
 import { ApiError, travelApi } from '../../services';
 import type { Garment, TravelPlan, TripLook } from '../../services/types';
@@ -50,7 +50,7 @@ export default function TravelPlanScreen({ route, navigation }: OutfitScreenProp
           const g = byId[gid];
           return g ? (
             <TouchableOpacity key={gid} onPress={() => openGarment(gid)} accessibilityRole="button">
-              <Image source={{ uri: g.thumbnail_url ?? g.image_url }} style={[styles.thumb, { width: tile, height: tile * 1.2 }]} />
+              <LazyImage uri={g.thumbnail_url ?? g.image_url} style={[styles.thumb, { width: tile, height: tile * 1.2 }]} />
               <Text style={styles.thumbLabel} numberOfLines={1}>
                 {g.color_primary} {pretty(g.garment_type)}
               </Text>
@@ -102,7 +102,7 @@ export default function TravelPlanScreen({ route, navigation }: OutfitScreenProp
                 <View style={styles.grid}>
                   {plan.items.map((it) => (
                     <TouchableOpacity key={it.garment.id} style={{ width: tile }} onPress={() => openGarment(it.garment.id)} accessibilityRole="button">
-                      <Image source={{ uri: it.garment.thumbnail_url ?? it.garment.image_url }} style={[styles.thumb, { width: tile, height: tile * 1.2 }]} />
+                      <LazyImage uri={it.garment.thumbnail_url ?? it.garment.image_url} style={[styles.thumb, { width: tile, height: tile * 1.2 }]} />
                       <View style={styles.wears}>
                         <Text style={styles.wearsText}>×{it.wears}</Text>
                       </View>

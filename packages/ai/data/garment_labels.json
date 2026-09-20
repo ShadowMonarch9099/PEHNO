@@ -39,7 +39,8 @@
       1200,
       8000
     ],
-    "gender": "women"
+    "gender": "women",
+    "label_hi": "साड़ी"
   },
   {
     "slug": "salwar_suit",
@@ -79,7 +80,8 @@
       1200,
       5000
     ],
-    "gender": "women"
+    "gender": "women",
+    "label_hi": "सलवार सूट"
   },
   {
     "slug": "kurta",
@@ -115,7 +117,8 @@
       700,
       2500
     ],
-    "gender": "unisex"
+    "gender": "unisex",
+    "label_hi": "कुर्ता"
   },
   {
     "slug": "dupatta",
@@ -154,7 +157,8 @@
       400,
       2000
     ],
-    "gender": "women"
+    "gender": "women",
+    "label_hi": "दुपट्टा"
   },
   {
     "slug": "lehenga",
@@ -192,7 +196,8 @@
       3000,
       15000
     ],
-    "gender": "women"
+    "gender": "women",
+    "label_hi": "लहंगा चोली"
   },
   {
     "slug": "palazzo",
@@ -227,7 +232,8 @@
       500,
       1500
     ],
-    "gender": "women"
+    "gender": "women",
+    "label_hi": "पलाज़ो"
   },
   {
     "slug": "anarkali",
@@ -264,7 +270,8 @@
       1500,
       6000
     ],
-    "gender": "women"
+    "gender": "women",
+    "label_hi": "अनारकली"
   },
   {
     "slug": "kurti",
@@ -299,7 +306,8 @@
       500,
       1800
     ],
-    "gender": "women"
+    "gender": "women",
+    "label_hi": "कुर्ती"
   },
   {
     "slug": "indo_western",
@@ -336,7 +344,8 @@
       1500,
       6000
     ],
-    "gender": "unisex"
+    "gender": "unisex",
+    "label_hi": "इंडो-वेस्टर्न"
   },
   {
     "slug": "churidar",
@@ -371,7 +380,8 @@
       400,
       1200
     ],
-    "gender": "unisex"
+    "gender": "unisex",
+    "label_hi": "चूड़ीदार"
   },
   {
     "slug": "sherwani",
@@ -409,7 +419,8 @@
       8000,
       40000
     ],
-    "gender": "men"
+    "gender": "men",
+    "label_hi": "शेरवानी"
   },
   {
     "slug": "kurta_pyjama",
@@ -449,7 +460,8 @@
       1200,
       5000
     ],
-    "gender": "men"
+    "gender": "men",
+    "label_hi": "कुर्ता पायजामा"
   },
   {
     "slug": "bandhgala",
@@ -486,7 +498,8 @@
       6000,
       30000
     ],
-    "gender": "men"
+    "gender": "men",
+    "label_hi": "बंदगला"
   },
   {
     "slug": "nehru_jacket",
@@ -525,7 +538,8 @@
       1500,
       8000
     ],
-    "gender": "men"
+    "gender": "men",
+    "label_hi": "नेहरू जैकेट"
   },
   {
     "slug": "dhoti",
@@ -563,7 +577,8 @@
       500,
       3000
     ],
-    "gender": "men"
+    "gender": "men",
+    "label_hi": "धोती"
   },
   {
     "slug": "pyjama",
@@ -600,7 +615,8 @@
       400,
       1500
     ],
-    "gender": "men"
+    "gender": "men",
+    "label_hi": "पायजामा"
   },
   {
     "slug": "pathani_suit",
@@ -633,6 +649,7 @@
       1200,
       4000
     ],
-    "gender": "men"
+    "gender": "men",
+    "label_hi": "पठानी सूट"
   }
 ]

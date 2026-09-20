@@ -6,6 +6,7 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-nati
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScreenHeader } from '../../components/ui';
 import type { OutfitScreenProps } from '../../navigation/types';
+import { useT } from '../../i18n';
 import { useMetaStore } from '../../store';
 import { borderRadius, colors, shadows, spacing, typography } from '../../theme';
 
@@ -29,6 +30,7 @@ const EMOJI: Record<string, string> = {
 const WEDDING = new Set(['mehendi', 'sangeet', 'haldi', 'baraat', 'reception']);
 
 export default function OccasionPickerScreen({ navigation }: OutfitScreenProps<'OccasionPicker'>) {
+  const t = useT();
   const { options, load } = useMetaStore();
   useEffect(() => {
     void load();
@@ -36,7 +38,7 @@ export default function OccasionPickerScreen({ navigation }: OutfitScreenProps<'
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScreenHeader title="What's the occasion?" subtitle="We'll pick from your wardrobe for today's weather." onBack={navigation.goBack} />
+      <ScreenHeader title={t('occasion.title')} subtitle={t('occasion.subtitle')} onBack={navigation.goBack} />
       <ScrollView contentContainerStyle={styles.body}>
         <View style={styles.grid}>
           {options.occasions.filter((o) => !WEDDING.has(o.slug)).map((o) => (

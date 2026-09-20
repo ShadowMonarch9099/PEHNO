@@ -21,6 +21,7 @@ class UserOut(APIModel):
     subscription_tier: SubscriptionTier
     subscription_expires_at: UTCDateTime | None
     onboarding_complete: bool
+    language: str = "en"
     created_at: UTCDateTime
     entitlements: dict | None = None
 
@@ -38,6 +39,7 @@ class UserUpdate(BaseModel):
         default=None, pattern="^(" + "|".join(REGIONAL_STYLES) + ")$"
     )
     fcm_token: str | None = Field(default=None, max_length=512)
+    language: str | None = Field(default=None, pattern="^(en|hi)$")
     onboarding_complete: bool | None = None
 
 

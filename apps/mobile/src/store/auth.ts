@@ -8,6 +8,7 @@
  */
 import { create } from 'zustand';
 import { authApi, setSessionExpiredHandler, tokenStorage, usersApi } from '../services';
+import { cache } from '../services/cache';
 import type { TokenResponse, User } from '../services/types';
 
 type Status = 'booting' | 'signedOut' | 'signedIn';
@@ -52,7 +53,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   signOut: async () => {
     const tokens = await tokenStorage.get();
     if (tokens) authApi.logout(tokens.refreshToken).catch(() => undefined); // best effort
-    await tokenStorage.clear();
+    await Promise.all([tokenStorage.clear(), cache.clear()]);
     set({ status: 'signedOut', user: null });
   },
 

@@ -3,10 +3,12 @@
  */
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import type { Outfit } from '../../services/types';
+import { useT } from '../../i18n';
 import { labelFor, useMetaStore } from '../../store';
 import { borderRadius, colors, shadows, spacing, typography } from '../../theme';
+import { LazyImage } from '../ui';
 
 interface Props {
   outfit: Outfit;
@@ -20,6 +22,7 @@ interface Props {
 }
 
 export const OutfitCard: React.FC<Props> = ({ outfit: o, onFeedback, onToggleSave, onWear, onShare, onGarmentPress, compact, busy }) => {
+  const t = useT();
   const options = useMetaStore((s) => s.options);
   const worn = Boolean(o.worn_at);
   return (
@@ -32,7 +35,7 @@ export const OutfitCard: React.FC<Props> = ({ outfit: o, onFeedback, onToggleSav
             onPress={() => onGarmentPress?.(g.id)}
             disabled={!onGarmentPress}
           >
-            <Image source={{ uri: g.thumbnail_url ?? g.image_url }} style={styles.tileImage} />
+            <LazyImage uri={g.thumbnail_url ?? g.image_url} style={styles.tileImage} />
             <Text style={styles.tileLabel} numberOfLines={1}>
               {labelFor(options.garment_types, g.garment_type)}
             </Text>
@@ -54,16 +57,16 @@ export const OutfitCard: React.FC<Props> = ({ outfit: o, onFeedback, onToggleSav
         <View style={styles.actions}>
           {onFeedback ? (
             <>
-              <IconButton icon="thumbs-up" active={o.feedback === 1} onPress={() => onFeedback(1)} disabled={busy} label="Like" />
-              <IconButton icon="thumbs-down" active={o.feedback === -1} onPress={() => onFeedback(-1)} disabled={busy} label="Dislike" />
+              <IconButton icon="thumbs-up" active={o.feedback === 1} onPress={() => onFeedback(1)} disabled={busy} label={t('outfit.like')} />
+              <IconButton icon="thumbs-down" active={o.feedback === -1} onPress={() => onFeedback(-1)} disabled={busy} label={t('outfit.dislike')} />
             </>
           ) : null}
-          {onToggleSave ? <IconButton icon="bookmark" active={o.is_saved} onPress={onToggleSave} disabled={busy} label="Save" /> : null}
-          {onShare ? <IconButton icon="share-2" active={o.is_public} onPress={onShare} disabled={busy} label="Share" /> : null}
+          {onToggleSave ? <IconButton icon="bookmark" active={o.is_saved} onPress={onToggleSave} disabled={busy} label={o.is_saved ? t('outfit.saved') : t('outfit.save')} /> : null}
+          {onShare ? <IconButton icon="share-2" active={o.is_public} onPress={onShare} disabled={busy} label={t('outfit.share')} /> : null}
           {onWear ? (
             <TouchableOpacity style={[styles.wear, worn && styles.wearDone]} onPress={onWear} disabled={busy || worn}>
               <Feather name={worn ? 'check' : 'sun'} size={16} color={worn ? colors.success : colors.textInverse} />
-              <Text style={[styles.wearText, worn && styles.wearTextDone]}>{worn ? 'Worn today' : 'Wearing this'}</Text>
+              <Text style={[styles.wearText, worn && styles.wearTextDone]}>{worn ? t('outfit.worn') : t('outfit.wear')}</Text>
             </TouchableOpacity>
           ) : null}
         </View>

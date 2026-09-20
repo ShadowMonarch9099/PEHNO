@@ -139,7 +139,7 @@ Status: ✅ done · 🔧 in progress · ⬜ not started · ⚠️ deviates from 
 | Weeks 38–41 — Travel packing planner | ✅ | Capsule solver over the user's wardrobe; 20 destinations with local notes; hill-station climate offsets; gaps → affiliate links |
 | Weeks 42–45 — Male wardrobe support | ✅ | 7 men's garment types, gender-scoped classification/gaps/links, men's occasion picks, fit layer for male + female builds |
 | Weeks 46–48 — Brand partnership layer | ✅ | Admin CMS, targeted challenges + collections, click-through tracking, per-campaign performance |
-| Weeks 49–52 — Tier 2 expansion | ⬜ | Tier-2 cities already in cities.json; Hindi UI pending |
+| Weeks 49–52 — Tier 2 expansion | ✅ | City style tuning (Jaipur/Lucknow/Ahmedabad/Chandigarh + 6 metros), offline cache + lazy images + gzip, Hindi UI/vocab/push |
 
 ### Weeks 29–32 deliverables
 - [x] Share cards: 1080×1350 Pillow render (collage, per-item type/fabric tags, occasion/festival header, PEHNO watermark, city) stored via the storage backend
@@ -185,3 +185,9 @@ Status: ✅ done · 🔧 in progress · ⬜ not started · ⚠️ deviates from 
 - [x] Performance: views, unique viewers, joins, participants, outfits submitted, completions, saves (submitted looks later saved), clicks, CTR, affiliate conversions/commission, by-day series
 - [x] Mobile: CampaignsScreen (targeted list with progress), CampaignDetailScreen (rules, join, "count a look" picker over recent outfits, products + CTA with tracked click-through); brand field on GarmentEdit; DailyLook link
 - [x] 4 new tests (164 total)
+
+### Weeks 49–52 deliverables
+- [x] Regional style tuning: every city in `cities.json` now carries a default `regional_style` (onboarding pre-selects it from the user's city and explains why); `style_profile` (crafts, local fabrics, local colours, note) for Jaipur (block print / leheriya), Lucknow (chikankari), Ahmedabad (bandhani / ajrakh), Chandigarh (phulkari) plus Mumbai, Delhi, Bengaluru, Chennai, Kolkata, Hyderabad; new engine layer (`W_CITY_FABRIC`, `W_CITY_COLOR`, "Reads local in Lucknow") also feeds travel plans; `GET /meta/cities` exposes style + crafts
+- [x] Slow networks: `GZipMiddleware` on JSON ≥1 KB; `Cache-Control: public, max-age=86400` on `/meta/*`; mobile `LazyImage` (expo-image, memory+disk cache, placeholder, fade) replaces every remote `<Image>`; AsyncStorage stale-while-revalidate cache for today's look, the wardrobe list and vocab — screens render instantly and keep working offline with an "offline" banner; cache cleared on sign-out
+- [x] Hindi: `label_hi` on occasions + garment types, `i18n_hi.json` for seasons/colours/fabrics/styles/conditions, `GET /meta/wardrobe-options?lang=hi`; `users.language` (`en`|`hi`, migration `0cf608310f63`) drives push copy in all four notification tasks; mobile `src/i18n` (persisted preference, `t()`/`useT()`, en/hi tables with fallback), language switch in Settings synced to the profile, translated tabs, Today's look, outfit actions, wardrobe home, occasion picker, festivals, settings, style onboarding; knowledge vocab re-fetched in the chosen language
+- [x] 6 new tests (170 total)

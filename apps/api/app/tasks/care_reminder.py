@@ -50,9 +50,15 @@ async def send_care_reminders() -> dict:
                     continue
                 fabric = g.fabric_type.replace("_", " ")
                 gtype = g.garment_type.replace("_", " ")
+                if user.language == "hi":
+                    title = f"आपके {fabric} {gtype} की देखभाल का समय"
+                    body = f"आख़िरी सफ़ाई के बाद {g.wears_since_care} बार पहना — {care_service.care_instruction(g)}"
+                else:
+                    title = f"Time to care for your {fabric} {gtype}"
+                    body = f"Worn {g.wears_since_care}× since its last clean — {care_service.care_instruction(g)}"
                 push = Push(
-                    title=f"Time to care for your {fabric} {gtype}",
-                    body=f"Worn {g.wears_since_care}× since its last clean — {care_service.care_instruction(g)}",
+                    title=title,
+                    body=body,
                     data={
                         "url": f"pehno://wardrobe/{g.id}",
                         "garment_id": str(g.id),

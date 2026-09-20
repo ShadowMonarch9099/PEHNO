@@ -4,9 +4,9 @@
  */
 import { Feather } from '@expo/vector-icons';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Alert, FlatList, Image, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ScreenHeader } from '../../components/ui';
+import { LazyImage, ScreenHeader } from '../../components/ui';
 import type { OutfitScreenProps } from '../../navigation/types';
 import { socialApi } from '../../services';
 import type { FeedItem } from '../../services/types';
@@ -62,7 +62,7 @@ export default function OOTDFeedScreen({ navigation }: OutfitScreenProps<'OOTDFe
         refreshControl={<RefreshControl refreshing={loading} onRefresh={load} tintColor={colors.primary} />}
         renderItem={({ item }) => (
           <View style={styles.card}>
-            {item.card_url ? <Image source={{ uri: item.card_url }} style={styles.cardImage} resizeMode="cover" /> : null}
+            {item.card_url ? <LazyImage uri={item.card_url} style={styles.cardImage} /> : null}
             <View style={styles.meta}>
               <View style={styles.flex}>
                 <Text style={styles.owner}>{item.owner_first_name} · {item.city}</Text>

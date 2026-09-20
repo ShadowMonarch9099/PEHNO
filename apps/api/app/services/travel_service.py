@@ -64,7 +64,11 @@ async def create_plan(
         dest=dest,
         slots=slots,
         user=engine.UserContext(
-            user.body_type.value, user.skin_tone.value, user.regional_style, user.gender.value
+            user.body_type.value,
+            user.skin_tone.value,
+            user.regional_style,
+            user.gender.value,
+            user.city,
         ),
         history=await outfit_service._history(db, user),
         max_items=max_items,

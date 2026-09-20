@@ -14,7 +14,8 @@
       "kanjeevaram",
       "net"
     ],
-    "notes": "Everyday relaxed wear — prioritize comfort and breathability. Kurtis, palazzo pants, casual salwar suits, or printed cotton sarees work perfectly. Keep it light and unfussy."
+    "notes": "Everyday relaxed wear — prioritize comfort and breathability. Kurtis, palazzo pants, casual salwar suits, or printed cotton sarees work perfectly. Keep it light and unfussy.",
+    "label_hi": "रोज़मर्रा"
   },
   {
     "slug": "office",
@@ -32,7 +33,8 @@
       "banarasi",
       "kanjeevaram"
     ],
-    "notes": "Professional yet comfortable. Formal salwar suits, structured kurta-palazzo sets, cotton or crepe sarees in muted or solid tones. Avoid overly embellished or diaphanous fabrics. Prefer structured silhouettes."
+    "notes": "Professional yet comfortable. Formal salwar suits, structured kurta-palazzo sets, cotton or crepe sarees in muted or solid tones. Avoid overly embellished or diaphanous fabrics. Prefer structured silhouettes.",
+    "label_hi": "ऑफ़िस / काम"
   },
   {
     "slug": "wedding_guest",
@@ -49,7 +51,8 @@
       "polyester",
       "cotton"
     ],
-    "notes": "Dress to impress without overshadowing the bride. Rich fabrics in jewel tones — lehenga cholis, anarkalis, silk sarees, or heavily embroidered salwar suits. Embellishment is appropriate. Gold or silver jewelry completes the look."
+    "notes": "Dress to impress without overshadowing the bride. Rich fabrics in jewel tones — lehenga cholis, anarkalis, silk sarees, or heavily embroidered salwar suits. Embellishment is appropriate. Gold or silver jewelry completes the look.",
+    "label_hi": "शादी में मेहमान"
   },
   {
     "slug": "pooja",
@@ -65,7 +68,8 @@
       "net",
       "satin"
     ],
-    "notes": "Modest, clean, and traditional. Traditional fabrics like cotton and silk are considered pure and appropriate for puja. Avoid synthetic fabrics. Regional pujas may have specific color requirements (e.g., yellow for Saraswati Puja)."
+    "notes": "Modest, clean, and traditional. Traditional fabrics like cotton and silk are considered pure and appropriate for puja. Avoid synthetic fabrics. Regional pujas may have specific color requirements (e.g., yellow for Saraswati Puja).",
+    "label_hi": "पूजा"
   },
   {
     "slug": "festival",
@@ -82,7 +86,8 @@
       "polyester",
       "rayon"
     ],
-    "notes": "Festival dressing is about celebration. Choose fabrics that photograph beautifully and carry traditional weight. Heavy embellishments, zari work, and mirror embroidery are all welcome. Check festival-specific color codes."
+    "notes": "Festival dressing is about celebration. Choose fabrics that photograph beautifully and carry traditional weight. Heavy embellishments, zari work, and mirror embroidery are all welcome. Check festival-specific color codes.",
+    "label_hi": "त्योहार"
   },
   {
     "slug": "formal",
@@ -99,7 +104,8 @@
       "khadi",
       "cotton"
     ],
-    "notes": "Formal events require polished, structured looks. Silk, crepe, or georgette sarees in neutral or rich tones. Tailored salwar suits or structured anarkalis. Minimal to moderate embellishment."
+    "notes": "Formal events require polished, structured looks. Silk, crepe, or georgette sarees in neutral or rich tones. Tailored salwar suits or structured anarkalis. Minimal to moderate embellishment.",
+    "label_hi": "फ़ॉर्मल / कॉर्पोरेट"
   },
   {
     "slug": "night_out",
@@ -116,7 +122,8 @@
       "khadi",
       "polyester"
     ],
-    "notes": "Evening and party looks call for fabrics with sheen and drape. Deep jewel tones, metallic accents, and dramatic silhouettes are encouraged. Indo-western fusion pieces work beautifully for clubs and urban social events."
+    "notes": "Evening and party looks call for fabrics with sheen and drape. Deep jewel tones, metallic accents, and dramatic silhouettes are encouraged. Indo-western fusion pieces work beautifully for clubs and urban social events.",
+    "label_hi": "शाम की आउटिंग"
   },
   {
     "slug": "campus",
@@ -133,7 +140,8 @@
       "kanjeevaram",
       "net"
     ],
-    "notes": "Practical and vibrant — campus wear should be comfortable for all-day activity. Printed kurtis, palazzo combos, jeans with ethnic tops, and casual salwar suits are campus staples. Machine-washable fabrics are a priority."
+    "notes": "Practical and vibrant — campus wear should be comfortable for all-day activity. Printed kurtis, palazzo combos, jeans with ethnic tops, and casual salwar suits are campus staples. Machine-washable fabrics are a priority.",
+    "label_hi": "कॉलेज"
   },
   {
     "slug": "temple",
@@ -150,7 +158,8 @@
       "net",
       "satin"
     ],
-    "notes": "Temple visits require modest, respectful attire. Natural fabrics like cotton and silk are traditionally considered auspicious. Conservative silhouettes — full-coverage salwar suits, traditional sarees, or long ethnic dresses. Many temples require a dupatta or head covering."
+    "notes": "Temple visits require modest, respectful attire. Natural fabrics like cotton and silk are traditionally considered auspicious. Conservative silhouettes — full-coverage salwar suits, traditional sarees, or long ethnic dresses. Many temples require a dupatta or head covering.",
+    "label_hi": "मंदिर"
   },
   {
     "slug": "mehendi",
@@ -190,7 +199,8 @@
       "nehru_jacket",
       "pyjama"
     ],
-    "notes": "Daytime, outdoors, sitting for hours with wet henna: light fabrics, sleeves you can push up, yellow-green-orange palette. Avoid white (henna stains) and black."
+    "notes": "Daytime, outdoors, sitting for hours with wet henna: light fabrics, sleeves you can push up, yellow-green-orange palette. Avoid white (henna stains) and black.",
+    "label_hi": "मेहंदी"
   },
   {
     "slug": "sangeet",
@@ -226,7 +236,8 @@
       "nehru_jacket",
       "sherwani"
     ],
-    "notes": "Evening, dancing: festive and glamorous — sequins, mirror work, bold colours. Lehenga or sharara you can move in; skip stiff silks."
+    "notes": "Evening, dancing: festive and glamorous — sequins, mirror work, bold colours. Lehenga or sharara you can move in; skip stiff silks.",
+    "label_hi": "संगीत"
   },
   {
     "slug": "haldi",
@@ -266,7 +277,8 @@
       "pyjama",
       "dhoti"
     ],
-    "notes": "Turmeric everywhere: old or inexpensive cottons in yellow/white; nothing precious, nothing that stains badly."
+    "notes": "Turmeric everywhere: old or inexpensive cottons in yellow/white; nothing precious, nothing that stains badly.",
+    "label_hi": "हल्दी"
   },
   {
     "slug": "baraat",
@@ -306,7 +318,8 @@
       "kurta_pyjama",
       "nehru_jacket"
     ],
-    "notes": "Groom's-side procession: ethnic festive with sparkle; comfortable enough to dance in the street. Sherwani or bandhgala for men."
+    "notes": "Groom's-side procession: ethnic festive with sparkle; comfortable enough to dance in the street. Sherwani or bandhgala for men.",
+    "label_hi": "बारात"
   },
   {
     "slug": "reception",
@@ -344,6 +357,7 @@
       "bandhgala",
       "nehru_jacket"
     ],
-    "notes": "The most formal sub-event: designer or occasion wear, rich silks, statement jewellery. Saree or lehenga preferred; darker jewel tones photograph well at night."
+    "notes": "The most formal sub-event: designer or occasion wear, rich silks, statement jewellery. Saree or lehenga preferred; darker jewel tones photograph well at night.",
+    "label_hi": "रिसेप्शन"
   }
 ]

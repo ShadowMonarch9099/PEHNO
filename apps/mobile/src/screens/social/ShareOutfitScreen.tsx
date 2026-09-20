@@ -4,9 +4,9 @@
  */
 import * as Clipboard from 'expo-clipboard';
 import React, { useEffect, useState } from 'react';
-import { Image, ScrollView, Share, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, Share, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { PrimaryButton, ScreenHeader, SecondaryButton } from '../../components/ui';
+import { LazyImage, PrimaryButton, ScreenHeader, SecondaryButton } from '../../components/ui';
 import type { OutfitScreenProps } from '../../navigation/types';
 import { ApiError, socialApi } from '../../services';
 import type { ShareState } from '../../services/types';
@@ -67,7 +67,7 @@ export default function ShareOutfitScreen({ route, navigation }: OutfitScreenPro
       <ScrollView contentContainerStyle={styles.body}>
         {error ? <Text style={styles.error}>{error}</Text> : null}
         {state?.card_url ? (
-          <Image source={{ uri: state.card_url }} style={styles.card} resizeMode="contain" />
+          <LazyImage uri={state.card_url} style={styles.card} contentFit="contain" />
         ) : (
           <View style={[styles.card, styles.placeholder]}>
             <Text style={typography.body2}>{busy ? 'Rendering your card…' : 'No card yet'}</Text>

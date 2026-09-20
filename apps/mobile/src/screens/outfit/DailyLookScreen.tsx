@@ -10,15 +10,17 @@ import { WeatherCard } from '../../components/outfit/WeatherCard';
 import { PrimaryButton, SecondaryButton } from '../../components/ui';
 import type { OutfitScreenProps } from '../../navigation/types';
 import { ApiError } from '../../services';
+import { useT } from '../../i18n';
 import { useAuthStore, useMetaStore, useOutfitStore } from '../../store';
 import { borderRadius, colors, spacing, typography } from '../../theme';
 
-const greeting = () => {
+const greetingKey = () => {
   const h = new Date().getHours();
-  return h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+  return h < 12 ? 'daily.morning' : h < 17 ? 'daily.afternoon' : 'daily.evening';
 };
 
 export default function DailyLookScreen({ navigation }: OutfitScreenProps<'DailyLook'>) {
+  const t = useT();
   const user = useAuthStore((s) => s.user);
   const load = useMetaStore((s) => s.load);
   const { daily, byId, loadDaily, feedback, toggleSave, wear } = useOutfitStore();
@@ -36,12 +38,12 @@ export default function DailyLookScreen({ navigation }: OutfitScreenProps<'Daily
       try {
         await loadDaily(regenerate);
       } catch (e) {
-        setError(e instanceof ApiError ? e.message : 'Could not load today’s look');
+        setError(e instanceof ApiError ? e.message : t('daily.error'));
       } finally {
         setLoading(false);
       }
     },
-    [loadDaily],
+    [loadDaily, t],
   );
 
   useFocusEffect(
@@ -64,10 +66,11 @@ export default function DailyLookScreen({ navigation }: OutfitScreenProps<'Daily
     <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView contentContainerStyle={styles.body} refreshControl={<RefreshControl refreshing={loading} onRefresh={() => refresh()} tintColor={colors.primary} />}>
         <Text style={typography.caption}>
-          {greeting()}
+          {t(greetingKey())}
           {user?.name ? `, ${user.name.split(' ')[0]}` : ''}
         </Text>
-        <Text style={typography.h1}>Today's look</Text>
+        <Text style={typography.h1}>{t('daily.title')}</Text>
+        {daily.offline ? <Text style={styles.offline}>{t('common.offline')}</Text> : null}
 
         {daily.weather ? <WeatherCard weather={daily.weather} /> : null}
 
@@ -86,42 +89,42 @@ export default function DailyLookScreen({ navigation }: OutfitScreenProps<'Daily
         ) : !loading ? (
           <View style={styles.empty}>
             <Text style={styles.emptyEmoji}>🪄</Text>
-            <Text style={typography.h3}>No look yet</Text>
-            <Text style={styles.emptyText}>{daily.hint ?? 'Add and label a few garments to get your first outfit.'}</Text>
-            <SecondaryButton title="Go to wardrobe" onPress={() => navigation.navigate('Wardrobe')} />
+            <Text style={typography.h3}>{t('daily.noLook')}</Text>
+            <Text style={styles.emptyText}>{daily.hint ?? t('daily.noLookHint')}</Text>
+            <SecondaryButton title={t('daily.goWardrobe')} onPress={() => navigation.navigate('Wardrobe')} />
           </View>
         ) : null}
 
         {daily.hint && outfit ? <Text style={styles.hint}>{daily.hint}</Text> : null}
 
         <View style={styles.buttons}>
-          {outfit ? <SecondaryButton title="Show me another" onPress={() => refresh(true)} disabled={loading} /> : null}
-          <PrimaryButton title="Dress for an occasion" onPress={() => navigation.navigate('OccasionPicker')} />
+          {outfit ? <SecondaryButton title={t('daily.another')} onPress={() => refresh(true)} disabled={loading} /> : null}
+          <PrimaryButton title={t('daily.occasion')} onPress={() => navigation.navigate('OccasionPicker')} />
         </View>
 
         <View style={styles.links}>
           <TouchableOpacity style={styles.link} onPress={() => navigation.navigate('OutfitHistory', { saved: true })}>
-            <Text style={styles.linkText}>🔖 Saved looks</Text>
+            <Text style={styles.linkText}>🔖 {t('daily.saved')}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.link} onPress={() => navigation.navigate('OutfitHistory', {})}>
-            <Text style={styles.linkText}>🕘 History</Text>
+            <Text style={styles.linkText}>🕘 {t('daily.history')}</Text>
           </TouchableOpacity>
           {social ? (
             <TouchableOpacity style={styles.link} onPress={() => navigation.navigate('OOTDFeed')}>
-              <Text style={styles.linkText}>🏙️ City looks</Text>
+              <Text style={styles.linkText}>🏙️ {t('daily.city')}</Text>
             </TouchableOpacity>
           ) : null}
           <TouchableOpacity style={styles.link} onPress={() => navigation.navigate('TravelHome')}>
-            <Text style={styles.linkText}>✈️ Trip packing</Text>
+            <Text style={styles.linkText}>✈️ {t('daily.travel')}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.link} onPress={() => navigation.navigate('Campaigns')}>
-            <Text style={styles.linkText}>🏷️ Brand challenges</Text>
+            <Text style={styles.linkText}>🏷️ {t('daily.brands')}</Text>
           </TouchableOpacity>
         </View>
         <TouchableOpacity style={styles.stylistBanner} onPress={() => navigation.navigate('StylistList')} accessibilityRole="button">
           <View style={styles.flex}>
-            <Text style={typography.h4}>Book a stylist</Text>
-            <Text style={typography.caption}>Verified stylists work from your real wardrobe. 60-min sessions{user?.subscription_tier === 'pro' ? ' · Pro discount applies' : ''}.</Text>
+            <Text style={typography.h4}>{t('daily.stylistTitle')}</Text>
+            <Text style={typography.caption}>{t('daily.stylistBody')}{user?.subscription_tier === 'pro' ? t('daily.proDiscount') : ''}.</Text>
           </View>
           <Text style={styles.arrow}>→</Text>
         </TouchableOpacity>
@@ -134,6 +137,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
   body: { padding: spacing.md, gap: spacing.md, paddingBottom: spacing.xxl },
   error: { ...typography.caption, color: colors.error },
+  offline: { ...typography.caption, color: colors.warning },
   hint: { ...typography.caption, textAlign: 'center' },
   empty: { alignItems: 'center', gap: spacing.sm, padding: spacing.xl, backgroundColor: colors.surfaceElevated, borderRadius: borderRadius.xl },
   emptyEmoji: { fontSize: 40 },

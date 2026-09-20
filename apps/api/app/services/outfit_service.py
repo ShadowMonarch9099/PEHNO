@@ -192,7 +192,11 @@ async def generate(
         occasion=occasion,
         weather=weather,
         user=engine.UserContext(
-            user.body_type.value, user.skin_tone.value, user.regional_style, user.gender.value
+            user.body_type.value,
+            user.skin_tone.value,
+            user.regional_style,
+            user.gender.value,
+            user.city,
         ),
         festival=festival,
         history=await _history(db, user),

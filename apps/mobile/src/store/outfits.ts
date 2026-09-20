@@ -4,11 +4,12 @@
  */
 import { create } from 'zustand';
 import { outfitsApi } from '../services';
+import { cache, isNetworkError } from '../services/cache';
 import type { Outfit, OutfitOptions, WeatherInfo } from '../services/types';
 
 interface OutfitState {
   byId: Record<string, Outfit>;
-  daily: { outfit: Outfit | null; weather: WeatherInfo | null; hint: string | null; loadedFor: string | null };
+  daily: { outfit: Outfit | null; weather: WeatherInfo | null; hint: string | null; loadedFor: string | null; offline: boolean };
   loadDaily: (regenerate?: boolean) => Promise<void>;
   generate: (occasion: string, festival?: string) => Promise<OutfitOptions>;
   feedback: (id: string, value: 1 | -1) => Promise<void>;
@@ -19,15 +20,33 @@ interface OutfitState {
 
 export const useOutfitStore = create<OutfitState>((set, get) => ({
   byId: {},
-  daily: { outfit: null, weather: null, hint: null, loadedFor: null },
+  daily: { outfit: null, weather: null, hint: null, loadedFor: null, offline: false },
 
   upsert: (o) => set((s) => ({ byId: { ...s.byId, [o.id]: o } })),
 
   loadDaily: async (regenerate = false) => {
-    const res = await outfitsApi.daily(regenerate);
-    const outfit = res.options[0] ?? null;
-    if (outfit) get().upsert(outfit);
-    set({ daily: { outfit, weather: res.weather, hint: res.hint, loadedFor: new Date().toDateString() } });
+    const today = new Date().toDateString();
+    // offline cache: today's look (or the last one we saved) renders before the network answers
+    if (!regenerate && !get().daily.outfit) {
+      const hit = await cache.get<{ outfit: Outfit | null; weather: WeatherInfo | null; hint: string | null; day: string }>('daily');
+      if (hit?.data.outfit) {
+        get().upsert(hit.data.outfit);
+        set({ daily: { ...hit.data, loadedFor: hit.data.day === today ? today : null, offline: true } });
+      }
+    }
+    try {
+      const res = await outfitsApi.daily(regenerate);
+      const outfit = res.options[0] ?? null;
+      if (outfit) get().upsert(outfit);
+      set({ daily: { outfit, weather: res.weather, hint: res.hint, loadedFor: today, offline: false } });
+      void cache.set('daily', { outfit, weather: res.weather, hint: res.hint, day: today });
+    } catch (e) {
+      if (isNetworkError(e) && get().daily.outfit) {
+        set((s) => ({ daily: { ...s.daily, loadedFor: today, offline: true } }));
+        return;
+      }
+      throw e;
+    }
   },
 
   generate: async (occasion, festival) => {

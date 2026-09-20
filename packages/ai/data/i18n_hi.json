@@ -1,0 +1,61 @@
+{
+  "seasons": {
+    "summer": "गर्मी",
+    "monsoon": "मानसून",
+    "winter": "सर्दी",
+    "all_season": "हर मौसम"
+  },
+  "colors": {
+    "red": "लाल",
+    "maroon": "मैरून",
+    "pink": "गुलाबी",
+    "orange": "नारंगी",
+    "yellow": "पीला",
+    "golden": "सुनहरा",
+    "green": "हरा",
+    "teal": "टील",
+    "blue": "नीला",
+    "navy": "नेवी",
+    "purple": "बैंगनी",
+    "white": "सफ़ेद",
+    "cream": "क्रीम",
+    "beige": "बेज",
+    "grey": "ग्रे",
+    "black": "काला",
+    "brown": "भूरा",
+    "multicolor": "बहुरंगी"
+  },
+  "fabrics": {
+    "cotton": "सूती",
+    "linen": "लिनन",
+    "georgette": "जॉर्जेट",
+    "chiffon": "शिफ़ॉन",
+    "crepe": "क्रेप",
+    "velvet": "मखमल",
+    "raw_silk": "रॉ सिल्क",
+    "banarasi": "बनारसी",
+    "kanjeevaram": "कांजीवरम",
+    "khadi": "खादी",
+    "net": "नेट",
+    "satin": "साटन",
+    "polyester": "पॉलिएस्टर",
+    "rayon": "रेयॉन",
+    "silk": "रेशम",
+    "other": "अन्य",
+    "unknown": "पता नहीं"
+  },
+  "regional_styles": {
+    "rajasthani": "राजस्थानी",
+    "south_indian": "दक्षिण भारतीय",
+    "punjabi": "पंजाबी",
+    "mumbai_minimal": "मुंबई मिनिमल",
+    "pan_india_fusion": "पैन-इंडिया फ़्यूज़न"
+  },
+  "conditions": {
+    "new": "नया",
+    "good": "अच्छा",
+    "worn": "पहना हुआ",
+    "needs_repair": "मरम्मत चाहिए"
+  },
+  "other": "अन्य"
+}

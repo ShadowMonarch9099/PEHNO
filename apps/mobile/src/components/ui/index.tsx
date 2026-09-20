@@ -399,3 +399,4 @@ export { ProgressBar } from './ProgressBar';
 export { ScreenHeader } from './ScreenHeader';
 export { OptionCard } from './OptionCard';
 export { LockedFeature, GhostLooks } from './LockedFeature';
+export { LazyImage } from './LazyImage';

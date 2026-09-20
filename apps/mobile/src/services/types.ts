@@ -25,6 +25,7 @@ export interface User {
   subscription_tier: SubscriptionTier;
   subscription_expires_at: string | null;
   onboarding_complete: boolean;
+  language: 'en' | 'hi';
   created_at: string;
   entitlements?: Entitlements | null;
 }
@@ -40,6 +41,7 @@ export type UserUpdate = Partial<
     | 'skin_tone'
     | 'regional_style'
     | 'onboarding_complete'
+    | 'language'
   > & { fcm_token: string }
 >;
 
@@ -235,6 +237,10 @@ export interface City {
   name: string;
   state: string;
   region: string;
+  regional_style: RegionalStyle;
+  aesthetic: string | null;
+  style_note: string | null;
+  crafts: string[];
 }
 
 // ── Outfits ────────────────────────────────────────────────────────────────

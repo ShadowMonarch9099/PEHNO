@@ -132,3 +132,25 @@ def occasion_parent(slug: str) -> str | None:
 
 def city_names() -> set[str]:
     return {c["name"] for c in cities()}
+
+
+def city(name: str) -> dict | None:
+    key = (name or "").strip().lower()
+    return next((c for c in cities() if c["name"].lower() == key or c["slug"] == key), None)
+
+
+def city_style_profile(name: str) -> dict | None:
+    """Crafts / fabrics / colours that read as local (Tier-2 style tuning)."""
+    c = city(name)
+    return (c or {}).get("style_profile")
+
+
+def hindi() -> dict:
+    return load("i18n_hi")
+
+
+def label(entry: dict, lang: str | None) -> str:
+    """`label_hi` when lang=hi and present, else the English label."""
+    if lang == "hi":
+        return entry.get("label_hi") or entry["label"]
+    return entry["label"]

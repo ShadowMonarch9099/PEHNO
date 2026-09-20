@@ -1,13 +1,14 @@
 /**
  * Onboarding 4/5 — regional style affinity (biases the recommendation engine).
  */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { OptionCard, PrimaryButton, ScreenHeader } from '../../components/ui';
 import type { OnboardingScreenProps } from '../../navigation/types';
 import type { RegionalStyle } from '../../services/types';
-import { useOnboardingStore } from '../../store';
+import { useT } from '../../i18n';
+import { labelFor, useMetaStore, useOnboardingStore } from '../../store';
 import { colors, spacing, typography } from '../../theme';
 
 const OPTIONS: { slug: RegionalStyle; title: string; description: string; emoji: string }[] = [
@@ -20,8 +21,20 @@ const OPTIONS: { slug: RegionalStyle; title: string; description: string; emoji:
 
 export default function StyleAffinityScreen({ navigation }: OnboardingScreenProps<'StyleAffinity'>) {
   const { draft, set, saveProgress } = useOnboardingStore();
+  const t = useT();
+  const { cities, options, load } = useMetaStore();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [touched, setTouched] = useState(false);
+
+  // Tier-2 tuning: pre-select the style most people in the user's city pick
+  const city = cities.find((c) => c.name.toLowerCase() === draft.city.trim().toLowerCase());
+  useEffect(() => {
+    void load();
+  }, [load]);
+  useEffect(() => {
+    if (city && !touched && city.regional_style !== draft.regional_style) set({ regional_style: city.regional_style });
+  }, [city, touched, draft.regional_style, set]);
 
   const next = async () => {
     setSaving(true);
@@ -39,19 +52,28 @@ export default function StyleAffinityScreen({ navigation }: OnboardingScreenProp
   return (
     <SafeAreaView style={styles.container}>
       <ScreenHeader
-        title="Your style"
-        subtitle="Which aesthetic feels most like you? We prioritise it in your wardrobe."
+        title={t('onb.style.title')}
+        subtitle={city ? t('onb.style.cityDefault', { city: city.name, style: labelFor(options.regional_styles, city.regional_style) }) : t('onb.style.subtitle')}
         onBack={navigation.goBack}
         step={{ current: 4, total: 5 }}
       />
       <ScrollView contentContainerStyle={styles.body}>
+        {city?.style_note ? <Text style={styles.note}>{city.aesthetic ? `${city.aesthetic} — ` : ''}{city.style_note}</Text> : null}
         {OPTIONS.map((o) => (
-          <OptionCard key={o.slug} {...o} selected={draft.regional_style === o.slug} onPress={() => set({ regional_style: o.slug })} />
+          <OptionCard
+            key={o.slug}
+            {...o}
+            selected={draft.regional_style === o.slug}
+            onPress={() => {
+              setTouched(true);
+              set({ regional_style: o.slug });
+            }}
+          />
         ))}
       </ScrollView>
       <View style={styles.footer}>
         {error ? <Text style={styles.error}>{error}</Text> : null}
-        <PrimaryButton title="Continue" onPress={next} loading={saving} />
+        <PrimaryButton title={t('common.continue')} onPress={next} loading={saving} />
       </View>
     </SafeAreaView>
   );
@@ -62,4 +84,5 @@ const styles = StyleSheet.create({
   body: { paddingHorizontal: spacing.xl, paddingTop: spacing.lg, gap: spacing.sm },
   footer: { padding: spacing.xl, gap: spacing.sm },
   error: { ...typography.caption, color: colors.error, textAlign: 'center' },
+  note: { ...typography.caption, marginBottom: spacing.xs },
 });

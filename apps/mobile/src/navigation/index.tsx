@@ -47,6 +47,7 @@ import GarmentDetailScreen from '../screens/wardrobe/GarmentDetailScreen';
 import GarmentEditScreen from '../screens/wardrobe/GarmentEditScreen';
 import UploadScreen from '../screens/wardrobe/UploadScreen';
 import WardrobeHomeScreen from '../screens/wardrobe/WardrobeHomeScreen';
+import { useT } from '../i18n';
 import { useAuthStore } from '../store';
 import { colors } from '../theme';
 import type {
@@ -168,10 +169,18 @@ const TAB_ICONS: Record<keyof MainTabParamList, React.ComponentProps<typeof Feat
 };
 
 function MainNavigator() {
+  const t = useT();
+  const labels: Record<keyof MainTabParamList, string> = {
+    Wardrobe: t('tab.wardrobe'),
+    Outfits: t('tab.outfits'),
+    Festivals: t('tab.festivals'),
+    Settings: t('tab.settings'),
+  };
   return (
     <Tabs.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
+        tabBarLabel: labels[route.name],
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.textMuted,
         tabBarStyle: { backgroundColor: colors.background, borderTopColor: colors.borderLight },

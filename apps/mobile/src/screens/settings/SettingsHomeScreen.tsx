@@ -4,7 +4,8 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { SecondaryButton } from '../../components/ui';
+import { ChipGroup, SecondaryButton } from '../../components/ui';
+import { useI18nStore, useT, type Language } from '../../i18n';
 import type { SettingsScreenProps } from '../../navigation/types';
 import { stylistsApi, usersApi } from '../../services';
 import type { StylistProfile, UserStats } from '../../services/types';
@@ -14,7 +15,16 @@ import { borderRadius, colors, spacing, typography } from '../../theme';
 export default function SettingsHomeScreen({ navigation }: SettingsScreenProps<'SettingsHome'>) {
   const user = useAuthStore((s) => s.user);
   const signOut = useAuthStore((s) => s.signOut);
+  const setUser = useAuthStore((s) => s.setUser);
   const options = useMetaStore((s) => s.options);
+  const t = useT();
+  const language = useI18nStore((s) => s.language);
+  const setLanguage = useI18nStore((s) => s.setLanguage);
+
+  const changeLanguage = async (lang: Language) => {
+    await setLanguage(lang); // UI flips immediately; profile keeps other devices in sync
+    usersApi.update({ language: lang }).then(setUser).catch(() => undefined);
+  };
   const [stats, setStats] = useState<UserStats | null>(null);
   const [stylist, setStylist] = useState<StylistProfile | null>(null);
 
@@ -29,14 +39,14 @@ export default function SettingsHomeScreen({ navigation }: SettingsScreenProps<'
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView contentContainerStyle={styles.body}>
-        <Text style={typography.h1}>Settings</Text>
+        <Text style={typography.h1}>{t('settings.title')}</Text>
 
         <View style={styles.profile}>
           <View style={styles.avatar}>
             <Text style={styles.avatarText}>{initial}</Text>
           </View>
           <View style={styles.profileText}>
-            <Text style={typography.h3}>{user.name || 'Add your name'}</Text>
+            <Text style={typography.h3}>{user.name || t('settings.addName')}</Text>
             <Text style={typography.caption}>{user.phone} · {user.city}</Text>
           </View>
           <View style={styles.tier}>
@@ -45,32 +55,44 @@ export default function SettingsHomeScreen({ navigation }: SettingsScreenProps<'
         </View>
 
         <View style={styles.card}>
-          <Row k="Body type" v={user.body_type} />
-          <Row k="Skin tone" v={user.skin_tone} />
-          <Row k="Style" v={labelFor(options.regional_styles, user.regional_style)} />
-          {stats ? <Row k="Wardrobe" v={`${stats.garment_count} items · ${stats.total_wears} wears`} /> : null}
+          <Row k={t('settings.bodyType')} v={user.body_type} />
+          <Row k={t('settings.skinTone')} v={user.skin_tone} />
+          <Row k={t('settings.style')} v={labelFor(options.regional_styles, user.regional_style)} />
+          {stats ? <Row k={t('settings.wardrobe')} v={`${stats.garment_count} ${t('wardrobe.items')} · ${stats.total_wears} ${t('settings.wears')}`} /> : null}
+        </View>
+
+        <View style={styles.card}>
+          <Text style={typography.h4}>{t('settings.language')}</Text>
+          <ChipGroup
+            options={[
+              { slug: 'en', label: t('settings.language.en') },
+              { slug: 'hi', label: t('settings.language.hi') },
+            ]}
+            value={language}
+            onChange={(l) => void changeLanguage(l as Language)}
+          />
         </View>
 
         <TouchableOpacity style={styles.rowLink} onPress={() => navigation.navigate('Subscription')} accessibilityRole="button">
-          <Text style={typography.h4}>Subscription</Text>
-          <Text style={typography.caption}>{user.subscription_tier === 'free' ? 'Free · see Plus and Pro' : `${user.subscription_tier === 'pro' ? 'Pro' : 'Plus'} · manage`} →</Text>
+          <Text style={typography.h4}>{t('settings.subscription')}</Text>
+          <Text style={typography.caption}>{user.subscription_tier === 'free' ? t('settings.free') : `${user.subscription_tier === 'pro' ? 'Pro' : 'Plus'} · ${t('settings.manage')}`} →</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.rowLink} onPress={() => navigation.navigate('Outfits', { screen: 'MyBookings' })} accessibilityRole="button">
-          <Text style={typography.h4}>Stylist sessions</Text>
-          <Text style={typography.caption}>Your bookings →</Text>
+          <Text style={typography.h4}>{t('settings.stylistSessions')}</Text>
+          <Text style={typography.caption}>{t('settings.yourBookings')} →</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.rowLink} onPress={() => navigation.navigate('StylistApply')} accessibilityRole="button">
-          <Text style={typography.h4}>{stylist?.is_stylist ? 'Your stylist listing' : 'Become a stylist'}</Text>
-          <Text style={typography.caption}>{stylist?.is_stylist ? (stylist.verified ? 'Verified' : 'Under review') : 'Apply'} →</Text>
+          <Text style={typography.h4}>{stylist?.is_stylist ? t('settings.yourListing') : t('settings.becomeStylist')}</Text>
+          <Text style={typography.caption}>{stylist?.is_stylist ? (stylist.verified ? t('settings.verified') : t('settings.underReview')) : t('settings.apply')} →</Text>
         </TouchableOpacity>
         {stylist?.is_stylist ? (
           <TouchableOpacity style={styles.rowLink} onPress={() => navigation.navigate('IncomingBookings')} accessibilityRole="button">
-            <Text style={typography.h4}>Sessions booked with you</Text>
-            <Text style={typography.caption}>Manage →</Text>
+            <Text style={typography.h4}>{t('settings.bookedWithYou')}</Text>
+            <Text style={typography.caption}>{t('settings.manage')} →</Text>
           </TouchableOpacity>
         ) : null}
-        <Text style={typography.caption}>Profile editing and notification preferences arrive in later build weeks.</Text>
-        <SecondaryButton title="Sign out" onPress={signOut} />
+        <Text style={typography.caption}>{t('settings.laterWeeks')}</Text>
+        <SecondaryButton title={t('settings.signOut')} onPress={signOut} />
       </ScrollView>
     </SafeAreaView>
   );

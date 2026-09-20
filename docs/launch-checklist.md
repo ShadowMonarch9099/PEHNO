@@ -33,6 +33,13 @@ What the code already does is ticked. Unticked items need accounts, keys or peop
 - [ ] Collect a labelled eval set (≥30 phone photos per garment type) → `packages/ai/eval/evaluate.py`; record the baseline in `packages/ai/README.md`
 - [ ] Decide zero-shot vs fine-tune from that number (85% gate); `train_vit.py` is ready
 - [ ] Re-verify 2026/2027 lunar festival dates in `packages/ai/data/festivals.json`
+- [ ] Men's classes: the zero-shot prompts for sherwani / bandhgala / dhoti etc. are unmeasured — include ≥30 men's photos per class in the eval set
+
+## Tier-2 rollout (Jaipur · Lucknow · Ahmedabad · Chandigarh)
+- [ ] Have a native speaker review `src/i18n/strings.ts` and `packages/ai/data/i18n_hi.json` / `label_hi` (machine-drafted Hindi; register should be conversational, not textbook)
+- [ ] Translate the remaining secondary screens (stylists, travel, brands, share) — core surfaces are done, the rest fall back to English
+- [ ] Validate the four city `style_profile`s with 5–10 local users each (do block prints really outrank chikankari in Jaipur for office wear?) and tune `W_CITY_*`
+- [ ] Test on a 2G/3G-throttled device: first paint from cache, image fade-in, offline banner
 
 ## Beta cohort (100 users, Mumbai · Delhi · Bengaluru)
 - [ ] Gap-report validation (plan weeks 15–17): show 10 beta users their report and ask whether the #1 gap is something they'd actually buy — tune `gap_analyzer` weights from that before promoting the feature

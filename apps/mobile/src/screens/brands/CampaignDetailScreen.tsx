@@ -3,9 +3,9 @@
  * and "count a look": pick one of your recent outfits to submit.
  */
 import React, { useCallback, useEffect, useState } from 'react';
-import { Alert, Image, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { PrimaryButton, ProgressBar, ScreenHeader, SecondaryButton } from '../../components/ui';
+import { LazyImage, PrimaryButton, ProgressBar, ScreenHeader, SecondaryButton } from '../../components/ui';
 import type { OutfitScreenProps } from '../../navigation/types';
 import { ApiError, brandsApi, outfitsApi } from '../../services';
 import type { Campaign, Outfit } from '../../services/types';
@@ -89,7 +89,7 @@ export default function CampaignDetailScreen({ route, navigation }: OutfitScreen
         {error ? <Text style={styles.error}>{error}</Text> : null}
         {c ? (
           <>
-            {c.hero_image_url ? <Image source={{ uri: c.hero_image_url }} style={styles.hero} resizeMode="cover" /> : null}
+            {c.hero_image_url ? <LazyImage uri={c.hero_image_url} style={styles.hero} /> : null}
             <Text style={typography.body1}>{c.description}</Text>
             {c.hashtag ? <Text style={styles.hashtag}>{c.hashtag}</Text> : null}
             {c.ends_at ? <Text style={typography.caption}>Ends {new Date(c.ends_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'long' })} · {c.participants} taking part</Text> : null}
@@ -123,7 +123,7 @@ export default function CampaignDetailScreen({ route, navigation }: OutfitScreen
                     <TouchableOpacity key={o.id} style={styles.outfitRow} onPress={() => submit(o)} disabled={busy} accessibilityRole="button">
                       <View style={styles.thumbs}>
                         {o.garments.slice(0, 3).map((g) => (
-                          <Image key={g.id} source={{ uri: g.thumbnail_url ?? g.image_url }} style={styles.thumb} />
+                          <LazyImage key={g.id} uri={g.thumbnail_url ?? g.image_url} style={styles.thumb} />
                         ))}
                       </View>
                       <View style={styles.flex}>
@@ -146,7 +146,7 @@ export default function CampaignDetailScreen({ route, navigation }: OutfitScreen
                 <Text style={typography.h4}>{isChallenge ? 'Pieces that count' : 'The collection'}</Text>
                 {c.products.map((p, i) => (
                   <TouchableOpacity key={i} style={styles.product} onPress={() => shop(i)} accessibilityRole="link">
-                    {p.image_url ? <Image source={{ uri: p.image_url }} style={styles.productImg} /> : <View style={[styles.productImg, styles.productPlaceholder]} />}
+                    {p.image_url ? <LazyImage uri={p.image_url} style={styles.productImg} /> : <View style={[styles.productImg, styles.productPlaceholder]} />}
                     <View style={styles.flex}>
                       <Text style={typography.label}>{p.name}</Text>
                       <Text style={typography.caption}>

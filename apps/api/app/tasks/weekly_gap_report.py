@@ -19,14 +19,19 @@ from app.tasks import celery_app, run_async
 log = logging.getLogger(__name__)
 
 
-def _copy(report: dict, notification_id: str) -> Push:
+def _copy(report: dict, notification_id: str, lang: str = "en") -> Push:
     top = report["gaps"][0]
-    body = (
-        f"You're missing 1 key piece that could unlock {top['new_outfits']} new outfits → "
-        f"a {top['suggested_colors'][0]} {top['label'].lower()}."
-    )
+    if lang == "hi":
+        title = "आपकी साप्ताहिक अलमारी रिपोर्ट तैयार है"
+        body = f"1 ज़रूरी पीस से {top['new_outfits']} नए आउटफ़िट बन सकते हैं → {top['suggested_colors'][0]} {top['label'].lower()}।"
+    else:
+        title = "Your weekly wardrobe report is ready"
+        body = (
+            f"You're missing 1 key piece that could unlock {top['new_outfits']} new outfits → "
+            f"a {top['suggested_colors'][0]} {top['label'].lower()}."
+        )
     return Push(
-        title="Your weekly wardrobe report is ready",
+        title=title,
         body=body,
         data={"url": "pehno://commerce/gap-report", "notification_id": notification_id},
     )
@@ -65,7 +70,7 @@ async def send_weekly_gap_reports() -> dict:
                     await db.rollback()
                     skipped += 1
                     continue
-                if await notifier.send(user.fcm_token, _copy(report, str(entry.id))):
+                if await notifier.send(user.fcm_token, _copy(report, str(entry.id), user.language)):
                     sent += 1
                     analytics.track(user.id, analytics.PUSH_SENT, kind="weekly_gap_report")
                     await db.commit()

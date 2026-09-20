@@ -4,6 +4,7 @@
  */
 import { create } from 'zustand';
 import { wardrobeApi } from '../services';
+import { cache, isNetworkError } from '../services/cache';
 import type { LocalPhoto } from '../services/wardrobe';
 import type { Garment, GarmentFilters, UploadResult } from '../services/types';
 
@@ -15,6 +16,8 @@ interface WardrobeState {
   filters: GarmentFilters;
   loading: boolean;
   error: string | null;
+  /** True when the list on screen came from the offline cache. */
+  offline: boolean;
   refresh: () => Promise<void>;
   setFilters: (patch: GarmentFilters) => void;
   clearFilters: () => void;
@@ -37,14 +40,23 @@ export const useWardrobeStore = create<WardrobeState>((set, get) => ({
   filters: {},
   loading: false,
   error: null,
+  offline: false,
 
   refresh: async () => {
+    const unfiltered = Object.keys(get().filters).length === 0;
     set({ loading: true, error: null });
+    // stale-while-revalidate: show the last unfiltered list instantly
+    if (unfiltered && !get().garments.length) {
+      const hit = await cache.get<{ items: Garment[]; total: number }>('wardrobe');
+      if (hit) set({ garments: hit.data.items, total: hit.data.total, offline: true });
+    }
     try {
       const res = await wardrobeApi.list({ ...get().filters, page_size: 200 });
-      set({ garments: res.items, total: res.total, loading: false });
+      set({ garments: res.items, total: res.total, loading: false, offline: false });
+      if (unfiltered) void cache.set('wardrobe', { items: res.items, total: res.total });
     } catch (e) {
-      set({ loading: false, error: e instanceof Error ? e.message : 'Failed to load wardrobe' });
+      const offline = isNetworkError(e) && get().garments.length > 0;
+      set({ loading: false, offline, error: offline ? null : e instanceof Error ? e.message : 'Failed to load wardrobe' });
     }
   },
 

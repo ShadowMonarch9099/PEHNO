@@ -2,10 +2,10 @@
  * GarmentDetail — photo, classification, stats (wears, cost-per-wear), actions.
  */
 import React, { useEffect, useState } from 'react';
-import { Alert, Image, ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AiSuggestionCard } from '../../components/garment/AiSuggestionCard';
-import { Chip, PrimaryButton, ScreenHeader, SecondaryButton } from '../../components/ui';
+import { Chip, LazyImage, PrimaryButton, ScreenHeader, SecondaryButton } from '../../components/ui';
 import { usePendingPoll } from '../../hooks/usePendingPoll';
 import type { WardrobeScreenProps } from '../../navigation/types';
 import { wardrobeApi } from '../../services';
@@ -71,7 +71,7 @@ export default function GarmentDetailScreen({ route, navigation }: WardrobeScree
     <SafeAreaView style={styles.container}>
       <ScreenHeader title={title} onBack={navigation.goBack} />
       <ScrollView contentContainerStyle={styles.body}>
-        <Image source={{ uri: g.image_url }} style={styles.image} resizeMode="cover" />
+        <LazyImage uri={g.image_url} style={styles.image} />
 
         <AiSuggestionCard
           garment={g}

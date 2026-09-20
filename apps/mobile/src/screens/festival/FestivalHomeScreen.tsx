@@ -10,11 +10,13 @@ import { festivalsApi } from '../../services';
 import type { Festival, NavratriToday } from '../../services/types';
 import { borderRadius, colors, shadows, spacing, typography } from '../../theme';
 import { hexFor } from '../../utils/colors';
+import { useT } from '../../i18n';
 
 const countdown = (f: Festival) => (f.is_active ? 'Happening now' : f.days_until === 0 ? 'Today' : f.days_until === 1 ? 'Tomorrow' : `In ${f.days_until} days`);
 const fmt = (iso: string) => new Date(iso + 'T00:00:00').toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
 
 export default function FestivalHomeScreen({ navigation }: FestivalScreenProps<'FestivalHome'>) {
+  const t = useT();
   const [festivals, setFestivals] = useState<Festival[]>([]);
   const [navratri, setNavratri] = useState<NavratriToday | null>(null);
   const [loading, setLoading] = useState(true);
@@ -45,7 +47,7 @@ export default function FestivalHomeScreen({ navigation }: FestivalScreenProps<'
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView contentContainerStyle={styles.body} refreshControl={<RefreshControl refreshing={loading} onRefresh={load} tintColor={colors.primary} />}>
-        <Text style={typography.h1}>Festivals</Text>
+        <Text style={typography.h1}>{t('festival.title')}</Text>
         {error ? <Text style={styles.error}>{error}</Text> : null}
 
         {showNavratri && navratri ? (

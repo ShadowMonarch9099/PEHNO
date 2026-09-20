@@ -7,6 +7,7 @@ import logging
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
+from app import knowledge
 from app.core import database
 from app.core.database import utcnow
 from app.models.notification import NotificationLog
@@ -19,16 +20,34 @@ from app.tasks import celery_app, run_async
 log = logging.getLogger(__name__)
 
 
-def _copy(outfit, weather, notification_id: str) -> Push:
-    names = [g.garment_type.replace("_", " ") for g in outfit.garments]
-    body = f"{weather.temp_c:.0f}°C in {weather.city}. "
-    body += (
-        f"Try your {' + '.join(names[:2])} today."
-        if names
-        else "Your look is ready — tap to see it."
-    )
+def _copy(outfit, weather, notification_id: str, lang: str = "en") -> Push:
+    """Push copy in the user's language (en | hi)."""
+    hi = lang == "hi"
+    tax = _tax()
+    names = [
+        (knowledge.label(tax[g.garment_type], lang) if hi else tax[g.garment_type]["label"].lower())
+        if g.garment_type in tax
+        else g.garment_type.replace("_", " ")
+        for g in outfit.garments
+    ]
+    if hi:
+        body = f"{weather.city} में {weather.temp_c:.0f}°C। "
+        body += (
+            f"आज {' + '.join(names[:2])} पहनकर देखें।"
+            if names
+            else "आपका लुक तैयार है — देखने के लिए टैप करें।"
+        )
+        title = "आज का लुक ✨"
+    else:
+        body = f"{weather.temp_c:.0f}°C in {weather.city}. "
+        body += (
+            f"Try your {' + '.join(names[:2])} today."
+            if names
+            else "Your look is ready — tap to see it."
+        )
+        title = "Today's look ✨"
     return Push(
-        title="Today's look ✨",
+        title=title,
         body=body,
         data={
             "url": "pehno://outfits/daily",
@@ -36,6 +55,10 @@ def _copy(outfit, weather, notification_id: str) -> Push:
             "notification_id": notification_id,
         },
     )
+
+
+def _tax() -> dict[str, dict]:
+    return {g["slug"]: g for g in knowledge.garment_types()}
 
 
 async def push_daily_outfits() -> dict:
@@ -73,7 +96,9 @@ async def push_daily_outfits() -> dict:
                     skipped += 1
                     continue
                 out = await outfit_service.to_out(db, rows[0])
-                if await notifier.send(user.fcm_token, _copy(out, weather, str(entry.id))):
+                if await notifier.send(
+                    user.fcm_token, _copy(out, weather, str(entry.id), user.language)
+                ):
                     sent += 1
                     analytics.track(user.id, analytics.PUSH_SENT, kind="daily_outfit")
                     await db.commit()
