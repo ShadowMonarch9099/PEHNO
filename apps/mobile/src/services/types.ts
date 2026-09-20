@@ -456,3 +456,81 @@ export interface ScanResult {
   verdict: 'buy' | 'maybe' | 'skip';
   rationale: string[];
 }
+
+// ── Stylist marketplace (weeks 33–37) ───────────────────────────────────────
+
+export type SessionType = 'wardrobe_review' | 'occasion_curation' | 'trip_packing';
+export type BookingStatus = 'pending' | 'confirmed' | 'completed' | 'cancelled';
+
+export interface StylistReview {
+  id: string;
+  rating: number;
+  comment: string | null;
+  reviewer_first_name: string;
+  created_at: string;
+}
+
+export interface Stylist {
+  id: string;
+  name: string;
+  city: string;
+  bio: string | null;
+  specialties: string[];
+  price_per_session_inr: number;
+  portfolio_urls: string[];
+  rating: number | null;
+  review_count: number;
+  sessions_completed: number;
+  session_types: { slug: SessionType; label: string }[];
+  quote: { amount_inr: number; discount_inr: number; pro_discount_applied: boolean } | null;
+  reviews: StylistReview[];
+}
+
+export interface StylistProfile {
+  is_stylist: boolean;
+  verified: boolean;
+  bio: string | null;
+  specialties: string[];
+  price_per_session_inr: number | null;
+  portfolio_urls: string[];
+  applied_at: string | null;
+}
+
+export interface StylistApplication {
+  bio: string;
+  specialties: string[];
+  price_per_session_inr: number;
+  portfolio_urls: string[];
+}
+
+export interface Booking {
+  id: string;
+  stylist_id: string;
+  stylist_name: string;
+  client_first_name: string;
+  session_type: SessionType;
+  session_label: string;
+  scheduled_at: string;
+  duration_minutes: number;
+  status: BookingStatus;
+  amount_inr: number;
+  discount_inr: number;
+  platform_commission_inr: number | null;
+  stylist_payout_inr: number | null;
+  notes: string | null;
+  payment_url: string | null;
+  paid_at: string | null;
+  completed_at: string | null;
+  cancelled_at: string | null;
+  reviewed: boolean;
+  created_at: string;
+}
+
+export interface ClientWardrobe {
+  booking_id: string;
+  client_first_name: string;
+  city: string;
+  regional_style: string;
+  notes: string | null;
+  garments: Garment[];
+}

@@ -4,6 +4,7 @@ tier updated on the user; cancel lapses at period end; a daily reconcile job
 downgrades expired subscriptions.
 """
 import logging
+import uuid
 from datetime import UTC, datetime, timedelta
 
 from fastapi import HTTPException, status
@@ -100,6 +101,17 @@ async def apply_event(db: AsyncSession, event: ProviderEvent) -> str:
     except IntegrityError:
         await db.rollback()
         return "duplicate"
+
+    if event.event_type == "paid":
+        # one-time payment (stylist session): reference_id is our booking id
+        from app.services import stylist_service
+
+        try:
+            booking_id = uuid.UUID(event.reference_id or "")
+        except ValueError:
+            return "ignored"
+        booking = await stylist_service.confirm_paid(db, booking_id, event.amount_inr)
+        return "paid" if booking else "unknown_booking"
 
     if not event.provider_subscription_id:
         return "ignored"

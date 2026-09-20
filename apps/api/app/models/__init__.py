@@ -12,6 +12,7 @@ from app.models.garment import Garment
 from app.models.notification import NotificationLog
 from app.models.outfit import Outfit
 from app.models.social import OutfitLike
+from app.models.stylist import StylistBooking, StylistReview
 from app.models.user import User
 
 __all__ = [
@@ -29,4 +30,6 @@ __all__ = [
     "BrandPartner",
     "BrandCampaign",
     "OutfitLike",
+    "StylistBooking",
+    "StylistReview",
 ]

@@ -19,7 +19,7 @@ from app.models.commerce import AffiliateClick
 from app.models.garment import Garment
 from app.models.outfit import Outfit
 from app.models.user import SubscriptionTier, User
-from app.services import wardrobe_service
+from app.services import stylist_service, wardrobe_service
 from app.services.entitlements import PLANS
 
 
@@ -336,4 +336,93 @@ async def create_brand(body: BrandIn, db: DbSession) -> dict:
         "slug": b.slug,
         "status": b.status.value,
         "campaign_count": 0,
+    }
+
+
+# ── /stylists (applications + verification) ─────────────────────────────────
+
+
+class VerifyIn(BaseModel):
+    verified: bool
+
+
+def _stylist_row(u: User, bookings: int, completed: int) -> dict:
+    return {
+        "id": str(u.id),
+        "name": u.name,
+        "phone": u.phone,
+        "city": u.city,
+        "verified": u.stylist_verified,
+        "bio": u.stylist_bio,
+        "specialties": u.stylist_specialties or [],
+        "price_per_session_inr": float(u.stylist_price_per_session or 0),
+        "portfolio_urls": u.stylist_portfolio_urls or [],
+        "applied_at": u.stylist_applied_at.isoformat() if u.stylist_applied_at else None,
+        "bookings": bookings,
+        "sessions_completed": completed,
+    }
+
+
+@router.get("/stylists")
+async def stylists(db: DbSession, pending: bool = False) -> list[dict]:
+    from app.models.stylist import BookingStatus, StylistBooking
+
+    stmt = select(User).where(User.is_stylist.is_(True))
+    if pending:
+        stmt = stmt.where(User.stylist_verified.is_(False))
+    users = (await db.execute(stmt.order_by(User.stylist_applied_at.desc()))).scalars().all()
+    counts = dict(
+        (
+            await db.execute(
+                select(StylistBooking.stylist_id, func.count(StylistBooking.id)).group_by(
+                    StylistBooking.stylist_id
+                )
+            )
+        ).all()
+    )
+    done = dict(
+        (
+            await db.execute(
+                select(StylistBooking.stylist_id, func.count(StylistBooking.id))
+                .where(StylistBooking.status == BookingStatus.completed)
+                .group_by(StylistBooking.stylist_id)
+            )
+        ).all()
+    )
+    return [_stylist_row(u, counts.get(u.id, 0), done.get(u.id, 0)) for u in users]
+
+
+@router.post("/stylists/{user_id}/verify")
+async def verify_stylist(user_id: uuid.UUID, body: VerifyIn, db: DbSession) -> dict:
+    user = await db.get(User, user_id)
+    if user is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "User not found")
+    await stylist_service.verify(db, user, body.verified)
+    return _stylist_row(user, 0, 0)
+
+
+@router.get("/stylists/bookings")
+async def stylist_bookings(db: DbSession, days: Annotated[int, Query(ge=1, le=365)] = 30) -> dict:
+    """Marketplace GMV + commission over the window."""
+    from app.models.stylist import BookingStatus, StylistBooking
+
+    since = utcnow() - timedelta(days=days)
+    rows = (
+        await db.execute(
+            select(
+                StylistBooking.status,
+                func.count(StylistBooking.id),
+                func.coalesce(func.sum(StylistBooking.amount_paid), 0),
+                func.coalesce(func.sum(StylistBooking.platform_commission), 0),
+            )
+            .where(StylistBooking.created_at >= since)
+            .group_by(StylistBooking.status)
+        )
+    ).all()
+    paid = {BookingStatus.confirmed, BookingStatus.completed}
+    return {
+        "days": days,
+        "by_status": {s.value: n for s, n, _, _ in rows},
+        "gmv_inr": float(sum(a for s, _, a, _ in rows if s in paid)),
+        "commission_inr": float(sum(c for s, _, _, c in rows if s in paid)),
     }

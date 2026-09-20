@@ -31,6 +31,13 @@ import OOTDFeedScreen from '../screens/social/OOTDFeedScreen';
 import ShareOutfitScreen from '../screens/social/ShareOutfitScreen';
 import SettingsHomeScreen from '../screens/settings/SettingsHomeScreen';
 import SubscriptionScreen from '../screens/settings/SubscriptionScreen';
+import BookSessionScreen from '../screens/stylist/BookSessionScreen';
+import ClientWardrobeScreen from '../screens/stylist/ClientWardrobeScreen';
+import IncomingBookingsScreen from '../screens/stylist/IncomingBookingsScreen';
+import MyBookingsScreen from '../screens/stylist/MyBookingsScreen';
+import StylistApplyScreen from '../screens/stylist/StylistApplyScreen';
+import StylistListScreen from '../screens/stylist/StylistListScreen';
+import StylistProfileScreen from '../screens/stylist/StylistProfileScreen';
 import GarmentDetailScreen from '../screens/wardrobe/GarmentDetailScreen';
 import GarmentEditScreen from '../screens/wardrobe/GarmentEditScreen';
 import UploadScreen from '../screens/wardrobe/UploadScreen';
@@ -60,9 +67,9 @@ const linking: LinkingOptions<MainTabParamList> = {
   config: {
     screens: {
       Wardrobe: { screens: { WardrobeHome: 'wardrobe', GarmentDetail: 'wardrobe/:garmentId', Upload: 'wardrobe/upload', GapReport: 'commerce/gap-report', Roi: 'wardrobe/roi', ScanMode: 'commerce/scan' } },
-      Outfits: { screens: { DailyLook: 'outfits/daily', OutfitResult: 'outfits/:occasion', OutfitHistory: 'outfits/history', OOTDFeed: 'outfits/feed' } },
+      Outfits: { screens: { DailyLook: 'outfits/daily', OutfitResult: 'outfits/:occasion', OutfitHistory: 'outfits/history', OOTDFeed: 'outfits/feed', StylistList: 'stylists', StylistProfile: 'stylists/:stylistId', MyBookings: 'stylists/bookings' } },
       Festivals: { screens: { FestivalHome: 'festivals', FestivalDetail: 'festivals/:slug', NavratriTracker: 'festivals/navratri' } },
-      Settings: { screens: { SettingsHome: 'settings', Subscription: 'settings/subscription' } },
+      Settings: { screens: { SettingsHome: 'settings', Subscription: 'settings/subscription', StylistApply: 'settings/stylist', IncomingBookings: 'settings/stylist/bookings' } },
     },
   },
 };
@@ -113,6 +120,10 @@ function OutfitNavigator() {
       <OutfitStack.Screen name="OutfitHistory" component={OutfitHistoryScreen} />
       <OutfitStack.Screen name="ShareOutfit" component={ShareOutfitScreen} />
       <OutfitStack.Screen name="OOTDFeed" component={OOTDFeedScreen} />
+      <OutfitStack.Screen name="StylistList" component={StylistListScreen} />
+      <OutfitStack.Screen name="StylistProfile" component={StylistProfileScreen} />
+      <OutfitStack.Screen name="BookSession" component={BookSessionScreen} />
+      <OutfitStack.Screen name="MyBookings" component={MyBookingsScreen} />
     </OutfitStack.Navigator>
   );
 }
@@ -132,6 +143,9 @@ function SettingsNavigator() {
     <SettingsStack.Navigator screenOptions={{ headerShown: false }}>
       <SettingsStack.Screen name="SettingsHome" component={SettingsHomeScreen} />
       <SettingsStack.Screen name="Subscription" component={SubscriptionScreen} />
+      <SettingsStack.Screen name="StylistApply" component={StylistApplyScreen} />
+      <SettingsStack.Screen name="IncomingBookings" component={IncomingBookingsScreen} />
+      <SettingsStack.Screen name="ClientWardrobe" component={ClientWardrobeScreen} />
     </SettingsStack.Navigator>
   );
 }

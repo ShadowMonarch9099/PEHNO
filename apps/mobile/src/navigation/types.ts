@@ -35,6 +35,10 @@ export type OutfitStackParamList = {
   OutfitHistory: { saved?: boolean };
   ShareOutfit: { outfitId: string };
   OOTDFeed: undefined;
+  StylistList: undefined;
+  StylistProfile: { stylistId: string };
+  BookSession: { stylistId: string };
+  MyBookings: undefined;
 };
 
 export type FestivalStackParamList = {
@@ -46,6 +50,9 @@ export type FestivalStackParamList = {
 export type SettingsStackParamList = {
   SettingsHome: undefined;
   Subscription: { highlight?: 'plus' | 'pro'; reason?: string } | undefined;
+  StylistApply: undefined;
+  IncomingBookings: undefined;
+  ClientWardrobe: { bookingId: string };
 };
 
 export type MainTabParamList = {

@@ -113,6 +113,11 @@ class Settings(BaseSettings):
     # ── Social (Phase 3) ─────────────────────────────────────────────────────
     # Off by default: the build plan says not to launch social until wardrobe data quality is high.
     SOCIAL_ENABLED: bool = False
+
+    # ── Stylist marketplace ──────────────────────────────────────────────────
+    STYLIST_COMMISSION_RATE: float = 0.20
+    PRO_STYLIST_DISCOUNT_RATE: float = 0.10
+    STYLIST_SESSION_MINUTES: int = 60
     SHARE_BASE_URL: str = ""  # public origin for share pages; defaults to PUBLIC_BASE_URL
 
     # ── Observability ────────────────────────────────────────────────────────

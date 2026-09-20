@@ -78,3 +78,25 @@ export interface Brand {
   campaign_count: number;
   created_at: string;
 }
+
+export interface AdminStylist {
+  id: string;
+  name: string;
+  phone: string;
+  city: string;
+  verified: boolean;
+  bio: string | null;
+  specialties: string[];
+  price_per_session_inr: number;
+  portfolio_urls: string[];
+  applied_at: string | null;
+  bookings: number;
+  sessions_completed: number;
+}
+
+export interface StylistMarketplace {
+  days: number;
+  by_status: Record<string, number>;
+  gmv_inr: number;
+  commission_inr: number;
+}

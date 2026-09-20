@@ -135,7 +135,7 @@ Status: ✅ done · 🔧 in progress · ⬜ not started · ⚠️ deviates from 
 | Block | Status | Notes |
 |---|---|---|
 | Weeks 29–32 — Social OOTD layer | ✅ (flag off) | `SOCIAL_ENABLED=false` by default per the plan's warning; flip when wardrobe data quality is high. |
-| Weeks 33–37 — Stylist marketplace | ⬜ | |
+| Weeks 33–37 — Stylist marketplace | ✅ | 20% commission, Razorpay Payment Links (mock locally), admin verification, scoped wardrobe access |
 | Weeks 38–41 — Travel packing planner | ⬜ | |
 | Weeks 42–45 — Male wardrobe support | ⬜ | |
 | Weeks 46–48 — Brand partnership layer | ⬜ | Schema scaffold exists |
@@ -148,3 +148,14 @@ Status: ✅ done · 🔧 in progress · ⬜ not started · ⚠️ deviates from 
 - [x] City aesthetics in `cities.json` (Mumbai minimal, Delhi maximalist, …); share state on every outfit response; `entitlements.flags.social`
 - [x] Mobile: share action on outfit cards, ShareOutfitScreen (card preview, native share sheet, copy link, stop sharing), OOTDFeedScreen (city feed, likes, tap-to-identify pieces); all hidden unless the flag is on
 - [x] 4 new tests (140 total)
+
+### Weeks 33–37 deliverables
+- [x] Stylist profiles on `users` (`is_stylist`, `stylist_verified`, bio, specialties, price, portfolio, applied_at); `stylist_bookings` + `stylist_reviews` tables (migration `8650b05784cb`)
+- [x] Apply → admin verify: `POST /stylists/apply` (re-submittable), `GET /stylists/me`; admin `GET /admin/stylists?pending`, `POST /admin/stylists/{id}/verify`, `GET /admin/stylists/bookings` (GMV + commission); admin dashboard **Stylists** page (verify/unlist, 30-day numbers)
+- [x] Browse: `GET /stylists` (verified only, `city`/`specialty` filters, rating-sorted, per-viewer quote), `GET /stylists/{id}` (profile, portfolio, session types, last 20 reviews), `GET /stylists/specialties`
+- [x] Bookings: `POST /stylists/book` (≥2 h ahead, 60-min slot clash → 409, no self-booking) creates a pending booking + provider **payment link**; `paid` webhook (`reference_id` = booking id) confirms — `BillingProvider.create_payment_link` on Razorpay (`/v1/payment_links`) and mock; `POST …/dev/pay` locally
+- [x] Money: stylist sets price; Pro gets `PRO_STYLIST_DISCOUNT_RATE` (10%); platform keeps `STYLIST_COMMISSION_RATE` (20%) of the paid amount; stylists see commission + payout, clients don't
+- [x] Lifecycle: cancel (either side; paid refunds manual for now), complete (stylist, confirmed only), review (client, once, after completion) → rating/count on profile and listing
+- [x] Scoped wardrobe access `GET /stylists/my-wardrobe-access/{booking}`: stylist only, **only while confirmed**, returns first name + city + classified garments — never phone/email
+- [x] Mobile: StylistList (specialty filter, Pro price), StylistProfile, BookSession (type/day/slot/notes → payment page or dev simulate), MyBookings (pay/cancel/review), Settings → StylistApply, IncomingBookings (payout, open client wardrobe, mark complete), ClientWardrobe (grid + brief); "Book a stylist" banner on DailyLook
+- [x] 4 new tests (144 total); verified live

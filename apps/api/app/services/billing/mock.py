@@ -8,7 +8,7 @@ from datetime import UTC, datetime, timedelta
 from hashlib import sha256
 
 from app.core.config import settings
-from app.services.billing import BillingProvider, CheckoutSession, ProviderEvent
+from app.services.billing import BillingProvider, CheckoutSession, PaymentLink, ProviderEvent
 
 
 class MockProvider(BillingProvider):
@@ -23,6 +23,11 @@ class MockProvider(BillingProvider):
         self, provider_subscription_id: str, *, at_period_end: bool
     ) -> None:
         return None
+
+    async def create_payment_link(
+        self, *, amount_inr: float, description: str, reference_id: str, phone: str
+    ) -> PaymentLink:
+        return PaymentLink(provider_payment_id=f"mock_plink_{uuid.uuid4().hex[:12]}", url=None)
 
     def verify_webhook(self, body: bytes, signature: str | None) -> bool:
         # Same scheme as Razorpay so the webhook route is exercised end-to-end in tests.
@@ -41,4 +46,6 @@ class MockProvider(BillingProvider):
             if end
             else datetime.now(UTC) + timedelta(days=30),
             raw=payload,
+            reference_id=payload.get("reference_id"),
+            amount_inr=payload.get("amount_inr"),
         )

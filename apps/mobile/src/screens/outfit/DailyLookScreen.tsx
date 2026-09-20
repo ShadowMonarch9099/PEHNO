@@ -112,6 +112,13 @@ export default function DailyLookScreen({ navigation }: OutfitScreenProps<'Daily
             </TouchableOpacity>
           ) : null}
         </View>
+        <TouchableOpacity style={styles.stylistBanner} onPress={() => navigation.navigate('StylistList')} accessibilityRole="button">
+          <View style={styles.flex}>
+            <Text style={typography.h4}>Book a stylist</Text>
+            <Text style={typography.caption}>Verified stylists work from your real wardrobe. 60-min sessions{user?.subscription_tier === 'pro' ? ' · Pro discount applies' : ''}.</Text>
+          </View>
+          <Text style={styles.arrow}>→</Text>
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
@@ -129,4 +136,7 @@ const styles = StyleSheet.create({
   links: { flexDirection: 'row', gap: spacing.sm },
   link: { flex: 1, padding: spacing.md, borderRadius: borderRadius.lg, backgroundColor: colors.surfaceElevated, alignItems: 'center' },
   linkText: { ...typography.label, color: colors.textPrimary },
+  stylistBanner: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, padding: spacing.md, borderRadius: borderRadius.xl, borderWidth: 1.5, borderColor: colors.border, backgroundColor: colors.surfaceElevated },
+  flex: { flex: 1, gap: 2 },
+  arrow: { ...typography.h3, color: colors.primary },
 });

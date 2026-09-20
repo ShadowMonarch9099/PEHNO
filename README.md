@@ -78,7 +78,7 @@ cd apps/admin && npx next build
 | `OPENWEATHER_API_KEY` | empty (monthly climatology per city) | live weather |
 | `FIREBASE_SERVICE_ACCOUNT` | empty (console notifier) | FCM push |
 | `CELERY_BROKER_URL` | empty (in-process jobs) | Redis; run `celery -A app.tasks worker` and `celery -A app.tasks beat` |
-| `BILLING_PROVIDER` | `mock` (dev activate endpoint) | `razorpay` (+ key id/secret, webhook secret, plan ids) |
+| `BILLING_PROVIDER` | `mock` (dev activate / dev pay endpoints) | `razorpay` (+ key id/secret, webhook secret, plan ids; enable `subscription.*` and `payment_link.paid` webhook events) |
 | `POSTHOG_API_KEY` | empty (events logged) | PostHog analytics |
 | `SOCIAL_ENABLED` | `false` | `true` once wardrobe data quality is high (plan's launch gate) |
 | `SENTRY_DSN` | empty (disabled) | your DSN |
@@ -108,7 +108,10 @@ GET  /commerce/gap-report  (Plus)   GET /commerce/affiliate-links   POST /commer
 POST /commerce/scan        (Pro)
 POST|DELETE /social/share-card/{id}   GET /social/feed/city   POST|DELETE /social/like/{id}   (SOCIAL_ENABLED)
 GET  /s/{slug}             public share page + /s/{slug}/card.jpg
-GET  /admin/metrics        (X-Admin-Key)
+GET  /stylists             GET /stylists/{id}        POST /stylists/apply      GET /stylists/me
+POST /stylists/book        GET /stylists/bookings/my|incoming   POST /stylists/bookings/{id}/cancel|complete|review
+GET  /stylists/my-wardrobe-access/{booking}          (stylist, confirmed sessions only)
+GET  /admin/metrics        (X-Admin-Key)   GET|POST /admin/stylists…
 GET  /media/{key}?exp&sig  (local storage backend; signed URLs)
 ```
 

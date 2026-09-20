@@ -19,7 +19,8 @@ What the code already does is ticked. Unticked items need accounts, keys or peop
 - [ ] PostHog project → `POSTHOG_API_KEY` (until then: events are logged server-side)
 - [ ] Affiliate network (Cuelinks / EarnKaro / vCommission): campaign ids for Myntra, AJIO, Nykaa Fashion, Meesho → `AFFILIATE_NETWORK_TEMPLATE`, `AFFILIATE_NETWORK_ID`, per-platform ids; configure the network's conversion postback to `POST /commerce/affiliate-conversion` with `X-Postback-Secret`
 - [ ] Admin: Google OAuth client (Web) → `apps/admin/.env` `GOOGLE_CLIENT_ID/SECRET`, `NEXTAUTH_URL`, `NEXTAUTH_SECRET`, `ADMIN_EMAIL_DOMAIN`; deploy `apps/admin` (Vercel/Railway) with `API_URL` + `ADMIN_API_KEY`
-- [ ] Razorpay account: create monthly plans for Plus (₹199) and Pro (₹399) → `RAZORPAY_PLAN_PLUS/PRO`, key id/secret, webhook secret; point the webhook at `/billing/webhook/razorpay`; set `BILLING_PROVIDER=razorpay`
+- [ ] Razorpay account: create monthly plans for Plus (₹199) and Pro (₹399) → `RAZORPAY_PLAN_PLUS/PRO`, key id/secret, webhook secret; point the webhook at `/billing/webhook/razorpay` with `subscription.*` **and** `payment_link.paid` events (stylist sessions); set `BILLING_PROVIDER=razorpay`
+- [ ] Stylist payouts: decide the payout rail (Razorpay Route / manual bank transfer) and refund policy for cancelled paid sessions — the API records `platform_commission` per booking but does not move money to stylists yet
 
 ## Mobile release
 - [ ] Expo account: `eas init` → replace `REPLACE_WITH_EAS_PROJECT_ID` in `apps/mobile/app.json`

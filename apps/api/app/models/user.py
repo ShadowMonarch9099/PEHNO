@@ -1,9 +1,10 @@
 import enum
 from datetime import datetime
 
-from sqlalchemy import Boolean, DateTime, Enum, String
+from sqlalchemy import Boolean, DateTime, Enum, Numeric, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from app.core.types import JSONColumn
 from app.models.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
 
 
@@ -76,6 +77,17 @@ class User(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     last_login_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     # Social: pre-generate share cards on save (opt-in)
     social_sharing_enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+
+    # Stylist marketplace (weeks 33–37)
+    is_stylist: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    stylist_verified: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    stylist_bio: Mapped[str | None] = mapped_column(Text, nullable=True)
+    stylist_specialties: Mapped[list[str] | None] = mapped_column(JSONColumn, nullable=True)
+    stylist_price_per_session: Mapped[float | None] = mapped_column(Numeric(10, 2), nullable=True)
+    stylist_portfolio_urls: Mapped[list[str] | None] = mapped_column(JSONColumn, nullable=True)
+    stylist_applied_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
 
     garments = relationship("Garment", back_populates="user", cascade="all, delete-orphan")
     outfits = relationship("Outfit", back_populates="user", cascade="all, delete-orphan")

@@ -10,7 +10,7 @@ from hashlib import sha256
 import httpx
 
 from app.core.config import settings
-from app.services.billing import BillingProvider, CheckoutSession, ProviderEvent
+from app.services.billing import BillingProvider, CheckoutSession, PaymentLink, ProviderEvent
 
 API = "https://api.razorpay.com/v1"
 
@@ -22,6 +22,7 @@ _EVENT_MAP = {
     "subscription.completed": "completed",
     "subscription.paused": "halted",
     "subscription.resumed": "activated",
+    "payment_link.paid": "paid",
 }
 
 
@@ -66,6 +67,26 @@ class RazorpayProvider(BillingProvider):
             )
             r.raise_for_status()
 
+    async def create_payment_link(
+        self, *, amount_inr: float, description: str, reference_id: str, phone: str
+    ) -> PaymentLink:
+        async with httpx.AsyncClient(timeout=15, auth=self._auth) as client:
+            r = await client.post(
+                f"{API}/payment_links",
+                json={
+                    "amount": int(round(amount_inr * 100)),
+                    "currency": "INR",
+                    "description": description,
+                    "reference_id": reference_id,
+                    "customer": {"contact": phone},
+                    "notify": {"sms": True},
+                    "notes": {"reference_id": reference_id},
+                },
+            )
+            r.raise_for_status()
+            d = r.json()
+        return PaymentLink(provider_payment_id=d["id"], url=d.get("short_url"))
+
     def verify_webhook(self, body: bytes, signature: str | None) -> bool:
         if not signature or not settings.RAZORPAY_WEBHOOK_SECRET:
             return False
@@ -73,13 +94,18 @@ class RazorpayProvider(BillingProvider):
         return hmac.compare_digest(expected, signature)
 
     def parse_event(self, payload: dict) -> ProviderEvent:
-        sub = payload.get("payload", {}).get("subscription", {}).get("entity", {})
+        body = payload.get("payload", {})
+        sub = body.get("subscription", {}).get("entity", {})
+        link = body.get("payment_link", {}).get("entity", {})
         end = sub.get("current_end")
+        ident = sub.get("id") or link.get("id")
         return ProviderEvent(
             event_id=payload.get("id")
-            or f"{payload.get('event')}:{sub.get('id')}:{payload.get('created_at')}",
+            or f"{payload.get('event')}:{ident}:{payload.get('created_at')}",
             event_type=_EVENT_MAP.get(payload.get("event", ""), "other"),
             provider_subscription_id=sub.get("id"),
             current_period_end=datetime.fromtimestamp(end, tz=UTC) if end else None,
             raw=payload,
+            reference_id=link.get("reference_id"),
+            amount_inr=(link.get("amount_paid") or 0) / 100 if link else None,
         )

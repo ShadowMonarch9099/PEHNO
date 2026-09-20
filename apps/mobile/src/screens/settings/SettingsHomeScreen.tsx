@@ -6,8 +6,8 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-nati
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SecondaryButton } from '../../components/ui';
 import type { SettingsScreenProps } from '../../navigation/types';
-import { usersApi } from '../../services';
-import type { UserStats } from '../../services/types';
+import { stylistsApi, usersApi } from '../../services';
+import type { StylistProfile, UserStats } from '../../services/types';
 import { labelFor, useAuthStore, useMetaStore } from '../../store';
 import { borderRadius, colors, spacing, typography } from '../../theme';
 
@@ -16,9 +16,11 @@ export default function SettingsHomeScreen({ navigation }: SettingsScreenProps<'
   const signOut = useAuthStore((s) => s.signOut);
   const options = useMetaStore((s) => s.options);
   const [stats, setStats] = useState<UserStats | null>(null);
+  const [stylist, setStylist] = useState<StylistProfile | null>(null);
 
   useEffect(() => {
     usersApi.stats().then(setStats).catch(() => undefined);
+    stylistsApi.me().then(setStylist).catch(() => undefined);
   }, []);
 
   if (!user) return null;
@@ -53,6 +55,20 @@ export default function SettingsHomeScreen({ navigation }: SettingsScreenProps<'
           <Text style={typography.h4}>Subscription</Text>
           <Text style={typography.caption}>{user.subscription_tier === 'free' ? 'Free · see Plus and Pro' : `${user.subscription_tier === 'pro' ? 'Pro' : 'Plus'} · manage`} →</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.rowLink} onPress={() => navigation.navigate('Outfits', { screen: 'MyBookings' })} accessibilityRole="button">
+          <Text style={typography.h4}>Stylist sessions</Text>
+          <Text style={typography.caption}>Your bookings →</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.rowLink} onPress={() => navigation.navigate('StylistApply')} accessibilityRole="button">
+          <Text style={typography.h4}>{stylist?.is_stylist ? 'Your stylist listing' : 'Become a stylist'}</Text>
+          <Text style={typography.caption}>{stylist?.is_stylist ? (stylist.verified ? 'Verified' : 'Under review') : 'Apply'} →</Text>
+        </TouchableOpacity>
+        {stylist?.is_stylist ? (
+          <TouchableOpacity style={styles.rowLink} onPress={() => navigation.navigate('IncomingBookings')} accessibilityRole="button">
+            <Text style={typography.h4}>Sessions booked with you</Text>
+            <Text style={typography.caption}>Manage →</Text>
+          </TouchableOpacity>
+        ) : null}
         <Text style={typography.caption}>Profile editing and notification preferences arrive in later build weeks.</Text>
         <SecondaryButton title="Sign out" onPress={signOut} />
       </ScrollView>
